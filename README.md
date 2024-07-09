@@ -2,7 +2,6 @@
 ![GitHub Created At](https://img.shields.io/github/created-at/OZ-Coding-School/oz_03_main-002-BE)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/OZ-Coding-School/oz_03_main-002-BE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/OZ-Coding-School/oz_03_main-002-BE)
-![GitHub License](https://img.shields.io/github/license/OZ-Coding-School/oz_03_main-002-BE)
 <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/OZ-Coding-School/oz_03_main-002-BE&count_bg=%23D2F3FF&title_bg=%235EEAFF&icon=&icon_color=%23E7E7E7&title=Hits&edge_flat=false"/></a>
 ![GitHub Repo stars](https://img.shields.io/github/stars/OZ-Coding-School/oz_03_main-002-BE)
 
