@@ -1,0 +1,5 @@
+#Personal
+
+DataTools/Data/*
+**/.venv
+**/*.ipynb
