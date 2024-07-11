@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.12"
 pandas = "^2.2.2"
 ipykernel = "^6.29.5"
+black = "^24.4.2"
+isort = "^5.13.2"
 
 
 [build-system]
