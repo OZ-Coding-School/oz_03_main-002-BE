@@ -63,3 +63,25 @@ result_dict = sub_code.to_dict(orient="index")
 result_json = json.dumps(result_dict, ensure_ascii=False)
 with open("Data/result/ingredients_sub.json", "w", encoding="utf-8") as f:
     f.write(result_json)
+
+# 식재료 명 추출을 위한 전처리
+df_deduplicated["식품명"] = df_deduplicated["식품명"].astype(str).str.split("것").str[0]
+df_deduplicated["식품명"] = (
+    df_deduplicated["식품명"].astype(str).str.split("전체").str[0]
+)
+df_deduplicated["식품명"] = df_deduplicated["식품명"].astype(str).str.split("_").str[0]
+sub_code = df_deduplicated.rename(
+    columns={
+        "식품명": "ingredients_name",
+        "식품대분류코드": "major_code",
+        "식품대분류명": " major_name",
+        "식품중분류코드": "middle_code",
+        "식품중분류명": "middle_name",
+        "식품소분류코드": "sub_code",
+        "식품소분류명": " sub_name",
+    }
+)
+result_dict = sub_code.to_dict(orient="index")
+result_json = json.dumps(result_dict, ensure_ascii=False)
+with open("Data/result/ingredients_list.json", "w", encoding="utf-8") as f:
+    f.write(result_json)
