@@ -78,7 +78,7 @@ sub_code = df_deduplicated.rename(
         "식품중분류코드": "middle_code",
         "식품중분류명": "middle_name",
         "식품소분류코드": "sub_code",
-        "식품소분류명": " sub_name",
+        "식품소분류명": "sub_name",
     }
 )
 result_dict = sub_code.to_dict(orient="index")
