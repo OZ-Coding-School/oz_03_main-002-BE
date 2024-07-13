@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "datatools"
+version = "0.1.0"
+description = ""
+authors = ["JoonHoSeong <joonho1366@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.2"
+ipykernel = "^6.29.5"
+black = "^24.4.2"
+isort = "^5.13.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
