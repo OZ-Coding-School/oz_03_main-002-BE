@@ -1,0 +1,6 @@
+**/*.ipynb
+**/*.csv
+**/*.json
+
+#unused file
+Scraping/playwright_test.py
