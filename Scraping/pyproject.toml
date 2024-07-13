@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "selenium-scarping"
+name = "selenium-scraping"
 version = "0.1.0"
 description = ""
 authors = ["JoonHoSeong <joonho1366@gmail.com>"]
