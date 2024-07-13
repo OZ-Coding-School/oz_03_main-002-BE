@@ -55,8 +55,6 @@ recipe_df = recipe_df.rename(
 recipe_df["thumbnail_url"] = None
 recipe_df["ingre_list"] = None
 recipe_df["detail_recipes"] = None
-recipe_df["detail_pics"] = None
-recipe_df["detail_tips"] = None
 
 
 os.makedirs("../Scraping/Data", exist_ok=True)

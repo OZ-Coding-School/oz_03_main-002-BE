@@ -6,3 +6,219 @@
 2024-07-13 23:23:16,443 [INFO] Recipe Step 3: {'recipe': '볼에 양념장을 만들어요.', 'tip': '양념장: 설탕 1큰술, 고춧가루 2큰술, 간장 2큰술, 까나리액젓 1/3큰술, 식초 1큰술, 연겨자 1/3큰술, 다진마늘 1/2큰술, 참기름 1큰술', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/7354eef97dba81ba21b0e0ef4137de931.png'}
 2024-07-13 23:23:16,482 [INFO] Recipe Step 4: {'recipe': '묵, 오이, 토마토를 넣고 버무린 뒤 삼채소를 넣고 한 번 더 버무려 마무리.', 'tip': '오이 1/3개, 참깨 약간', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/4742796b4dc2315f9841dade7c7fbc921.png'}
 2024-07-13 23:23:16,482 [INFO] Complete Recipe: {'1': {'recipe': '묵은 먹기 좋게 썰어요.', 'tip': '도토리묵 1모', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/faf1bf890bee605a2c6376ce076401601.png'}, '2': {'recipe': '쌈채소와 고추, 토마토도 먹기 좋게 썰어요.', 'tip': '쌈채소(상추/깻잎/쑥갓등) 2줌, 방울토마토 1컵, 청고추 1개, 홍고추 1개', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/dfbbe1b8754a6d1aa6c96a0e6c08a53e1.png'}, '3': {'recipe': '볼에 양념장을 만들어요.', 'tip': '양념장: 설탕 1큰술, 고춧가루 2큰술, 간장 2큰술, 까나리액젓 1/3큰술, 식초 1큰술, 연겨자 1/3큰술, 다진마늘 1/2큰술, 참기름 1큰술', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/7354eef97dba81ba21b0e0ef4137de931.png'}, '4': {'recipe': '묵, 오이, 토마토를 넣고 버무린 뒤 삼채소를 넣고 한 번 더 버무려 마무리.', 'tip': '오이 1/3개, 참깨 약간', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2016/08/26/4742796b4dc2315f9841dade7c7fbc921.png'}}
+2024-07-14 02:43:08,629 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:43:14,172 [INFO] Thumbnail URL: https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/1fb83f8578488ba482ad400e3b62df49.jpg
+2024-07-14 02:43:14,542 [INFO] Ingredient List: {'어묵': '2개', '김밥용김': '3장', '당면': '1움큼', '양파': '1/2개', '당근': '1/2개', '깻잎': '6장', '튀김가루': '1컵', '올리브유': '적당량', '간장': '1T', '참기름': '1T'}
+2024-07-14 02:43:14,594 [INFO] Recipe Step 1: {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}
+2024-07-14 02:43:14,627 [INFO] Recipe Step 2: {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}
+2024-07-14 02:43:14,661 [INFO] Recipe Step 3: {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}
+2024-07-14 02:43:14,694 [INFO] Recipe Step 4: {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}
+2024-07-14 02:43:14,729 [INFO] Recipe Step 5: {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}
+2024-07-14 02:43:14,760 [INFO] Recipe Step 6: {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}
+2024-07-14 02:43:14,761 [INFO] Complete Recipe: {'1': {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}, '2': {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}, '3': {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}, '4': {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}, '5': {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}, '6': {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}}
+2024-07-14 02:44:15,606 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:44:19,473 [INFO] Thumbnail URL: https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/1fb83f8578488ba482ad400e3b62df49.jpg
+2024-07-14 02:44:19,873 [INFO] Ingredient List: {'어묵': '2개', '김밥용김': '3장', '당면': '1움큼', '양파': '1/2개', '당근': '1/2개', '깻잎': '6장', '튀김가루': '1컵', '올리브유': '적당량', '간장': '1T', '참기름': '1T'}
+2024-07-14 02:44:19,916 [INFO] Recipe Step 1: {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}
+2024-07-14 02:44:19,956 [INFO] Recipe Step 2: {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}
+2024-07-14 02:44:19,989 [INFO] Recipe Step 3: {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}
+2024-07-14 02:44:20,023 [INFO] Recipe Step 4: {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}
+2024-07-14 02:44:20,058 [INFO] Recipe Step 5: {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}
+2024-07-14 02:44:20,092 [INFO] Recipe Step 6: {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}
+2024-07-14 02:44:20,092 [INFO] Complete Recipe: {'1': {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}, '2': {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}, '3': {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}, '4': {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}, '5': {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}, '6': {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}}
+2024-07-14 02:47:02,429 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:48:06,697 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:48:09,377 [INFO] Thumbnail URL: https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/1fb83f8578488ba482ad400e3b62df49.jpg
+2024-07-14 02:48:12,854 [INFO] Ingredient List: {'어묵': '2개', '김밥용김': '3장', '당면': '1움큼', '양파': '1/2개', '당근': '1/2개', '깻잎': '6장', '튀김가루': '1컵', '올리브유': '적당량', '간장': '1T', '참기름': '1T'}
+2024-07-14 02:48:12,907 [INFO] Recipe Step 1: {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}
+2024-07-14 02:48:12,939 [INFO] Recipe Step 2: {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}
+2024-07-14 02:48:12,970 [INFO] Recipe Step 3: {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}
+2024-07-14 02:48:13,001 [INFO] Recipe Step 4: {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}
+2024-07-14 02:48:13,033 [INFO] Recipe Step 5: {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}
+2024-07-14 02:48:13,066 [INFO] Recipe Step 6: {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}
+2024-07-14 02:48:13,066 [INFO] Complete Recipe: {'1': {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}, '2': {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}, '3': {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}, '4': {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}, '5': {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}, '6': {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}}
+2024-07-14 02:48:15,604 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:48:20,797 [INFO] Thumbnail URL: https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/1fb83f8578488ba482ad400e3b62df49.jpg
+2024-07-14 02:48:21,136 [INFO] Ingredient List: {'어묵': '2개', '김밥용김': '3장', '당면': '1움큼', '양파': '1/2개', '당근': '1/2개', '깻잎': '6장', '튀김가루': '1컵', '올리브유': '적당량', '간장': '1T', '참기름': '1T'}
+2024-07-14 02:48:21,177 [INFO] Recipe Step 1: {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}
+2024-07-14 02:48:21,210 [INFO] Recipe Step 2: {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}
+2024-07-14 02:48:21,243 [INFO] Recipe Step 3: {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}
+2024-07-14 02:48:21,280 [INFO] Recipe Step 4: {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}
+2024-07-14 02:48:21,313 [INFO] Recipe Step 5: {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}
+2024-07-14 02:48:21,346 [INFO] Recipe Step 6: {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}
+2024-07-14 02:48:21,347 [INFO] Complete Recipe: {'1': {'recipe': '당근과 양파는 깨끗히 씻으신 후에 채썰어 준비한 후 후라이팬에 기름을 두르고 팬을 달군 후 당근, 양파를 살짝 볶아주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/35326477eefe4a27baaf47b00a76ba641.jpg'}, '2': {'recipe': '삶은 당면과 볶은야채를 넣고 잘 섞어주세요.이때 간장1T, 참기름1t 를 넣어서 간을 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/2d241f0ca5be44ed9f13c6e32ece9d9f1.jpg'}, '3': {'recipe': '나무 젓가락을 이용해 어묵구멍속에 당면과 야채를 어묵을 꾹꾹 눌러가면서 속을 채워주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/55714d09783885dcc1f70e4b363ca0c51.jpg'}, '4': {'recipe': '김을 깔고 그 위에 속을 채운 어묵을 올려놓은 뒤돌돌 말아주세요.녹말물이나 튀김옷 물을 묻혀서 마무리 해주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/417b1631039a9e3a9d74d25cc480be1f1.jpg'}, '5': {'recipe': '잘 말은 김말이에 녹말가루를 살짝 묻혀주세요.튀김가루 또는 밀가루를 이용해 튀김옷을 만들어주세요', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/d30308d7f47b4565d209f402a4d544891.jpg'}, '6': {'recipe': '잘 달군 팬에 기름을 넉넉히 부어주신 다음얇게 튀김옷을 입힌 김말이를 튀겨주세요.\n튀긴 김말이를 키친타올에 올려 불필요한 기름을 빼주세요.', 'tip': '', 'img_url': 'https://recipe1.ezmember.co.kr/cache/recipe/2015/05/18/60c1dc96838ed90b776fa217942d690c1.jpg'}}
+2024-07-14 02:52:41,302 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:52:43,848 [INFO] Thumbnail URL Done
+2024-07-14 02:52:44,108 [INFO] Ingredient List Done
+2024-07-14 02:52:47,394 [INFO] Complete Recipe
+2024-07-14 02:52:47,394 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128892
+2024-07-14 02:52:48,951 [INFO] Thumbnail URL Done
+2024-07-14 02:52:49,214 [INFO] Ingredient List Done
+2024-07-14 02:52:49,522 [INFO] Complete Recipe
+2024-07-14 02:52:49,522 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128932
+2024-07-14 02:53:26,512 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 02:53:30,318 [INFO] Thumbnail URL Done
+2024-07-14 02:53:30,572 [INFO] Ingredient List Done
+2024-07-14 02:53:33,779 [INFO] Complete Recipe
+2024-07-14 02:53:33,779 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128892
+2024-07-14 02:53:40,572 [INFO] Thumbnail URL Done
+2024-07-14 02:53:40,791 [INFO] Ingredient List Done
+2024-07-14 02:53:41,051 [INFO] Complete Recipe
+2024-07-14 02:53:41,052 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128932
+2024-07-14 03:00:33,905 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 03:00:38,879 [INFO] Thumbnail URL Done
+2024-07-14 03:00:39,124 [INFO] Ingredient List Done
+2024-07-14 03:00:39,332 [INFO] Complete Recipe
+2024-07-14 03:00:39,332 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128892
+2024-07-14 03:00:43,728 [INFO] Thumbnail URL Done
+2024-07-14 03:00:43,951 [INFO] Ingredient List Done
+2024-07-14 03:00:44,280 [INFO] Complete Recipe
+2024-07-14 03:00:44,281 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128932
+2024-07-14 03:00:45,328 [INFO] Thumbnail URL Done
+2024-07-14 03:00:45,653 [INFO] Ingredient List Done
+2024-07-14 03:00:45,786 [INFO] Complete Recipe
+2024-07-14 03:00:45,786 [INFO] Accessing URL: https://m.10000recipe.com/recipe/131871
+2024-07-14 03:00:46,786 [INFO] Thumbnail URL Done
+2024-07-14 03:00:46,956 [INFO] Ingredient List Done
+2024-07-14 03:00:47,082 [INFO] Complete Recipe
+2024-07-14 03:00:47,083 [INFO] Accessing URL: https://m.10000recipe.com/recipe/139247
+2024-07-14 03:00:48,149 [INFO] Thumbnail URL Done
+2024-07-14 03:00:48,413 [INFO] Ingredient List Done
+2024-07-14 03:00:48,661 [INFO] Complete Recipe
+2024-07-14 03:00:48,662 [INFO] Accessing URL: https://m.10000recipe.com/recipe/149207
+2024-07-14 03:00:50,108 [INFO] Thumbnail URL Done
+2024-07-14 03:00:50,323 [INFO] Ingredient List Done
+2024-07-14 03:00:50,542 [INFO] Complete Recipe
+2024-07-14 03:00:50,542 [INFO] Accessing URL: https://m.10000recipe.com/recipe/151148
+2024-07-14 03:00:51,758 [INFO] Thumbnail URL Done
+2024-07-14 03:00:52,175 [INFO] Ingredient List Done
+2024-07-14 03:00:52,394 [INFO] Complete Recipe
+2024-07-14 03:00:52,394 [INFO] Accessing URL: https://m.10000recipe.com/recipe/153040
+2024-07-14 03:00:53,907 [INFO] Thumbnail URL Done
+2024-07-14 03:00:54,252 [INFO] Ingredient List Done
+2024-07-14 03:00:54,372 [INFO] Complete Recipe
+2024-07-14 03:00:54,373 [INFO] Accessing URL: https://m.10000recipe.com/recipe/221094
+2024-07-14 03:00:55,922 [INFO] Thumbnail URL Done
+2024-07-14 03:00:56,111 [INFO] Ingredient List Done
+2024-07-14 03:00:56,301 [INFO] Complete Recipe
+2024-07-14 03:00:56,301 [INFO] Accessing URL: https://m.10000recipe.com/recipe/221097
+2024-07-14 03:00:57,742 [INFO] Thumbnail URL Done
+2024-07-14 03:00:58,042 [INFO] Ingredient List Done
+2024-07-14 03:00:58,232 [INFO] Complete Recipe
+2024-07-14 03:00:58,233 [INFO] Accessing URL: https://m.10000recipe.com/recipe/221098
+2024-07-14 03:00:59,360 [INFO] Thumbnail URL Done
+2024-07-14 03:00:59,803 [INFO] Ingredient List Done
+2024-07-14 03:01:00,053 [INFO] Complete Recipe
+2024-07-14 03:01:00,054 [INFO] Accessing URL: https://m.10000recipe.com/recipe/221101
+2024-07-14 03:01:01,320 [INFO] Thumbnail URL Done
+2024-07-14 03:01:01,551 [INFO] Ingredient List Done
+2024-07-14 03:01:01,837 [INFO] Complete Recipe
+2024-07-14 03:01:01,837 [INFO] Accessing URL: https://m.10000recipe.com/recipe/221102
+2024-07-14 03:01:02,879 [INFO] Thumbnail URL Done
+2024-07-14 03:01:03,133 [INFO] Ingredient List Done
+2024-07-14 03:01:03,361 [INFO] Complete Recipe
+2024-07-14 03:01:03,362 [INFO] Accessing URL: https://m.10000recipe.com/recipe/223583
+2024-07-14 03:01:04,440 [INFO] Thumbnail URL Done
+2024-07-14 03:01:04,732 [INFO] Ingredient List Done
+2024-07-14 03:01:04,982 [INFO] Complete Recipe
+2024-07-14 03:01:04,982 [INFO] Accessing URL: https://m.10000recipe.com/recipe/223584
+2024-07-14 03:01:05,919 [INFO] Thumbnail URL Done
+2024-07-14 03:01:06,150 [INFO] Ingredient List Done
+2024-07-14 03:01:06,357 [INFO] Complete Recipe
+2024-07-14 03:01:06,358 [INFO] Accessing URL: https://m.10000recipe.com/recipe/225141
+2024-07-14 03:01:07,780 [INFO] Thumbnail URL Done
+2024-07-14 03:01:07,939 [INFO] Ingredient List Done
+2024-07-14 03:01:08,104 [INFO] Complete Recipe
+2024-07-14 03:01:08,104 [INFO] Accessing URL: https://m.10000recipe.com/recipe/225146
+2024-07-14 03:01:09,007 [INFO] Thumbnail URL Done
+2024-07-14 03:01:09,237 [INFO] Ingredient List Done
+2024-07-14 03:01:09,512 [INFO] Complete Recipe
+2024-07-14 03:01:09,513 [INFO] Accessing URL: https://m.10000recipe.com/recipe/331003
+2024-07-14 03:01:10,429 [INFO] Thumbnail URL Done
+2024-07-14 03:01:10,611 [INFO] Ingredient List Done
+2024-07-14 03:01:10,858 [INFO] Complete Recipe
+2024-07-14 03:01:10,858 [INFO] Accessing URL: https://m.10000recipe.com/recipe/331006
+2024-07-14 03:01:12,688 [INFO] Thumbnail URL Done
+2024-07-14 03:01:13,072 [INFO] Ingredient List Done
+2024-07-14 03:01:13,286 [INFO] Complete Recipe
+2024-07-14 03:01:13,287 [INFO] Accessing URL: https://m.10000recipe.com/recipe/333866
+2024-07-14 03:01:14,393 [INFO] Thumbnail URL Done
+2024-07-14 03:01:14,528 [INFO] Ingredient List Done
+2024-07-14 03:01:14,757 [INFO] Complete Recipe
+2024-07-14 03:01:14,758 [INFO] Accessing URL: https://m.10000recipe.com/recipe/333869
+2024-07-14 03:01:15,711 [INFO] Thumbnail URL Done
+2024-07-14 03:01:15,984 [INFO] Ingredient List Done
+2024-07-14 03:01:16,305 [INFO] Complete Recipe
+2024-07-14 03:01:16,306 [INFO] Accessing URL: https://m.10000recipe.com/recipe/340534
+2024-07-14 03:01:17,321 [INFO] Thumbnail URL Done
+2024-07-14 03:01:17,545 [INFO] Ingredient List Done
+2024-07-14 03:01:17,757 [INFO] Complete Recipe
+2024-07-14 03:01:17,757 [INFO] Accessing URL: https://m.10000recipe.com/recipe/340537
+2024-07-14 03:01:19,206 [INFO] Thumbnail URL Done
+2024-07-14 03:01:19,523 [INFO] Ingredient List Done
+2024-07-14 03:01:19,777 [INFO] Complete Recipe
+2024-07-14 03:01:19,777 [INFO] Accessing URL: https://m.10000recipe.com/recipe/343935
+2024-07-14 03:01:21,274 [INFO] Thumbnail URL Done
+2024-07-14 03:01:21,631 [INFO] Ingredient List Done
+2024-07-14 03:01:21,856 [INFO] Complete Recipe
+2024-07-14 03:01:21,856 [INFO] Accessing URL: https://m.10000recipe.com/recipe/344698
+2024-07-14 03:01:22,822 [INFO] Thumbnail URL Done
+2024-07-14 03:01:23,173 [INFO] Ingredient List Done
+2024-07-14 03:01:23,481 [INFO] Complete Recipe
+2024-07-14 03:01:23,482 [INFO] Accessing URL: https://m.10000recipe.com/recipe/345834
+2024-07-14 03:01:24,738 [INFO] Thumbnail URL Done
+2024-07-14 03:01:24,972 [INFO] Ingredient List Done
+2024-07-14 03:01:25,092 [INFO] Complete Recipe
+2024-07-14 03:01:25,093 [INFO] Accessing URL: https://m.10000recipe.com/recipe/346652
+2024-07-14 03:01:26,062 [INFO] Thumbnail URL Done
+2024-07-14 03:01:26,314 [INFO] Ingredient List Done
+2024-07-14 03:01:26,667 [INFO] Complete Recipe
+2024-07-14 03:01:26,668 [INFO] Accessing URL: https://m.10000recipe.com/recipe/346665
+2024-07-14 03:01:27,630 [INFO] Thumbnail URL Done
+2024-07-14 03:01:27,822 [INFO] Ingredient List Done
+2024-07-14 03:01:28,021 [INFO] Complete Recipe
+2024-07-14 03:01:28,021 [INFO] Accessing URL: https://m.10000recipe.com/recipe/347791
+2024-07-14 03:01:29,083 [INFO] Thumbnail URL Done
+2024-07-14 03:01:29,272 [INFO] Ingredient List Done
+2024-07-14 03:01:29,506 [INFO] Complete Recipe
+2024-07-14 03:01:29,507 [INFO] Accessing URL: https://m.10000recipe.com/recipe/349330
+2024-07-14 03:01:30,530 [INFO] Thumbnail URL Done
+2024-07-14 03:01:30,977 [INFO] Ingredient List Done
+2024-07-14 03:01:31,144 [INFO] Complete Recipe
+2024-07-14 03:01:31,144 [INFO] Accessing URL: https://m.10000recipe.com/recipe/349332
+2024-07-14 03:01:32,071 [INFO] Thumbnail URL Done
+2024-07-14 03:01:32,394 [INFO] Ingredient List Done
+2024-07-14 03:01:32,636 [INFO] Complete Recipe
+2024-07-14 03:01:32,636 [INFO] Accessing URL: https://m.10000recipe.com/recipe/349381
+2024-07-14 03:01:34,009 [INFO] Thumbnail URL Done
+2024-07-14 03:01:34,419 [INFO] Ingredient List Done
+2024-07-14 03:01:34,606 [INFO] Complete Recipe
+2024-07-14 03:01:34,606 [INFO] Accessing URL: https://m.10000recipe.com/recipe/349386
+2024-07-14 03:01:36,301 [INFO] Thumbnail URL Done
+2024-07-14 03:01:36,844 [INFO] Ingredient List Done
+2024-07-14 03:01:37,131 [INFO] Complete Recipe
+2024-07-14 03:01:37,132 [INFO] Accessing URL: https://m.10000recipe.com/recipe/349740
+2024-07-14 03:01:38,678 [INFO] Thumbnail URL Done
+2024-07-14 03:01:39,140 [INFO] Ingredient List Done
+2024-07-14 03:01:39,268 [INFO] Complete Recipe
+2024-07-14 03:01:39,269 [INFO] Accessing URL: https://m.10000recipe.com/recipe/351591
+2024-07-14 03:01:41,284 [INFO] Thumbnail URL Done
+2024-07-14 03:01:41,804 [INFO] Ingredient List Done
+2024-07-14 03:01:42,023 [INFO] Complete Recipe
+2024-07-14 03:01:42,024 [INFO] Accessing URL: https://m.10000recipe.com/recipe/352110
+2024-07-14 03:01:43,523 [INFO] Thumbnail URL Done
+2024-07-14 03:01:43,530 [INFO] Ingredient List Done
+2024-07-14 03:01:43,764 [INFO] Complete Recipe
+2024-07-14 03:01:43,764 [INFO] Accessing URL: https://m.10000recipe.com/recipe/352364
+2024-07-14 03:01:44,926 [INFO] Thumbnail URL Done
+2024-07-14 03:01:45,265 [INFO] Ingredient List Done
+2024-07-14 03:01:45,488 [INFO] Complete Recipe
+2024-07-14 03:01:45,489 [INFO] Accessing URL: https://m.10000recipe.com/recipe/352415
+2024-07-14 03:01:46,978 [INFO] Thumbnail URL Done
+2024-07-14 03:01:47,158 [INFO] Ingredient List Done
+2024-07-14 03:01:47,333 [INFO] Complete Recipe
+2024-07-14 03:01:47,334 [INFO] Accessing URL: https://m.10000recipe.com/recipe/355810
+2024-07-14 03:07:01,309 [INFO] Accessing URL: https://m.10000recipe.com/recipe/128671
+2024-07-14 03:07:04,374 [INFO] Thumbnail URL Done
+2024-07-14 03:07:04,635 [INFO] Ingredient List Done
+2024-07-14 03:07:07,871 [INFO] Complete Recipe
