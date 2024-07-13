@@ -1,8 +1,9 @@
 import logging
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
+
 from pyvirtualdisplay import Display
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 # 로깅 설정 (파일과 콘솔에 모두 출력)
 logging.basicConfig(
@@ -10,7 +11,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
         logging.FileHandler("scraping.log"),  # 로그 파일 저장
-        logging.StreamHandler()  # 콘솔 출력
+        logging.StreamHandler(),  # 콘솔 출력
     ],
 )
 
