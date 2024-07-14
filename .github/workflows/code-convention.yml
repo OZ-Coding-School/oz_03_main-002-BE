@@ -1,0 +1,27 @@
+name: Code Style Check
+
+on:
+  push:
+    branches: ['**']  # 검사할 브랜치 지정
+  pull_request:
+    branches: ['**']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # 사용 중인 Python 버전에 맞게 수정
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort flake8
+      - name: Run black
+        run: black --check .
+      - name: Run isort
+        run: isort --check-only .
+      - name: Run flake8
+        run: flake8 .
