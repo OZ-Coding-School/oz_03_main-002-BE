@@ -5,7 +5,13 @@ from selenium.webdriver.chrome.options import Options
 # from pyvirtualdisplay import Display #For Linux Server
 
 import json
+import time
+import os
 
+try :
+    os.remove('scraping.log')
+except :
+    pass
 
 # 로깅 설정 (파일과 콘솔에 모두 출력)
 logging.basicConfig(
@@ -19,7 +25,7 @@ logging.basicConfig(
 
 # 크롬 옵션 설정
 chrome_options = Options()
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--incognito")
@@ -32,10 +38,13 @@ driver = webdriver.Chrome(options=chrome_options)
 with open('Data/preprocessed_data.json', 'r') as f :
     data = json.load(f)
     
-    
+cnt = 0
+total_time = 0
 for num in data :
+    s_time = time.time()
     logging.info(f"Scaping : {num} recipe")
     if data[num]['thumbnail_url'] == None or data[num]['ingre_list'] == None or data[num]['detail_recipes'] == None :
+        cnt += 1
         try :
             url = data[num]['URL']
             logging.info(f"Accessing URL: {url}")
@@ -82,13 +91,23 @@ for num in data :
             logging.info("Complete Recipe")  # 전체 레시피 로깅
             data[num]['detail_recipes'] = recipe
         except :
-            with open('Data/preprocessed_data.json', 'w') as f :
-                json.dump(data, f, indent=4)
+            # with open('Data/preprocessed_data.json', 'w') as f :
+            #     json.dump(data, f, indent=4)
             with open('Data/Fail.json', 'a') as f :
-                json.dump(num, f, indent=4)    
+                json.dump(num+',', f, indent=4)    
+            logging.info('Fail {num} recipe')
             continue
-        if int(num)%1000 == 0 :
+        e_time = time.time()
+        elapsed_time = e_time - s_time
+        total_time += elapsed_time
+        logging.info(f"Scraping execution time: {elapsed_time:.2f} seconds")
+        logging.info(f"AVG execution time: {total_time/cnt:.2f} seconds")
+        if int(num)%500 == 0 and int(num) != 0:
+            logging.info("Json Write!!!!!!")
             with open('Data/preprocessed_data.json', 'w') as f :
                 json.dump(data, f, indent=4)
     else :
         logging.info('Completed Recipe')
+    
+    if int(num)==500 :
+        break
