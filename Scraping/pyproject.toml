@@ -11,6 +11,8 @@ selenium = "^4.22.0"
 ipykernel = "^6.29.5"
 black = "^24.4.2"
 isort = "^5.13.2"
+psycopg2-binary = "^2.9.9"
+cryptography = "^42.0.8"
 
 
 [build-system]
