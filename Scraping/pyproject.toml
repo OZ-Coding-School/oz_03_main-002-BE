@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "datatools"
+name = "selenium-scraping"
 version = "0.1.0"
 description = ""
 authors = ["JoonHoSeong <joonho1366@gmail.com>"]
@@ -7,10 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-pandas = "^2.2.2"
+selenium = "^4.22.0"
 ipykernel = "^6.29.5"
 black = "^24.4.2"
 isort = "^5.13.2"
+psycopg2-binary = "^2.9.9"
+cryptography = "^42.0.8"
+pandas = "^2.2.2"
 
 
 [build-system]
@@ -19,10 +22,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.flake8]
 exclude = [
-    "**/*.venv/*",
-    "**/*migrations/*",
-    "**/*__pycache__/*",
+    "**/*.venv",
+    "**/*migrations",
+    "**/*__pycache__",
     "**/*tests/*",
-    "**/*test.py",]
+    "Scraping/test.py",]
 max-line-length = 120
 ignore = ["E203", "W503"]
