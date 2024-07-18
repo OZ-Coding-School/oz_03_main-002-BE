@@ -6,3 +6,4 @@
 **/*config.json
 #unused file
 Scraping/playwright_test.py
+Scraping/test.py

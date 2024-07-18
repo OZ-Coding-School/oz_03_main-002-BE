@@ -16,3 +16,13 @@ isort = "^5.13.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+exclude = [
+    "**/*.venv/*",
+    "**/*migrations/*",
+    "**/*__pycache__/*",
+    "**/*tests/*",
+    "**/*test.py",]
+max-line-length = 120
+ignore = ["E203", "W503"]

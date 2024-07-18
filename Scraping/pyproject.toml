@@ -19,3 +19,13 @@ pandas = "^2.2.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+exclude = [
+    "**/*.venv",
+    "**/*migrations",
+    "**/*__pycache__",
+    "**/*tests/*",
+    "Scraping/test.py",]
+max-line-length = 120
+ignore = ["E203", "W503"]
