@@ -1,5 +1,9 @@
-#Personal
-
-DataTools/Data/*
-**/.venv
 **/*.ipynb
+**/*.csv
+**/*.json
+# 보안
+**/*.key
+**/*config.json
+#unused file
+Scraping/playwright_test.py
+Scraping/test.py
