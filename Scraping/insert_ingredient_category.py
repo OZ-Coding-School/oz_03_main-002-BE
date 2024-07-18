@@ -59,7 +59,6 @@ for item in data:
             "INSERT INTO ingre_middle (name, id, major_id) VALUES (%s, %s, %s)",
             (name, code, major_code),
         )
-        print(name, code, major_code)
         temp.append(code)
 
 conn.commit()
@@ -82,7 +81,6 @@ for item in data:
             "INSERT INTO ingre_sub (name, id, middle_id) VALUES (%s, %s, %s)",
             (name, code, middle_code),
         )
-        print(name, code, middle_code)
         temp.append(code)
 conn.commit()
 print("데이터 삽입 완료")

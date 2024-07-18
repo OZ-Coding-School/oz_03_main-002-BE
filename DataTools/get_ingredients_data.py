@@ -29,7 +29,7 @@ major_code = (
     .reset_index(drop=True)
 )
 major_code = major_code.rename(
-    columns={"식품대분류코드": " major_code", "식품대분류명": "major_name"}
+    columns={"식품대분류코드": "major_code", "식품대분류명": "major_name"}
 )
 result_dict = major_code.to_dict(orient="index")
 result_json = json.dumps(result_dict, ensure_ascii=False)
