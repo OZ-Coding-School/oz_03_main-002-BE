@@ -50,13 +50,13 @@
 ## Usages
 
 ## Flow Chart
-<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/tree/feature/django-model-setting/images/flowchart.png'>
+<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/blob/feature/main/images/flowchart.png'>
 
 ## Use Case
-<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/tree/feature/django-model-setting/images/UseCase.png'>
+<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/tree/feature/main/images/UseCase.png'>
 
 ## ERD
-<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/tree/feature/django-model-setting/images/ERD.png'>
+<img src='https://github.com/OZ-Coding-School/oz_03_main-002-BE/tree/feature/main/images/ERD.png'>
 
 ## Folder Structure
 
