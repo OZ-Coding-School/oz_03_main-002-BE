@@ -13,6 +13,7 @@ black = "^24.4.2"
 isort = "^5.13.2"
 psycopg2-binary = "^2.9.9"
 cryptography = "^42.0.8"
+pandas = "^2.2.2"
 
 
 [build-system]
