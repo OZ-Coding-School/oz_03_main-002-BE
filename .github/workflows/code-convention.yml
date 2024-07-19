@@ -1,25 +1,42 @@
-name: Code Style Check
+name: Code Style Check  # 워크플로우 이름 설정
 
+# 이벤트 트리거 설정 (푸시 및 풀 리퀘스트 발생 시 워크플로우 실행)
 on:
   push:
-    branches: ['**']  # 검사할 브랜치 지정
+    branches: ['**']  # 모든 브랜치에 대한 푸시 이벤트
   pull_request:
-    branches: ['**']
+    branches: ['**']  # 모든 브랜치에 대한 풀 리퀘스트 이벤트
 
+# 작업 정의 (lint 작업)
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 작업 실행 환경 (Ubuntu 최신 버전)
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3  # 코드 체크아웃 (저장소 코드 가져오기)
+      - name: Set up Python  # Python 환경 설정
+        uses: actions/setup-python@v4  # actions/setup-python 액션 사용
         with:
-          python-version: '3.12'  # 사용 중인 Python 버전에 맞게 수정
+          python-version: '3.12'  # 사용할 Python 버전 (3.12)
+
+      # Poetry 의존성 캐시 설정 (선택 사항)
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v3  # actions/cache 액션 사용
+        with:
+          path: ~/.cache/pypoetry  # 캐시 저장 경로
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}  # 캐시 키 (운영체제, poetry.lock 파일 해시)
+          restore-keys: |  # 캐시 복원 키 (poetry.lock 파일이 변경되지 않았을 경우 이전 캐시 사용)
+            ${{ runner.os }}-poetry-
+
+      # 의존성 설치 및 Poetry 설정
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black isort
-      - name: Run black
-        run: black --check .
-      - name: Run isort
-        run: isort --check-only .
+        run: |  # 실행할 명령어 (여러 줄일 경우 | 사용)
+          python -m pip install --upgrade pip  # pip 최신 버전으로 업그레이드
+          pip install poetry  # Poetry 설치
+          poetry config virtualenvs.create false  # 가상 환경 생성 비활성화
+          poetry install  # Poetry를 사용하여 의존성 설치
+
+      # 코드 스타일 검사 도구 실행
+      - name: Run black  # Black 실행 (코드 포맷팅 검사)
+        run: poetry run black --check .  # poetry 환경에서 Black 실행, --check 옵션으로 포맷팅 오류만 검사
+      - name: Run isort  # isort 실행 (import 문 정렬 검사)
+        run: poetry run isort --check-only .  # poetry 환경에서 isort 실행, --check-only 옵션으로 정렬 오류만 검사
