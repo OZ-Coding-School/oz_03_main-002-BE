@@ -16,7 +16,7 @@ def load_config(config_file, key_file):
 
 
 # 테스트를 위한 코드
-config = load_config("config_test.json.enc", "config.key")
+config = load_config("../crypto_files/config_test.json.enc", "config.key")
 # 본 코드
 # config = load_config('config.json.enc', 'config.key')
 endpoint = config["endpoint"]
