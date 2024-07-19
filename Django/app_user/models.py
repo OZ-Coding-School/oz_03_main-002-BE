@@ -1,10 +1,12 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class UserRole(models.TextChoices):
-    ADMIN = 'ADMIN', _('Admin')
-    USER = 'USER', _('User')
+    ADMIN = "ADMIN", _("Admin")
+    USER = "USER", _("User")
+
 
 class App_User(AbstractUser):
     user_id = models.CharField(max_length=255, unique=True)  # user_id 필드 추가
@@ -15,10 +17,17 @@ class App_User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     last_login_at = models.DateTimeField(null=True, blank=True)
     is_activate = models.BooleanField(default=True)
-    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.USER)
+    role = models.CharField(
+        max_length=10, choices=UserRole.choices, default=UserRole.USER
+    )
 
-    USERNAME_FIELD = 'user_id'  # user_id를 사용자 이름으로 사용
-    REQUIRED_FIELDS = ['name', 'nick_name', 'password_hash', 'username']  # 필수 필드 설정
+    USERNAME_FIELD = "user_id"  # user_id를 사용자 이름으로 사용
+    REQUIRED_FIELDS = [
+        "name",
+        "nick_name",
+        "password_hash",
+        "username",
+    ]  # 필수 필드 설정
 
     def __str__(self):
         return self.user_id

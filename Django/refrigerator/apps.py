@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class RefrigeratorConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'refrigerator'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "refrigerator"
