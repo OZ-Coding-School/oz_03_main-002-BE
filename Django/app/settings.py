@@ -11,7 +11,30 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import json
 
+from cryptography.fernet import Fernet
+
+
+def load_config(config_file, key_file):
+    with open(key_file, "rb") as f:
+        key = f.read()
+    fernet = Fernet(key)
+
+    with open(config_file, "rb") as f:
+        encrypted_config = f.read()
+    decrypted_config = fernet.decrypt(encrypted_config)
+
+    return json.loads(decrypted_config)
+
+
+# 테스트를 위한 코드
+config = load_config("../crypto_files/config.json.enc", "config.key")
+# 본 코드
+# config = load_config('config.json.enc', 'config.key')
+endpoint = config["endpoint"]
+username = config["username"]
+password = config["password"]
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -83,10 +106,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'naengttogi',     # RDS 인스턴스에서 생성한 데이터베이스 이름
+        'USER': username,     # RDS 마스터 사용자 이름
+        'PASSWORD': password, # RDS 마스터 사용자 비밀번호
+        'HOST': endpoint,  # RDS 인스턴스 엔드포인트 주소
+        'PORT': '5432',             # PostgreSQL 기본 포트
     }
 }
 
@@ -131,3 +159,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'user.User'  # 커스텀 사용자 모델 사용 설정
