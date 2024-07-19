@@ -1,16 +1,8 @@
 from django.contrib import admin
 
-from .models import (
-    CookingAttribute,
-    CookingMainIngre,
-    CookingMethod,
-    CookingNameList,
-    CookingSituation,
-    CookingType,
-    DetailRecipe,
-    Recipe,
-    RecipeIngredientList,
-)
+from .models import (CookingAttribute, CookingMainIngre, CookingMethod,
+                     CookingNameList, CookingSituation, CookingType,
+                     DetailRecipe, Recipe, RecipeIngredientList)
 
 
 class RecipeIngredientListInline(admin.TabularInline):
