@@ -68,6 +68,9 @@ CUSTOM_APPS = [
     "ingredient",
     "recipe",
     "app_user",
+    # For Redoc
+    "rest_framework",
+    "drf_yasg",
 ]
 
 
@@ -160,5 +163,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+DEFAULT_SCHEMA_CLASS = "rest_framework.schemas.openapi.AutoSchema"
 AUTH_USER_MODEL = "app_user.APP_User"  # 커스텀 사용자 모델 사용 설정
