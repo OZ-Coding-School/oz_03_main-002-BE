@@ -15,7 +15,7 @@ router.register(
     "login", views.UserSignInViewSet, basename="user_signin"
 )  # UserSignInViewSet 등록
 router.register(
-    "login", views.UserAccountRecoveryViewSet, basename="user_recovery"
+    "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
 )  # UserAccountRecoveryViewSet 등록
 router.register(
     "login", views.UserRefrigeratorViewSet, basename="user_refrigerator"
