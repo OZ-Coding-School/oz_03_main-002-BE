@@ -18,7 +18,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 # Black 코드 포맷터 설정
 line-length = 120  # 최대 줄 길이 (120자)
-target-version = ['py3.12']  # 지원할 Python 버전 (3.10)
+target-version = ['py312']  # 지원할 Python 버전 (3.12)
 
 exclude = '''
 /(
@@ -48,10 +48,11 @@ exclude = '''
 )/
 '''  # Black 적용 제외 파일 및 디렉토리 패턴
 
+
 [tool.isort]
 # isort 임포트 정렬 도구 설정
 profile = "black"  # Black 코드 스타일 가이드에 맞춰 임포트 정렬
-multi_line_output = 3  # 여러 줄 임포트 시 출력 방식 (3: Grid 방식)
+force_single_line = false  # 한 줄에 여러 개의 import 문 허용
 include_trailing_comma = true  # 마지막 임포트 항목 뒤에 쉼표 추가
 force_grid_wrap = 0  # 여러 줄 임포트 시 강제 줄바꿈 설정 (0: 비활성화)
 use_parentheses = true  # 여러 줄 임포트 시 괄호 사용

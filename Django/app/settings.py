@@ -29,9 +29,7 @@ def load_config(config_file, key_file):
 
 
 # 테스트를 위한 코드
-config = load_config(
-    "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-)
+config = load_config("../crypto_files/config_test.json.enc", "../crypto_files/config.key")
 
 endpoint = config["endpoint"]
 username = config["username"]
