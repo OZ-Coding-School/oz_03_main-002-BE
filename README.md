@@ -29,7 +29,8 @@
 #### Cloud & Infrastructure
 ![amazonec2](https://img.shields.io/badge/amazonec2-%23FF9900.svg?style=for-the-badge&logo=amazonec2&logoColor=white)
 ![amazons3](https://img.shields.io/badge/amazons3-%23569A31.svg?style=for-the-badge&logo=amazons3&logoColor=white)
-![docker](https://img.shields.io/badge/docker-%232496ED.svg?style=for-the-badge&logo=docker&logoColor=white)
+![amazonrds](https://img.shields.io/badge/amazonrds-%23527FFF.svg?style=for-the-badge&logo=amazonrds&logoColor=white)
+![docker](https://img.shields.io/badge/docker-%23527FFF.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 #### Database & Data Processing
 ![postgresql](https://img.shields.io/badge/postgresql-%234169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)
