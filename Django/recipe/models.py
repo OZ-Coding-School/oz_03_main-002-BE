@@ -1,6 +1,6 @@
 from django.db import models
 from ingredient.models import Ingredient
-from user.models import User
+from app_user.models import App_User
 
 class CookingNameList(models.Model):
     name = models.CharField(max_length=255)
@@ -18,9 +18,9 @@ class CookingType(models.Model):
     name = models.CharField(max_length=255)
 
 class RecipeDifficulty(models.TextChoices):
-    EASY = 'EASY', _('Easy')
-    MEDIUM = 'MEDIUM', _('Medium')
-    HARD = 'HARD', _('Hard')
+    EASY = 'EASY', ('Easy')
+    MEDIUM = 'MEDIUM', ('Medium')
+    HARD = 'HARD', ('Hard')
 
 class CookingAttribute(models.Model):
     name = models.ForeignKey(CookingNameList, on_delete=models.CASCADE, unique=True)
@@ -32,7 +32,7 @@ class CookingAttribute(models.Model):
 class Recipe(models.Model):
     url = models.URLField()
     recipe_name = models.TextField()
-    nick_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    nick_name = models.ForeignKey(App_User, on_delete=models.CASCADE)
     recommend_num = models.PositiveIntegerField(default=0)
     recipe_intro = models.TextField(blank=True)
     eat_people = models.PositiveSmallIntegerField(default=1)

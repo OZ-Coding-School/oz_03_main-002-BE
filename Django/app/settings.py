@@ -29,9 +29,8 @@ def load_config(config_file, key_file):
 
 
 # 테스트를 위한 코드
-config = load_config("../crypto_files/config.json.enc", "config.key")
-# 본 코드
-# config = load_config('config.json.enc', 'config.key')
+config = load_config("../crypto_files/config_test.json.enc", "../crypto_files/config.key")
+
 endpoint = config["endpoint"]
 username = config["username"]
 password = config["password"]
@@ -63,10 +62,10 @@ DEFAULT_APPS = [
 ]
 CUSTOM_APPS = [
     'django.contrib.postgres',
-    'user',
     'refrigerator',
     'ingredient',
     'recipe',
+    'app_user',
 ]
 
 
@@ -160,4 +159,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'user.User'  # 커스텀 사용자 모델 사용 설정
+AUTH_USER_MODEL = 'app_user.APP_User'  # 커스텀 사용자 모델 사용 설정
