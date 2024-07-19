@@ -42,8 +42,8 @@
 ## Member
 |Back End Leader|Back End|Back End|
 |-----|-----|-----|
-|[<img src="https://avatars.githubusercontent.com/u/87454608?v=4" width="100">](https://github.com/JoonHoSeong)|[<img src="https://avatars.githubusercontent.com/u/164370715?v=4" width="100">](https://github.com/Moon-Nights)|[<img src="https://avatars.githubusercontent.com/u/144230243?v=4" width="100">](https://github.com/cmmnnie)|
-|[JoonHoSeong](https://github.com/JoonHoSeong)|[YeongJoong Seok](https://github.com/Moon-Nights)|[cmmnnie](https://github.com/cmmnnie)|
+|[<img src="https://avatars.githubusercontent.com/u/87454608?v=4" width="100">](https://github.com/JoonHoSeong)|[<img src="https://avatars.githubusercontent.com/u/164370715?v=4" width="100">](https://github.com/Moon-Nights)|
+|[JoonHoSeong](https://github.com/JoonHoSeong)|[YeongJoong Seok](https://github.com/Moon-Nights)|
 
 ## To-Do List
 
