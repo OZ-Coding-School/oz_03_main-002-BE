@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "django-app"
+version = "0.1.0"
+description = ""
+authors = ["JoonHoSeong <joonho1366@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+# Black 코드 포맷터 설정
+line-length = 120  # 최대 줄 길이 (120자)
+target-version = ['py312']  # 지원할 Python 버전 (3.12)
+
+exclude = '''
+/(
+    \.eggs         # Python egg 디렉토리
+  | \.git          # Git 관련 디렉토리 및 파일
+  | \.hg           # Mercurial 관련 디렉토리 및 파일
+  | \.mypy_cache   # mypy 캐시 디렉토리
+  | \.tox          # tox 테스트 환경 디렉토리
+  | \.venv         # Python 가상 환경 디렉토리
+  | _build         # 빌드 결과물 디렉토리
+  | buck-out       # Buck 빌드 결과물 디렉토리
+  | build           # 빌드 결과물 디렉토리
+  | dist           # 배포 파일 디렉토리
+  | node_modules   # Node.js 패키지 디렉토리
+  | \.vscode       # VS Code 설정 디렉토리
+  | \.idea         # PyCharm 설정 디렉토리
+  | __pycache__    # Python 바이트코드 캐시 디렉토리
+  | \.pyc          # Python 컴파일된 파일
+  | Pipfile        # Pipenv 설정 파일
+  | Pipfile\.lock  # Pipenv 잠금 파일
+  | poetry\.lock   # Poetry 잠금 파일
+  | requirements\.txt  # pip requirements 파일
+  | requirements-dev\.txt  # pip 개발용 requirements 파일
+  | staticfiles    # Django 정적 파일 디렉토리
+  | media          # Django 미디어 파일 디렉토리
+  | locale         # Django 지역화 파일 디렉토리
+)/
+'''  # Black 적용 제외 파일 및 디렉토리 패턴
+
+
+[tool.isort]
+# isort 임포트 정렬 도구 설정
+profile = "black"  # Black 코드 스타일 가이드에 맞춰 임포트 정렬
+force_single_line = false  # 한 줄에 여러 개의 import 문 허용
+include_trailing_comma = true  # 마지막 임포트 항목 뒤에 쉼표 추가
+force_grid_wrap = 0  # 여러 줄 임포트 시 강제 줄바꿈 설정 (0: 비활성화)
+use_parentheses = true  # 여러 줄 임포트 시 괄호 사용
+line_length = 120  # 최대 줄 길이 (120자)
+
+skip_glob = [
+    "**/migrations/*.py",  # Django migration 파일 제외
+]  # isort 적용 제외 파일 패턴

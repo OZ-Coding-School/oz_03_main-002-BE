@@ -28,8 +28,9 @@
 ![githubactions](https://img.shields.io/badge/githubactions-%232088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 #### Cloud & Infrastructure
 ![amazonec2](https://img.shields.io/badge/amazonec2-%23FF9900.svg?style=for-the-badge&logo=amazonec2&logoColor=white)
+![amazonrds](https://img.shields.io/badge/amazonrds-%23527FFF.svg?style=for-the-badge&logo=amazonrds&logoColor=white)
 ![amazons3](https://img.shields.io/badge/amazons3-%23569A31.svg?style=for-the-badge&logo=amazons3&logoColor=white)
-![docker](https://img.shields.io/badge/docker-%232496ED.svg?style=for-the-badge&logo=docker&logoColor=white)
+![docker](https://img.shields.io/badge/docker-%23527FFF.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 #### Database & Data Processing
 ![postgresql](https://img.shields.io/badge/postgresql-%234169E1.svg?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -40,8 +41,9 @@
 
 
 ## Member
-|Back End Leader|Back End|
-|-----|-----|
+
+|Back-End Leader|Back-End|
+|:---:|:---:|
 |[<img src="https://avatars.githubusercontent.com/u/87454608?v=4" width="100">](https://github.com/JoonHoSeong)|[<img src="https://avatars.githubusercontent.com/u/164370715?v=4" width="100">](https://github.com/Moon-Nights)|
 |[JoonHoSeong](https://github.com/JoonHoSeong)|[YeongJoong Seok](https://github.com/Moon-Nights)|
 
