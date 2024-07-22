@@ -1,0 +1,66 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Install Docker on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            sudo apt-get update
+            sudo apt-get install docker.io -y
+            sudo service docker start
+            sudo usermod -a -G docker $USER
+
+      - name: Install Docker Compose on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Build Docker image on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            docker build -t my-app . --build-arg API_KEY=${{ secrets.API_KEY }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            docker stop my-app || true
+            docker rm my-app || true
+            docker run -d -p 80:80 --name my-app my-app
