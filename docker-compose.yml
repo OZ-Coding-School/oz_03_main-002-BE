@@ -11,8 +11,6 @@ services:
         target: /app    # 컨테이너 내부의 /app 디렉토리
     ports:
       - 8000:8000
-    env_file:
-      - .env
     environment:
       - RDS_DATABASE=${RDS_DATABASE}
       - RDS_USERNAME=${RDS_USERNAME}
