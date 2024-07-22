@@ -84,10 +84,10 @@ jobs:
                 docker-compose down 
                 docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                 docker-compose run web python manage.py migrate # 마이그레이션
-                docker-compose up -d
-        env:
-          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
-          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
-          RDS_PORT: ${{ secrets.RDS_PORT }}
+                RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d
+        # env:
+        #   RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+        #   RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+        #   RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+        #   RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+        #   RDS_PORT: ${{ secrets.RDS_PORT }}
