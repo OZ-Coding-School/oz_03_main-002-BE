@@ -114,4 +114,4 @@ jobs:
                 
                 docker-compose --version # Docker Compose 버전 확인
                 sudo docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-                sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d 
+                sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up
