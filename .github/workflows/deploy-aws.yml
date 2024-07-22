@@ -70,7 +70,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/my-app/Django
+            cd /home/ubuntu/my-app
             echo "Check env values:" # 환경 변수 확인
             echo "RDS_DATABASE=${RDS_DATABASE}"
             echo "RDS_USERNAME=${RDS_USERNAME}"
@@ -85,7 +85,7 @@ jobs:
               sudo docker stop $EXISTING_CONTAINERS
               sudo docker rm $EXISTING_CONTAINERS
             fi
-
+            ls -al
             sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
 
       - name: Build and run Docker Compose on EC2
@@ -95,7 +95,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/my-app/Django
+            cd /home/ubuntu/my-app
             docker-compose --version # Docker Compose 버전 확인
             sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
             sudo docker-compose build # Docker 이미지 빌드
