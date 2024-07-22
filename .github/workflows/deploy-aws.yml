@@ -62,7 +62,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            
+            ls -al
             cd /home/ubuntu/my-app # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
             docker-compose run web python manage.py migrate  # 마이그레이션 실행
         env:
