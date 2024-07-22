@@ -33,7 +33,16 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: "./Django/"
           target: /home/ubuntu/my-app
-        
+    
+      - name: Copy .env file to EC2  # .env 파일 복사 단계 추가
+        uses: appleboy/scp-action@master
+        with:
+            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+            username: ubuntu
+            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+            source: ".env"
+            target: /home/ubuntu/my-app/Django
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
