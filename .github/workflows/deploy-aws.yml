@@ -71,7 +71,7 @@ jobs:
             username: ubuntu
             key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
             script: |
-                cd /home/ubuntu/my-app 
+                cd /home/ubuntu/my-app /Django
                 echo "Check env values:" # 환경 변수 확인
                 echo "RDS_DATABASE=${RDS_DATABASE}"
                 echo "RDS_USERNAME=${RDS_USERNAME}"
@@ -96,7 +96,7 @@ jobs:
             username: ubuntu
             key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
             script: |
-                cd /home/ubuntu/my-app
+                cd /home/ubuntu/my-app/Django
 
                 # Check for existing containers and remove them
                 EXISTING_CONTAINERS=$(sudo docker ps -aq)
