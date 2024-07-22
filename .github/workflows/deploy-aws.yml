@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to EC2 with Docker Compose and Migration
 
 on:
   push:
@@ -45,22 +45,36 @@ jobs:
             sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
 
-      - name: Build Docker image on EC2
+      - name: Run database migrations
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker build -t my-app . --build-arg API_KEY=${{ secrets.API_KEY }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            cd /home/ubuntu/my-app # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
+            docker-compose run web python manage.py migrate  # 마이그레이션 실행
+        env:
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
 
-      - name: Deploy to EC2
+      - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker stop my-app || true
-            docker rm my-app || true
-            docker run -d -p 80:80 --name my-app my-app
+            cd /home/ubuntu/my-app  # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
+            docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
+            docker-compose build --build-arg API_KEY=${{ secrets.API_KEY }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}  # Docker 이미지 빌드
+            docker-compose up -d  # 컨테이너 실행 (백그라운드 모드)
+        env:
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
