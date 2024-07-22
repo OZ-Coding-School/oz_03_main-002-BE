@@ -31,7 +31,7 @@ jobs:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "./Django"
+          source: "./Django/"
           target: /home/ubuntu/my-app
         
       - name: Configure AWS credentials
