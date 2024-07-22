@@ -1,86 +1,85 @@
-name: Deploy to EC2 with Docker Compose and Migration
+name: Deploy to EC2 with Docker Compose and Migration  # 워크플로우 이름
 
-on:
-  push:
+on:  # 워크플로우 실행 트리거 조건
+  push:  # develop 브랜치에 push 이벤트 발생 시
     branches:
       - develop
-  pull_request:
+  pull_request:  # develop 브랜치에 pull request 이벤트 발생 시
     branches:
       - develop
 
-jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
+jobs:  # 실행할 작업 정의
+  build_and_deploy:  # 작업 이름
+    runs-on: ubuntu-latest  # 작업 실행 환경 (Ubuntu 최신 버전)
 
-    steps:
+    steps:  # 작업 단계 정의
+      - name: Checkout code  # 소스 코드 체크아웃
+        uses: actions/checkout@v3  # actions/checkout 액션 사용
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Copy project files to EC2
-        uses: appleboy/scp-action@master
+      - name: Copy project files to EC2  # 프로젝트 파일을 EC2 인스턴스에 복사
+        uses: appleboy/scp-action@master  # appleboy/scp-action 액션 사용 (SCP를 통한 파일 복사)
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com  # EC2 인스턴스 주소
+          username: ubuntu  # EC2 인스턴스 사용자 이름
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # GitHub Secrets에서 EC2 인스턴스 접속용 개인 키 가져오기
+          source: "."  # 현재 디렉토리 (모든 파일)
+          target: /home/ubuntu/my-app  # EC2 인스턴스의 대상 디렉토리
+
+      - name: Configure AWS credentials  # AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v1  # aws-actions/configure-aws-credentials 액션 사용
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # GitHub Secrets에서 AWS Access Key ID 가져오기
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # GitHub Secrets에서 AWS Secret Access Key 가져오기
+          aws-region: ap-northeast-2  # AWS 리전 설정
+
+      - name: Install Docker on EC2  # EC2 인스턴스에 Docker 설치
+        uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "."
-          target: /home/ubuntu/my-app
-        
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+          script: |  # 실행할 스크립트
+            sudo apt-get update  # 패키지 목록 업데이트
+            sudo apt-get install docker.io -y  # Docker 설치
+            sudo service docker start  # Docker 서비스 시작
+            sudo usermod -a -G docker $USER  # 현재 사용자를 docker 그룹에 추가
+            newgrp docker  # 변경된 그룹 적용
 
-      - name: Install Docker on EC2
+      - name: Install Docker Compose on EC2  # EC2 인스턴스에 Docker Compose 설치
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            sudo apt-get update
-            sudo apt-get install docker.io -y
-            sudo service docker start
-            sudo usermod -a -G docker $USER
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  # Docker Compose 다운로드
+            sudo chmod +x /usr/local/bin/docker-compose  # 실행 권한 부여
 
-      - name: Install Docker Compose on EC2
+      - name: Run database migrations  # 데이터베이스 마이그레이션 실행
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
+            cd /home/ubuntu/my-app  # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
+            sudo docker-compose run web python manage.py migrate  # 마이그레이션 실행
+        env:  # 환경 변수 설정 (RDS 접속 정보)
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
 
-      - name: Run database migrations
+      - name: Build and run Docker Compose on EC2  # Docker Compose 빌드 및 실행
         uses: appleboy/ssh-action@master
         with:
-            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-            script: |
-                cd /home/ubuntu/my-app 
-                sudo docker-compose run --rm web python manage.py migrate 
-        env:
-            RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
-            RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-            RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-            RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
-            RDS_PORT: ${{ secrets.RDS_PORT }}
-
-
-      - name: Build and run Docker Compose on EC2
-        uses: appleboy/ssh-action@master
-        with:
-            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-            script: |
-                cd /home/ubuntu/my-app
-                docker-compose --version # Docker Compose 버전 확인
-                sudo docker-compose down 
-                sudo docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-                sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/my-app  # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
+            docker-compose --version  # Docker Compose 버전 확인
+            sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
+            sudo docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}  # Docker 이미지 빌드
+            sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d  # 컨테이너 실행 (백그라운드 모드)
