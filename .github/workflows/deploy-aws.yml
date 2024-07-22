@@ -85,7 +85,7 @@ jobs:
               sudo docker stop $EXISTING_CONTAINERS
               sudo docker rm $EXISTING_CONTAINERS
             fi
-
+            sudo docker-compose run --rm web python manage.py mkaemigrations
             sudo docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
         env:  # 환경 변수 설정 (RDS 접속 정보)
           RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
