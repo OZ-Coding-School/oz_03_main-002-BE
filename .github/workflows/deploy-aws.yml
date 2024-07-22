@@ -70,7 +70,7 @@ jobs:
           script: |
             cd /home/ubuntu/my-app  # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
             docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
-            docker-compose build --build-arg API_KEY=${{ secrets.API_KEY }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}  # Docker 이미지 빌드
+            docker-compose build --build-arg --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}  # Docker 이미지 빌드
             docker-compose up -d  # 컨테이너 실행 (백그라운드 모드)
         env:
           RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
