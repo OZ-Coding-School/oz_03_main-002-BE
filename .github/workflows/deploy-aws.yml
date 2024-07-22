@@ -13,9 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v3
-
+      
+      - name: Copy project files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "."
+          target: /home/ubuntu/my-app
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -52,7 +62,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            ls -al
+            
             cd /home/ubuntu/my-app # 프로젝트 디렉토리로 이동 (실제 경로로 수정 필요)
             docker-compose run web python manage.py migrate  # 마이그레이션 실행
         env:
