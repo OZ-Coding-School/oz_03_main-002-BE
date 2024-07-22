@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code  # 저장소 코드 체크아웃
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Print environment variables  # 환경 변수 출력 (디버깅용)
+      - name: Print environment variables
         run: |
           echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}"
           echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}"
@@ -24,7 +24,7 @@ jobs:
           echo "RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}"
           echo "RDS_PORT=${{ secrets.RDS_PORT }}"
 
-      - name: Copy project files to EC2  # 프로젝트 파일을 EC2 인스턴스에 복사
+      - name: Copy project files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
@@ -33,23 +33,14 @@ jobs:
           source: "."
           target: /home/ubuntu/my-app
 
-      - name: Copy .env file to EC2  # .env 파일을 EC2 인스턴스에 복사
-        uses: appleboy/scp-action@master
-        with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: ".env"
-          target: /home/ubuntu/my-app
-        
-      - name: Configure AWS credentials # AWS 자격 증명 설정
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Install Docker on EC2  # EC2 인스턴스에 Docker 설치
+      - name: Install Docker on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
@@ -62,7 +53,7 @@ jobs:
             sudo usermod -a -G docker $USER # docker 그룹에 사용자 추가
             newgrp docker # 변경된 그룹 적용
 
-      - name: Install Docker Compose on EC2  # EC2 인스턴스에 Docker Compose 설치
+      - name: Install Docker Compose on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
@@ -72,61 +63,40 @@ jobs:
             sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
 
-      - name: Run database migrations  # 데이터베이스 마이그레이션 실행
+      - name: Run database migrations
         uses: appleboy/ssh-action@master
         with:
-            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-            script: |
-                cd /home/ubuntu/my-app 
-                echo "Check env values:" # 환경 변수 확인
-                echo "RDS_DATABASE=${RDS_DATABASE}"
-                echo "RDS_USERNAME=${RDS_USERNAME}"
-                echo "RDS_PASSWORD=${RDS_PASSWORD}"
-                echo "RDS_HOSTNAME=${RDS_HOSTNAME}"
-                echo "RDS_PORT=${RDS_PORT}"
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/my-app
+            echo "Check env values:" # 환경 변수 확인
+            echo "RDS_DATABASE=${RDS_DATABASE}"
+            echo "RDS_USERNAME=${RDS_USERNAME}"
+            echo "RDS_PASSWORD=${RDS_PASSWORD}"
+            echo "RDS_HOSTNAME=${RDS_HOSTNAME}"
+            echo "RDS_PORT=${RDS_PORT}"
 
-                # Check for existing containers and remove them
-                EXISTING_CONTAINERS=$(sudo docker ps -aq)
-                if [ -n "$EXISTING_CONTAINERS" ]; then
-                    echo "Stopping and removing existing containers..."
-                    sudo docker stop $EXISTING_CONTAINERS
-                    sudo docker rm $EXISTING_CONTAINERS
-                fi
+            # Check for existing containers and remove them
+            EXISTING_CONTAINERS=$(sudo docker ps -aq)
+            if [ -n "$EXISTING_CONTAINERS" ]; then
+              echo "Stopping and removing existing containers..."
+              sudo docker stop $EXISTING_CONTAINERS
+              sudo docker rm $EXISTING_CONTAINERS
+            fi
 
-                sudo docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
-        env:  # 환경 변수 설정 (RDS 접속 정보)
-            RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
-            RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-            RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-            RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
-            RDS_PORT: ${{ secrets.RDS_PORT }}
+            sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
 
-
-      - name: Build and run Docker Compose on EC2  # Docker Compose 빌드 및 실행
+      - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
         with:
-            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-            script: |
-                cd /home/ubuntu/my-app
-
-                # Check for existing containers and remove them
-                EXISTING_CONTAINERS=$(sudo docker ps -aq)
-                if [ -n "$EXISTING_CONTAINERS" ]; then
-                    echo "Stopping and removing existing containers..."
-                    sudo docker stop $EXISTING_CONTAINERS
-                    sudo docker rm $EXISTING_CONTAINERS
-                fi
-                
-                docker-compose --version # Docker Compose 버전 확인
-                sudo docker-compose build # Docker 이미지 빌드
-                sudo docker-compose up -d # 컨테이너 실행 (백그라운드)
-        env:
-            RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
-            RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-            RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-            RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
-            RDS_PORT: ${{ secrets.RDS_PORT }}
+          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/my-app
+            docker-compose --version # Docker Compose 버전 확인
+            sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
+            sudo docker-compose build # Docker 이미지 빌드
+            sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d  # 컨테이너 실행 (백그라운드)
