@@ -71,6 +71,8 @@ CUSTOM_APPS = [
     # For Redoc
     "rest_framework",
     "drf_yasg",
+    # For Swagger
+    "rest_framework_swagger",
 ]
 
 
@@ -165,3 +167,16 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEFAULT_SCHEMA_CLASS = "rest_framework.schemas.openapi.AutoSchema"
 AUTH_USER_MODEL = "app_user.APP_User"  # 커스텀 사용자 모델 사용 설정
+
+# Swagger
+REST_FRAMEWORK = {
+    # ... other settings
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
+    },
+}

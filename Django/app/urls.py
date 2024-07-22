@@ -24,8 +24,8 @@ from drf_yasg.generators import (
 )
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework_swagger.views import get_swagger_view
 
-# ... (이전 코드와 동일)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -49,5 +49,6 @@ urlpatterns = [
     path("api/v1/refrigerator/", include("refrigerator.urls")),
     path("api/v1/ingredient/", include("ingredient.urls")),
     path("api/v1/recipe/", include("recipe.urls")),
+    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-redoc"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
