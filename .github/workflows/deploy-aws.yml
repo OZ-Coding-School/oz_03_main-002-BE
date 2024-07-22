@@ -103,15 +103,33 @@ jobs:
             key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
             script: |
                 cd /home/ubuntu/my-app
-
-                # Check for existing containers and remove them
-                EXISTING_CONTAINERS=$(sudo docker ps -aq)
-                if [ -n "$EXISTING_CONTAINERS" ]; then
-                    echo "Stopping and removing existing containers..."
-                    sudo docker stop $EXISTING_CONTAINERS
-                    sudo docker rm $EXISTING_CONTAINERS
-                fi
-                
                 docker-compose --version # Docker Compose 버전 확인
-                sudo docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-                sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d > /home/ubuntu/my-app/docker-compose.log 2>&1 &  # 컨테이너 실행 (백그라운드)
+                sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
+                sudo docker-compose build # Docker 이미지 빌드
+                sudo docker-compose up -d # 컨테이너 실행 (백그라운드)
+        env:
+            RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+            RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+            RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+            RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+            RDS_PORT: ${{ secrets.RDS_PORT }}
+    #   - name: Build and run Docker Compose on EC2
+    #     uses: appleboy/ssh-action@master
+    #     with:
+    #         host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+    #         username: ubuntu
+    #         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+    #         script: |
+    #             cd /home/ubuntu/my-app
+
+    #             # Check for existing containers and remove them
+    #             EXISTING_CONTAINERS=$(sudo docker ps -aq)
+    #             if [ -n "$EXISTING_CONTAINERS" ]; then
+    #                 echo "Stopping and removing existing containers..."
+    #                 sudo docker stop $EXISTING_CONTAINERS
+    #                 sudo docker rm $EXISTING_CONTAINERS
+    #             fi
+                
+    #             docker-compose --version # Docker Compose 버전 확인
+    #             sudo docker-compose build --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+    #             sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d > /home/ubuntu/my-app/docker-compose.log 2>&1 &  # 컨테이너 실행 (백그라운드)
