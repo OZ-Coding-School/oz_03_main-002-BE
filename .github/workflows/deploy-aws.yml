@@ -72,11 +72,11 @@ jobs:
             script: |
                 cd /home/ubuntu/my-app
                 echo "Check env values:"
-                echo "RDS_DATABASE=${RDS_DATABASE}"
-                echo "RDS_USERNAME=${RDS_USERNAME}"
-                echo "RDS_PASSWORD=${RDS_PASSWORD}"
-                echo "RDS_HOSTNAME=${RDS_HOSTNAME}"
-                echo "RDS_PORT=${RDS_PORT}"
+                echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}"
+                echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}"
+                echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}"
+                echo "RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}"
+                echo "RDS_PORT=${{ secrets.RDS_PORT }}"
 
                 # Check for existing containers and remove them
                 EXISTING_CONTAINERS=$(sudo docker ps -aq)
@@ -86,7 +86,7 @@ jobs:
                     sudo docker rm $EXISTING_CONTAINERS
                 fi
 
-                sudo docker-compose run --rm web python manage.py migrate
+                sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose run --rm web python manage.py migrate
         env:
             RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
             RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
