@@ -1,6 +1,7 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins, viewsets
+from rest_framework import mixins
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -35,7 +36,9 @@ class RecipeListViewSet(viewsets.ViewSet):
         operation_summary="추천 레시피 리스트 조회",
         operation_description="20개씩 추천 레시피 리스트를 받아오며 상세 정보 없이 받아옵니다.",
     )
-    @action(detail=False, methods=["get"], name="recommend_recipes", url_path="recommend")
+    @action(
+        detail=False, methods=["get"], name="recommend_recipes", url_path="recommend"
+    )
     def recommend_recipes(self, request):
         """
         추천 레시피 리스트 조회
@@ -53,7 +56,9 @@ class RecipeDetailViewSet(viewsets.ViewSet):
         operation_summary="상세 레시피 조회",
         operation_description="레시피의 상세 정보를 조회합니다.",
     )
-    @action(detail=True, methods=["get"], name="detail_recipe", url_path="detail/<int:pk>")
+    @action(
+        detail=True, methods=["get"], name="detail_recipe", url_path="detail/<int:pk>"
+    )
     def retrieve_recipe(self, request, pk=None):
         """
         상세 레시피 조회
@@ -94,7 +99,9 @@ class RecipeDetailViewSet(viewsets.ViewSet):
         operation_summary="레시피 수정",
         operation_description="기존 레시피를 수정합니다.",
     )
-    @action(detail=True, methods=["put"], name="update_recipe", url_path="update/<int:pk>")
+    @action(
+        detail=True, methods=["put"], name="update_recipe", url_path="update/<int:pk>"
+    )
     def update_recipe(self, request, pk=None):
         """
         레시피 수정

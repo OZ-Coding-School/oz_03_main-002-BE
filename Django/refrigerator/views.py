@@ -1,6 +1,7 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins, viewsets
+from rest_framework import mixins
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -17,7 +18,9 @@ class RefrigeratorViewSet(viewsets.ViewSet):
         operation_summary="새로운 냉장고 추가",
         operation_description="새로운 냉장고를 추가합니다.",
     )
-    @action(detail=False, methods=["post"], name="create_refrigerator", url_path="create")
+    @action(
+        detail=False, methods=["post"], name="create_refrigerator", url_path="create"
+    )
     def create_refrigerator(self, request):
         """
         새로운 냉장고 추가
@@ -88,7 +91,9 @@ class RefrigeratorIngredientViewSet(viewsets.ViewSet):
         """
         냉장고에 새로운 재료 추가
         """
-        return Response({"message": f"냉장고 {refrigerator_id}에 새로운 재료 추가 API (미구현)"})
+        return Response(
+            {"message": f"냉장고 {refrigerator_id}에 새로운 재료 추가 API (미구현)"}
+        )
 
     @swagger_auto_schema(
         tags=["Refrigerator Ingredient"],

@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Refrigerator, RefrigeratorIngredientList
+from .models import Refrigerator
+from .models import RefrigeratorIngredientList
 
 
 class RefrigeratorIngredientListInline(admin.TabularInline):
