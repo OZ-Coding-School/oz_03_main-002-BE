@@ -16,16 +16,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include
-from django.urls import path
+from django.urls import include, path
 from drf_yasg import openapi
-from drf_yasg.generators import (
-    OpenAPISchemaGenerator,  # OpenAPISchemaGenerator import 추가
-)
+from drf_yasg.generators import OpenAPISchemaGenerator  # OpenAPISchemaGenerator import 추가
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework_swagger.views import get_swagger_view
-
 
 schema_view = get_schema_view(
     openapi.Info(

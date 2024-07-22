@@ -1,5 +1,6 @@
-from app_user.models import App_User
 from django.db import models
+
+from app_user.models import App_User
 from ingredient.models import Ingredient
 
 
@@ -32,12 +33,8 @@ class RecipeDifficulty(models.TextChoices):
 class CookingAttribute(models.Model):
     name = models.ForeignKey(CookingNameList, on_delete=models.CASCADE, unique=True)
     method = models.ForeignKey(CookingMethod, on_delete=models.CASCADE, unique=True)
-    situation = models.ForeignKey(
-        CookingSituation, on_delete=models.CASCADE, unique=True
-    )
-    main_ingre = models.ForeignKey(
-        CookingMainIngre, on_delete=models.CASCADE, unique=True
-    )
+    situation = models.ForeignKey(CookingSituation, on_delete=models.CASCADE, unique=True)
+    main_ingre = models.ForeignKey(CookingMainIngre, on_delete=models.CASCADE, unique=True)
     type = models.ForeignKey(CookingType, on_delete=models.CASCADE, unique=True)
 
 
@@ -48,14 +45,10 @@ class Recipe(models.Model):
     recommend_num = models.PositiveIntegerField(default=0)
     recipe_intro = models.TextField(blank=True)
     eat_people = models.PositiveSmallIntegerField(default=1)
-    difficulty = models.CharField(
-        max_length=10, choices=RecipeDifficulty.choices, default=RecipeDifficulty.EASY
-    )
+    difficulty = models.CharField(max_length=10, choices=RecipeDifficulty.choices, default=RecipeDifficulty.EASY)
     cooking_time = models.PositiveIntegerField(default=0)
     thumbnail_url = models.URLField(blank=True)
-    attribute = models.OneToOneField(
-        CookingAttribute, on_delete=models.CASCADE, unique=True
-    )
+    attribute = models.OneToOneField(CookingAttribute, on_delete=models.CASCADE, unique=True)
 
 
 class RecipeIngredientList(models.Model):

@@ -209,9 +209,7 @@ class Migration(migrations.Migration):
                 ("step", models.PositiveSmallIntegerField()),
                 (
                     "recipe",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"),
                 ),
             ],
         ),
@@ -236,9 +234,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "recipe",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"),
                 ),
             ],
         ),

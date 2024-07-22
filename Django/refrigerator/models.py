@@ -1,5 +1,6 @@
-from app_user.models import App_User
 from django.db import models
+
+from app_user.models import App_User
 from ingredient.models import Ingredient
 
 

@@ -29,9 +29,7 @@ def load_config(config_file, key_file):
 
 
 # 테스트를 위한 코드
-config = load_config(
-    "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-)
+config = load_config("../crypto_files/config_test.json.enc", "../crypto_files/config.key")
 
 endpoint = config["endpoint"]
 username = config["username"]
@@ -171,12 +169,12 @@ AUTH_USER_MODEL = "app_user.APP_User"  # 커스텀 사용자 모델 사용 설�
 # Swagger
 REST_FRAMEWORK = {
     # ... other settings
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,
-    'SECURITY_DEFINITIONS': {
+    "USE_SESSION_AUTH": False,
+    "SECURITY_DEFINITIONS": {
         # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
     },
 }

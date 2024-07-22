@@ -17,9 +17,7 @@ class App_User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     last_login_at = models.DateTimeField(null=True, blank=True)
     is_activate = models.BooleanField(default=True)
-    role = models.CharField(
-        max_length=10, choices=UserRole.choices, default=UserRole.USER
-    )
+    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.USER)
 
     USERNAME_FIELD = "user_id"  # user_id를 사용자 이름으로 사용
     REQUIRED_FIELDS = [

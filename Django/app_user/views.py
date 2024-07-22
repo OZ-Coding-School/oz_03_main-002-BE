@@ -1,8 +1,7 @@
 # app_user/views.py
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -26,12 +25,8 @@ class UserLoginViewSet(viewsets.GenericViewSet):
             },
         ),
         responses={
-            201: openapi.Response(
-                description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
-            ),
-            401: openapi.Response(
-                description="아이디 또는 비밀번호가 일치하지 않을 경우."
-            ),
+            201: openapi.Response(description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."),
+            401: openapi.Response(description="아이디 또는 비밀번호가 일치하지 않을 경우."),
             400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
         },
     )
@@ -55,12 +50,8 @@ class UserLoginViewSet(viewsets.GenericViewSet):
             },
         ),
         responses={
-            201: openapi.Response(
-                description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
-            ),
-            401: openapi.Response(
-                description="이메일 또는 비밀번호가 일치하지 않을 경우."
-            ),
+            201: openapi.Response(description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."),
+            401: openapi.Response(description="이메일 또는 비밀번호가 일치하지 않을 경우."),
             400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
         },
     )
@@ -84,12 +75,8 @@ class UserSignInViewSet(viewsets.GenericViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "username": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="사용자 아이디"
-                ),
-                "password": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="비밀번호"
-                ),
+                "username": openapi.Schema(type=openapi.TYPE_STRING, description="사용자 아이디"),
+                "password": openapi.Schema(type=openapi.TYPE_STRING, description="비밀번호"),
             },
             required=["username", "password"],  # 필수 필드 추가
         ),
@@ -104,9 +91,7 @@ class UserSignInViewSet(viewsets.GenericViewSet):
                     },
                 ),
             ),
-            400: openapi.Response(
-                description="요청 데이터가 유효하지 않을 경우 (예: 중복된 아이디)"
-            ),
+            400: openapi.Response(description="요청 데이터가 유효하지 않을 경우 (예: 중복된 아이디)"),
         },
     )
     @action(detail=False, methods=["post"], name="signin", url_path="signin")
@@ -128,23 +113,15 @@ class UserAccountRecoveryViewSet(viewsets.GenericViewSet):
         operation_description="이메일을 통해 비밀번호 재설정 링크를 전송합니다.",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="사용자 이메일"
-                )
-            },
+            properties={"email": openapi.Schema(type=openapi.TYPE_STRING, description="사용자 이메일")},
         ),
         responses={
             200: openapi.Response(description="비밀번호 재설정 링크 전송 성공"),
-            404: openapi.Response(
-                description="해당 이메일로 가입된 사용자를 찾을 수 없음"
-            ),
+            404: openapi.Response(description="해당 이메일로 가입된 사용자를 찾을 수 없음"),
             400: openapi.Response(description="요청 데이터가 유효하지 않을 경우"),
         },
     )
-    @action(
-        detail=False, methods=["post"], name="find_password", url_path="find_password"
-    )
+    @action(detail=False, methods=["post"], name="find_password", url_path="find_password")
     def find_password(self, request):
         """
         비밀번호 찾기
@@ -158,19 +135,13 @@ class UserAccountRecoveryViewSet(viewsets.GenericViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "name": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="사용자 이름"
-                ),
-                "phone_number": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="전화번호"
-                ),
+                "name": openapi.Schema(type=openapi.TYPE_STRING, description="사용자 이름"),
+                "phone_number": openapi.Schema(type=openapi.TYPE_STRING, description="전화번호"),
             },
         ),
         responses={
             200: openapi.Response(description="아이디 찾기 성공"),
-            404: openapi.Response(
-                description="해당 정보로 가입된 사용자를 찾을 수 없음"
-            ),
+            404: openapi.Response(description="해당 정보로 가입된 사용자를 찾을 수 없음"),
             400: openapi.Response(description="요청 데이터가 유효하지 않을 경우"),
         },
     )
@@ -188,24 +159,16 @@ class UserAccountRecoveryViewSet(viewsets.GenericViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "token": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="비밀번호 재설정 토큰"
-                ),
-                "new_password": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="새로운 비밀번호"
-                ),
+                "token": openapi.Schema(type=openapi.TYPE_STRING, description="비밀번호 재설정 토큰"),
+                "new_password": openapi.Schema(type=openapi.TYPE_STRING, description="새로운 비밀번호"),
             },
         ),
         responses={
             200: openapi.Response(description="비밀번호 재설정 성공"),
-            400: openapi.Response(
-                description="요청 데이터가 유효하지 않거나 토큰이 유효하지 않을 경우"
-            ),
+            400: openapi.Response(description="요청 데이터가 유효하지 않거나 토큰이 유효하지 않을 경우"),
         },
     )
-    @action(
-        detail=False, methods=["post"], name="reset_password", url_path="reset_password"
-    )
+    @action(detail=False, methods=["post"], name="reset_password", url_path="reset_password")
     def reset_password(self, request):
         """
         비밀번호 재설정
@@ -230,12 +193,8 @@ class UserRefrigeratorViewSet(viewsets.ViewSet):  # ListModelMixin 제거
                     items=openapi.Schema(
                         type=openapi.TYPE_OBJECT,
                         properties={
-                            "id": openapi.Schema(
-                                type=openapi.TYPE_INTEGER, description="냉장고 ID"
-                            ),
-                            "name": openapi.Schema(
-                                type=openapi.TYPE_STRING, description="냉장고 이름"
-                            ),
+                            "id": openapi.Schema(type=openapi.TYPE_INTEGER, description="냉장고 ID"),
+                            "name": openapi.Schema(type=openapi.TYPE_STRING, description="냉장고 이름"),
                             # ... 필요한 냉장고 정보 필드 추가 ...
                         },
                     ),
