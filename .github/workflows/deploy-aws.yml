@@ -15,6 +15,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+    
+      - name: Print environment variables
+        run: |
+          echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}"
+          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}"
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}"
+          echo "RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}"
+          echo "RDS_PORT=${{ secrets.RDS_PORT }}"
       
       - name: Copy project files to EC2
         uses: appleboy/scp-action@master
