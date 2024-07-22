@@ -7,6 +7,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
-    env_file:  # .env 파일에서 환경 변수 읽어오기
-      - .env
+    environment:
+      - RDS_DATABASE=${RDS_DATABASE}
+      - RDS_USERNAME=${RDS_USERNAME}
+      - RDS_PASSWORD=${RDS_PASSWORD}
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_PORT=${RDS_PORT}
     command: python manage.py runserver 0.0.0.0:8000
