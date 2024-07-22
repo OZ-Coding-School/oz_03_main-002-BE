@@ -3,18 +3,10 @@
 services:
   web:
     build:
-      context: .  # 현재 디렉토리 (Django 프로젝트 루트)
-      dockerfile: Dockerfile  # Dockerfile 이름
-    volumes:
-      - type: bind   # 볼륨 유형 명시
-        source: ./Django  # 호스트의 Django 디렉토리
-        target: /app    # 컨테이너 내부의 /app 디렉토리
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 8000:8000
-    environment:
-      - RDS_DATABASE=${RDS_DATABASE}
-      - RDS_USERNAME=${RDS_USERNAME}
-      - RDS_PASSWORD=${RDS_PASSWORD}
-      - RDS_HOSTNAME=${RDS_HOSTNAME}
-      - RDS_PORT=${RDS_PORT}
+    env_file:  # .env 파일에서 환경 변수 읽어오기
+      - .env
     command: python manage.py runserver 0.0.0.0:8000
