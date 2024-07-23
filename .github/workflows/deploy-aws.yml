@@ -62,6 +62,22 @@ jobs:
           script: |
             sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
+    
+      - name: Create .env file on EC2
+        uses: appleboy/ssh-action@master
+        with:
+            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+            username: ubuntu
+            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+            script: |
+                cd /home/ubuntu/my-app/Django
+                cat << EOF > .env
+                RDS_DATABASE=${{ secrets.RDS_DATABASE }}
+                RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+                RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+                RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
+                RDS_PORT=${{ secrets.RDS_PORT }}
+                EOF
 
       - name: Run database migrations
         uses: appleboy/ssh-action@master
