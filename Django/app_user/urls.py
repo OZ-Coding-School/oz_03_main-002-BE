@@ -12,13 +12,13 @@ router.register(
     "login", views.UserLoginViewSet, basename="user_login"
 )  # UserLoginViewSet 등록
 router.register(
-    "login", views.UserSignInViewSet, basename="user_signin"
+    "auth", views.UserSignInViewSet, basename="user_signin"
 )  # UserSignInViewSet 등록
 router.register(
     "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
 )  # UserAccountRecoveryViewSet 등록
 router.register(
-    "login", views.UserRefrigeratorViewSet, basename="user_refrigerator"
+    "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
 )  # UserRefrigeratorViewSet 등록
 
 urlpatterns = [
