@@ -85,7 +85,7 @@ jobs:
               sudo docker stop $EXISTING_CONTAINERS
               sudo docker rm $EXISTING_CONTAINERS
             fi
-            sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
+            sudo docker-compose run --rm -e RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} web python manage.py migrate  # 마이그레이션 실행
 
       - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
@@ -98,4 +98,4 @@ jobs:
             docker-compose --version # Docker Compose 버전 확인
             sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
             sudo docker-compose build # Docker 이미지 빌드
-            sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose up -d  # 컨테이너 실행 (백그라운드)
+            sudo docker-compose up -d --build -e RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }}  # 컨테이너 실행 (백그라운드)
