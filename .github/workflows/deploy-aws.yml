@@ -85,7 +85,6 @@ jobs:
               sudo docker stop $EXISTING_CONTAINERS
               sudo docker rm $EXISTING_CONTAINERS
             fi
-            ls -al
             sudo RDS_DATABASE=${{ secrets.RDS_DATABASE }} RDS_USERNAME=${{ secrets.RDS_USERNAME }} RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }} RDS_PORT=${{ secrets.RDS_PORT }} docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
 
       - name: Build and run Docker Compose on EC2
