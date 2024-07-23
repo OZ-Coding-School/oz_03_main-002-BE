@@ -41,9 +41,7 @@ class UserLoginViewSet(viewsets.GenericViewSet):
     #     아이디로 사용자 로그인
     #     """
     #     return Response({"message": "아이디 로그인 API (미구현)"})
-    
-    
-    
+
     # 아이디로 사용자 로그인
     @swagger_auto_schema(
         tags=["UserLogin"],
@@ -107,6 +105,7 @@ class UserSignInViewSet(viewsets.GenericViewSet):
     """
     사용자 회원가입 관련 API
     """
+
     # 소셜 회원 가입
     @swagger_auto_schema(
         tags=["Sign-In"],
@@ -146,10 +145,7 @@ class UserSignInViewSet(viewsets.GenericViewSet):
         사용자 회원 가입
         """
         return Response({"message": "사용자 회원 가입 API (미구현)"})
-    
-    
-    
-    
+
     @swagger_auto_schema(
         tags=["Sign-In"],
         operation_summary="회원 가입",

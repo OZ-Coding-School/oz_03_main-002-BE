@@ -56,10 +56,10 @@ CUSTOM_APPS = [
     # For Swagger
     "rest_framework_swagger",
     # Google Social Login
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
 
@@ -72,7 +72,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # Google Social Login
-    'allauth.account.middleware.AccountMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -172,5 +172,5 @@ SWAGGER_SETTINGS = {
 ## 로그인 리다이렉트
 LOGIN_URL = "/admin/login/"
 
-#Google Social Login
+# Google Social Login
 SITE_ID = 1
