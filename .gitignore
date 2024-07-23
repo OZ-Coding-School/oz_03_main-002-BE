@@ -2,8 +2,10 @@
 **/*.csv
 **/*.json
 # 보안
+crypto_files/*
 **/*.key
 **/*config.json
+**/*.env
 #unused file
 Scraping/playwright_test.py
 Scraping/test.py

@@ -11,32 +11,34 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import json
+import os
 from pathlib import Path
 
-from cryptography.fernet import Fernet
+# from cryptography.fernet import Fernet
 
 
-def load_config(config_file, key_file):
-    with open(key_file, "rb") as f:
-        key = f.read()
-    fernet = Fernet(key)
+# def load_config(config_file, key_file):
+#     with open(key_file, "rb") as f:
+#         key = f.read()
+#     fernet = Fernet(key)
 
-    with open(config_file, "rb") as f:
-        encrypted_config = f.read()
-    decrypted_config = fernet.decrypt(encrypted_config)
+#     with open(config_file, "rb") as f:
+#         encrypted_config = f.read()
+#     decrypted_config = fernet.decrypt(encrypted_config)
 
-    return json.loads(decrypted_config)
+#     return json.loads(decrypted_config)
 
 
-# 테스트를 위한 코드
-config = load_config(
-    "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-)
+# # 테스트를 위한 코드
+# config = load_config(
+#     "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
+# )
 
-endpoint = config["endpoint"]
-username = config["username"]
-password = config["password"]
+# endpoint = config["endpoint"]
+# username = config["username"]
+# password = config["password"]
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -49,7 +51,7 @@ SECRET_KEY = "django-insecure-%s)3l76c=fst)66im#%_a41(%xe+e7!-%p%vpliulx_-a3(97i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["43.203.195.173", "127.0.0.1"]
 
 
 # Application definition
@@ -116,11 +118,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "naengttogi",  # RDS 인스턴스에서 생성한 데이터베이스 이름
-        "USER": username,  # RDS 마스터 사용자 이름
-        "PASSWORD": password,  # RDS 마스터 사용자 비밀번호
-        "HOST": endpoint,  # RDS 인스턴스 엔드포인트 주소
-        "PORT": "5432",  # PostgreSQL 기본 포트
+        "NAME": "naengttogi",
+        "USER": os.environ.get("RDS_USERNAME"),
+        "PASSWORD": os.environ.get("RDS_PASSWORD"),
+        "HOST": os.environ.get("RDS_HOSTNAME"),
+        "PORT": os.environ.get("RDS_PORT"),
     }
 }
 

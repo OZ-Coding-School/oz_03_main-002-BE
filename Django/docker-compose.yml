@@ -1,0 +1,40 @@
+# version: '3.8'  # Docker Compose 버전 명시 (선택 사항)
+
+
+# ### 로컬
+services:
+  web:
+    build:
+      context: .  # 현재 디렉토리 (Django 프로젝트 루트)
+      dockerfile: Dockerfile  # Dockerfile 이름
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    environment:
+      - RDS_DATABASE=${RDS_DATABASE}
+      - RDS_USERNAME=${RDS_USERNAME}
+      - RDS_PASSWORD=${RDS_PASSWORD}
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_PORT=${RDS_PORT}
+    command: python manage.py runserver 0.0.0.0:8000
+
+
+
+
+# # version: '3.12'
+
+# services:
+#   web:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - 8000:8000
+#     environment:
+#       - RDS_DATABASE=${RDS_DATABASE} # GitHub Actions 환경 변수 사용
+#       - RDS_USERNAME=${RDS_USERNAME}
+#       - RDS_PASSWORD=${RDS_PASSWORD}
+#       - RDS_HOSTNAME=${RDS_HOSTNAME}
+#       - RDS_PORT=${RDS_PORT}
+#     command: python manage.py runserver 0.0.0.0:8000

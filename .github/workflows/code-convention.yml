@@ -4,8 +4,8 @@ name: Code Style Check  # 워크플로우 이름 설정
 on:
   push:
     branches: ['**']  # 모든 브랜치에 대한 푸시 이벤트
-  pull_request:
-    branches: ['**']  # 모든 브랜치에 대한 풀 리퀘스트 이벤트
+  # pull_request:
+  #   branches: ['**']  # 모든 브랜치에 대한 풀 리퀘스트 이벤트
 
 # 작업 정의 (lint 작업)
 jobs:
