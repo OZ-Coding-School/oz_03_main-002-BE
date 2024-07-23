@@ -14,30 +14,9 @@ import json
 import os
 from pathlib import Path
 
-# from cryptography.fernet import Fernet
-
-
-# def load_config(config_file, key_file):
-#     with open(key_file, "rb") as f:
-#         key = f.read()
-#     fernet = Fernet(key)
-
-#     with open(config_file, "rb") as f:
-#         encrypted_config = f.read()
-#     decrypted_config = fernet.decrypt(encrypted_config)
-
-#     return json.loads(decrypted_config)
-
-
-# # 테스트를 위한 코드
-# config = load_config(
-#     "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-# )
-
-# endpoint = config["endpoint"]
-# username = config["username"]
-# password = config["password"]
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# # For Local Test
+# from dotenv import load_dotenv
+# load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -70,11 +49,17 @@ CUSTOM_APPS = [
     "ingredient",
     "recipe",
     "app_user",
+    "common",
     # For Redoc
     "rest_framework",
     "drf_yasg",
     # For Swagger
     "rest_framework_swagger",
+    # Google Social Login
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
 
@@ -86,6 +71,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Google Social Login
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -182,3 +169,8 @@ SWAGGER_SETTINGS = {
         # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
     },
 }
+## 로그인 리다이렉트
+LOGIN_URL = "/admin/login/"
+
+# Google Social Login
+SITE_ID = 1

@@ -13,6 +13,35 @@ class UserLoginViewSet(viewsets.GenericViewSet):
     사용자 로그인 관련 API
     """
 
+    # # 소셜 사용자 로그인
+    # @swagger_auto_schema(
+    #     tags=["UserLogin"],
+    #     operation_summary="아이디 로그인",
+    #     operation_description="아이디와 비밀번호를 사용하여 로그인합니다.",
+    #     request_body=openapi.Schema(
+    #         type=openapi.TYPE_OBJECT,
+    #         properties={
+    #             "username": openapi.Schema(type=openapi.TYPE_STRING),
+    #             "password": openapi.Schema(type=openapi.TYPE_STRING),
+    #         },
+    #     ),
+    #     responses={
+    #         201: openapi.Response(
+    #             description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
+    #         ),
+    #         401: openapi.Response(
+    #             description="아이디 또는 비밀번호가 일치하지 않을 경우."
+    #         ),
+    #         400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
+    #     },
+    # )
+    # @action(detail=False, methods=["post"], name="id_login", url_path="id")
+    # def user_login_id(self, request):
+    #     """
+    #     아이디로 사용자 로그인
+    #     """
+    #     return Response({"message": "아이디 로그인 API (미구현)"})
+
     # 아이디로 사용자 로그인
     @swagger_auto_schema(
         tags=["UserLogin"],
@@ -76,6 +105,46 @@ class UserSignInViewSet(viewsets.GenericViewSet):
     """
     사용자 회원가입 관련 API
     """
+
+    # 소셜 회원 가입
+    @swagger_auto_schema(
+        tags=["Sign-In"],
+        operation_summary="구글 소셜 회원 가입",
+        operation_description="사용자가 구글 API를 이용해 회원가입을 합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "username": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="사용자 아이디"
+                ),
+                "password": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="비밀번호"
+                ),
+            },
+            required=["username", "password"],  # 필수 필드 추가
+        ),
+        responses={
+            201: openapi.Response(
+                description="회원가입 성공. 사용자 정보 및 토큰 반환",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+                        "token": openapi.Schema(type=openapi.TYPE_STRING),
+                    },
+                ),
+            ),
+            400: openapi.Response(
+                description="요청 데이터가 유효하지 않을 경우 (예: 중복된 아이디)"
+            ),
+        },
+    )
+    @action(detail=False, methods=["post"], name="google", url_path="google/signin")
+    def user_social_sign_in(self, request):
+        """
+        사용자 회원 가입
+        """
+        return Response({"message": "사용자 회원 가입 API (미구현)"})
 
     @swagger_auto_schema(
         tags=["Sign-In"],
