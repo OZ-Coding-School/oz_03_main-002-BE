@@ -76,23 +76,23 @@ jobs:
                 RDS_PORT=${{ secrets.RDS_PORT }}
                 EOF
 
-      - name: Run database migrations
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/ubuntu/my-app/Django
+      # - name: Run database migrations
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      #     script: |
+      #       cd /home/ubuntu/my-app/Django
 
-            # Check for existing containers and remove them
-            EXISTING_CONTAINERS=$(sudo docker ps -aq)
-            if [ -n "$EXISTING_CONTAINERS" ]; then
-              echo "Stopping and removing existing containers..."
-              sudo docker stop $EXISTING_CONTAINERS
-              sudo docker rm $EXISTING_CONTAINERS
-            fi
-            sudo docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
+      #       # Check for existing containers and remove them
+      #       EXISTING_CONTAINERS=$(sudo docker ps -aq)
+      #       if [ -n "$EXISTING_CONTAINERS" ]; then
+      #         echo "Stopping and removing existing containers..."
+      #         sudo docker stop $EXISTING_CONTAINERS
+      #         sudo docker rm $EXISTING_CONTAINERS
+      #       fi
+      #       sudo docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
 
       - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
