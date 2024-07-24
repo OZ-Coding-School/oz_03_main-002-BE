@@ -1,0 +1,68 @@
+name: Test with Docker Compose and RDS (Django folder)
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print environment variables (for debugging)
+        run: |
+          echo "RDS_DATABASE=${{ secrets.RDS_DATABASE }}"
+          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}"
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} (masked)"
+          echo "RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}"
+          echo "RDS_PORT=${{ secrets.RDS_PORT }}"
+
+      - name: Set up Docker Compose context
+        working-directory: Django  # Django 프로젝트 폴더로 이동
+        run: echo "COMPOSE_PROJECT_NAME=test_project" >> $GITHUB_ENV  # 컨테이너 이름 설정 (선택 사항)
+
+      - name: Start web service with Docker Compose
+        working-directory: Django
+        run: docker-compose up -d web
+
+      - name: Wait for RDS to be ready
+        working-directory: Django
+        run: |
+          ATTEMPTS=0
+          MAX_ATTEMPTS=10
+          until pg_isready -h ${{ secrets.RDS_HOSTNAME }} -p ${{ secrets.RDS_PORT }} -U ${{ secrets.RDS_USERNAME }} -d ${{ secrets.RDS_DATABASE }} || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
+            echo "Waiting for RDS to be ready..."
+            sleep 5
+            ATTEMPTS=$((ATTEMPTS + 1))
+          done
+          if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+            echo "RDS not ready after $MAX_ATTEMPTS attempts. Exiting..."
+            exit 1
+          fi
+
+      - name: Run database migrations
+        working-directory: Django
+        run: docker-compose run --rm web python manage.py migrate
+
+      - name: Check if runserver is running
+        run: |
+          ATTEMPTS=0
+          MAX_ATTEMPTS=10
+          until curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
+            echo "Waiting for runserver to start..."
+            sleep 5
+            ATTEMPTS=$((ATTEMPTS + 1))
+          done
+          if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+            echo "Runserver failed to start after $MAX_ATTEMPTS attempts. Exiting..."
+            exit 1
+          fi
+
+      - name: Stop services
+        if: always()
+        working-directory: Django
+        run: docker-compose down
