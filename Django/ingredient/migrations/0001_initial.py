@@ -14,34 +14,96 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="IngreMajor",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="IngreMiddle",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
-                ("major", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingremajor")),
+                (
+                    "major",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingremajor",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name="IngreSub",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
-                ("middle", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingremiddle")),
+                (
+                    "middle",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingremiddle",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name="Ingredient",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
-                ("major", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingremajor")),
-                ("middle", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingremiddle")),
-                ("sub", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingresub")),
+                (
+                    "major",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingremajor",
+                    ),
+                ),
+                (
+                    "middle",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingremiddle",
+                    ),
+                ),
+                (
+                    "sub",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingresub",
+                    ),
+                ),
             ],
         ),
     ]

@@ -17,25 +17,53 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Refrigerator",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 ("is_activate", models.BooleanField(default=True)),
-                ("user", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="app_user.app_user")),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_user.app_user",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name="RefrigeratorIngredientList",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("expiration_date", models.DateField()),
                 (
                     "ingredient",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingredient"),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingredient",
+                    ),
                 ),
                 (
                     "refrigerator",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="refrigerator.refrigerator"),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="refrigerator.refrigerator",
+                    ),
                 ),
             ],
         ),
