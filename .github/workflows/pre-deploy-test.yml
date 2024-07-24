@@ -25,6 +25,21 @@ jobs:
         working-directory: Django  # Django 프로젝트 폴더로 이동
         run: echo "COMPOSE_PROJECT_NAME=test_project" >> $GITHUB_ENV  # 컨테이너 이름 설정 (선택 사항)
 
+      - name: Create temporary .env file
+        working-directory: Django
+        run: |
+          cat << EOF > .env
+          RDS_DATABASE=${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+          RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT=${{ secrets.RDS_PORT }}
+          EOF
+
+      - name: Print .env file contents (for debugging)
+        working-directory: Django
+        run: cat .env
+
       - name: Start web service with Docker Compose
         working-directory: Django
         run: docker-compose up -d web
@@ -62,7 +77,9 @@ jobs:
             exit 1
           fi
 
-      - name: Stop services
+      - name: Stop services and clean up
         if: always()
         working-directory: Django
-        run: docker-compose down
+        run: |
+          docker-compose down
+          rm .env  # 임시 .env 파일 삭제
