@@ -1,4 +1,4 @@
-name: Test with Docker Compose and RDS (Django folder)
+name: Test with Docker Compose and RDS (Local Environment)
 
 on:
   pull_request:
@@ -40,9 +40,9 @@ jobs:
         working-directory: Django
         run: cat .env
 
-      - name: Start ervice with Docker Compose
+      - name: Start services with Docker Compose
         working-directory: Django
-        run: docker-compose up -d
+        run: docker-compose up -d --build
 
       - name: Wait for RDS to be ready
         working-directory: Django
@@ -76,6 +76,10 @@ jobs:
             echo "Runserver failed to start after $MAX_ATTEMPTS attempts. Exiting..."
             exit 1
           fi
+
+      # - name: Run tests (Optional)
+      #   working-directory: Django
+      #   run: docker-compose run --rm web python manage.py test
 
       - name: Stop services and clean up
         if: always()
