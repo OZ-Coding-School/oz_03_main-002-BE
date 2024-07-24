@@ -16,6 +16,7 @@ from pathlib import Path
 
 # For Local Test
 from dotenv import load_dotenv
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,12 +58,12 @@ CUSTOM_APPS = [
     "rest_framework_swagger",
     # For Login
     "rest_framework_simplejwt",
-#   # Google Social Login
-    "django.contrib.sites", 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',  # Google provider 추가
+    #   # Google Social Login
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",  # Google provider 추가
 ]
 
 
@@ -85,7 +86,7 @@ ROOT_URLCONF = "app.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -192,18 +193,18 @@ SITE_ID = 1
 # ACCOUNT_USERNAME_REQUIRED = True # 유저네임 사용여부
 # ACCOUNT_AUTHENTICATION_METHOD = "email" # 인증 필드 메소드
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        "AUTH_PARAMS": {
+            "access_type": "online",
         },
-        'APP': {
-            'client_id': os.environ.get("GOOGLE_CLIENT_ID"),
-            'secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
-            'key': '',
+        "APP": {
+            "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
+            "secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+            "key": "",
         },
     },
 }
