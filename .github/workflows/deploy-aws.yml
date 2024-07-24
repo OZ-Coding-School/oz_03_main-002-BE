@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - develop
-  pull_request:
-    branches:
-      - develop
 
 jobs:
   build_and_deploy:
@@ -27,7 +24,7 @@ jobs:
       - name: Copy project files to EC2
         uses: appleboy/scp-action@master
         with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: "./Django/."
@@ -43,7 +40,7 @@ jobs:
       - name: Install Docker on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
@@ -56,7 +53,7 @@ jobs:
       - name: Install Docker Compose on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
@@ -66,7 +63,7 @@ jobs:
       - name: Create .env file on EC2
         uses: appleboy/ssh-action@master
         with:
-            host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+            host: ${{ secrets.EC2_HOST }}
             username: ubuntu
             key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
             script: |
@@ -82,7 +79,7 @@ jobs:
       - name: Run database migrations
         uses: appleboy/ssh-action@master
         with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
@@ -100,7 +97,7 @@ jobs:
       - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ec2-43-203-195-173.ap-northeast-2.compute.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
