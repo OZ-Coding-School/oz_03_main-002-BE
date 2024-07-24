@@ -14,10 +14,10 @@ import json
 import os
 from pathlib import Path
 
-# For Local Test
-from dotenv import load_dotenv
+# # For Local Test
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
