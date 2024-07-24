@@ -71,10 +71,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    # Google Social Login
-    "allauth.account.middleware.AccountMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # # Google Social Login
+    # "allauth.account.middleware.AccountMiddleware",
+    # "django.contrib.messages.middleware.MessageMiddleware",
+    # "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -165,12 +165,12 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
-    "SECURITY_DEFINITIONS": {
-        # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
-    },
+    # "SECURITY_DEFINITIONS": {
+    #     # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
+    # },
 }
-## 로그인 리다이렉트
-LOGIN_URL = "/admin/login/"
+# ## 로그인 리다이렉트
+# LOGIN_URL = "/admin/login/"
 
-# Google Social Login
-SITE_ID = 1
+# # Google Social Login
+# SITE_ID = 1
