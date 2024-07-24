@@ -40,9 +40,9 @@ jobs:
         working-directory: Django
         run: cat .env
 
-      - name: Start web service with Docker Compose
+      - name: Start ervice with Docker Compose
         working-directory: Django
-        run: docker-compose up -d web
+        run: docker-compose up -d
 
       - name: Wait for RDS to be ready
         working-directory: Django
