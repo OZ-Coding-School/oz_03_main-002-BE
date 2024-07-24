@@ -14,9 +14,9 @@ import json
 import os
 from pathlib import Path
 
-# # For Local Test
-# from dotenv import load_dotenv
-# load_dotenv()
+# For Local Test
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,11 +55,14 @@ CUSTOM_APPS = [
     "drf_yasg",
     # For Swagger
     "rest_framework_swagger",
-    # Google Social Login
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
+    # For Login
+    "rest_framework_simplejwt",
+#   # Google Social Login
+    "django.contrib.sites", 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # Google provider 추가
 ]
 
 
@@ -71,10 +74,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # # Google Social Login
-    # "allauth.account.middleware.AccountMiddleware",
-    # "django.contrib.messages.middleware.MessageMiddleware",
-    # "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -82,7 +85,7 @@ ROOT_URLCONF = "app.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -155,7 +158,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEFAULT_SCHEMA_CLASS = "rest_framework.schemas.openapi.AutoSchema"
-AUTH_USER_MODEL = "app_user.APP_User"  # 커스텀 사용자 모델 사용 설정
+# AUTH_USER_MODEL = "app_user.APP_User"  # 커스텀 사용자 모델 사용 설정
 
 # Swagger
 REST_FRAMEWORK = {
@@ -174,3 +177,33 @@ SWAGGER_SETTINGS = {
 
 # # Google Social Login
 # SITE_ID = 1
+
+
+# # 구글 소셜 로그인
+# AUTH_USER_MODEL = "app_user.APP_User"
+
+# 사용할 사이트 갯수
+SITE_ID = 1
+
+# REST_USE_JWT = True
+
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = "username" # 유저네임필드 이름
+# ACCOUNT_EMAIL_REQUIRED = True # 이메일 사용여부
+# ACCOUNT_USERNAME_REQUIRED = True # 유저네임 사용여부
+# ACCOUNT_AUTHENTICATION_METHOD = "email" # 인증 필드 메소드
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': os.environ.get("GOOGLE_CLIENT_ID"),
+            'secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
+            'key': '',
+        },
+    },
+}

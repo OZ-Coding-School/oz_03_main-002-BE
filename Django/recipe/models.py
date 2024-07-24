@@ -30,15 +30,11 @@ class RecipeDifficulty(models.TextChoices):
 
 
 class CookingAttribute(models.Model):
-    name = models.ForeignKey(CookingNameList, on_delete=models.CASCADE, unique=True)
-    method = models.ForeignKey(CookingMethod, on_delete=models.CASCADE, unique=True)
-    situation = models.ForeignKey(
-        CookingSituation, on_delete=models.CASCADE, unique=True
-    )
-    main_ingre = models.ForeignKey(
-        CookingMainIngre, on_delete=models.CASCADE, unique=True
-    )
-    type = models.ForeignKey(CookingType, on_delete=models.CASCADE, unique=True)
+    name = models.OneToOneField(CookingNameList, on_delete=models.CASCADE)
+    method = models.OneToOneField(CookingMethod, on_delete=models.CASCADE)
+    situation = models.OneToOneField(CookingSituation, on_delete=models.CASCADE)
+    main_ingre = models.OneToOneField(CookingMainIngre, on_delete=models.CASCADE)
+    type = models.OneToOneField(CookingType, on_delete=models.CASCADE)
 
 
 class Recipe(models.Model):
