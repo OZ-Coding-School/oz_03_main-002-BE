@@ -4,7 +4,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from . import views
-
+from .views import google_login, google_callback, GoogleLogin
 app_name = "user"
 
 router = DefaultRouter()
@@ -23,4 +23,8 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
+    # 구글 소셜로그인
+    path('google/login', google_login, name='google_login'),
+    path('google/callback/', google_callback, name='google_callback'),
+    path('google/login/finish/', GoogleLogin.as_view(), name='google_login_todjango'),
 ]

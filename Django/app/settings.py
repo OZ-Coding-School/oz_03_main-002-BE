@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-%s)3l76c=fst)66im#%_a41(%xe+e7!-%p%vpliulx_-a3(97i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["43.203.195.173", "127.0.0.1"]
+ALLOWED_HOSTS = ["43.203.195.173", "127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -59,6 +59,11 @@ CUSTOM_APPS = [
     # For Login
     "rest_framework_simplejwt",
     #   # Google Social Login
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    
+    
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -165,33 +170,20 @@ DEFAULT_SCHEMA_CLASS = "rest_framework.schemas.openapi.AutoSchema"
 REST_FRAMEWORK = {
     # ... other settings
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    # 구글 소셜 로그인
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
-    # "SECURITY_DEFINITIONS": {
-    #     # 필요에 따라 인증 설정 추가 (예: Basic Authentication, JWT 등)
-    # },
 }
-# ## 로그인 리다이렉트
-# LOGIN_URL = "/admin/login/"
 
-# # Google Social Login
-# SITE_ID = 1
-
-
-# # 구글 소셜 로그인
-# AUTH_USER_MODEL = "app_user.APP_User"
 
 # 사용할 사이트 갯수
 SITE_ID = 1
 
-# REST_USE_JWT = True
-
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = "username" # 유저네임필드 이름
-# ACCOUNT_EMAIL_REQUIRED = True # 이메일 사용여부
-# ACCOUNT_USERNAME_REQUIRED = True # 유저네임 사용여부
-# ACCOUNT_AUTHENTICATION_METHOD = "email" # 인증 필드 메소드
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
@@ -208,3 +200,17 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
+
+# 사이트는 1개만 사용할 것이라고 명시
+SITE_ID = 1
+
+AUTH_USER_MODEL = 'app_user.App_User'
+
+REST_USE_JWT = True
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
+ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
+ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+SOCIALACCOUNT_AUTO_SIGNUP=True
