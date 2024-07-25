@@ -11,9 +11,10 @@ class UserRole(models.TextChoices):
 
 
 class App_User(AbstractUser):
-    user_id = models.CharField(max_length=255, unique=True)  # user_id 필드 추가
-    password_hash = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)  # name 필드 추가
+    id = models.UUIDField(primary_key=True, max_length=255, unique=True)  # id 필드 추가
+    user_id = models.CharField(max_length=255, unique=True)
+    # password_hash = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)  # name 필드 추가
     nick_name = models.CharField(max_length=255)  # nick_name 필드 추가
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -25,9 +26,8 @@ class App_User(AbstractUser):
 
     USERNAME_FIELD = "user_id"  # user_id를 사용자 이름으로 사용
     REQUIRED_FIELDS = [
-        "name",
+        "user_id"
         "nick_name",
-        "password_hash",
         "username",
     ]  # 필수 필드 설정
     groups = models.ManyToManyField(
@@ -41,4 +41,4 @@ class App_User(AbstractUser):
     )
 
     def __str__(self):
-        return self.user_id
+        return self.id
