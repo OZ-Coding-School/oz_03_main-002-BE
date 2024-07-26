@@ -47,4 +47,5 @@ urlpatterns = [
         ),
         name="schema-redoc",
     ),
+    path('api/common_user/', include('common_users.urls')), # added common_user
 ]
