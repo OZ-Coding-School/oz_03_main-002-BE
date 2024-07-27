@@ -1,7 +1,12 @@
-from django.contrib.auth.models import AbstractBaseUser, Group, Permission, BaseUserManager, PermissionsMixin
+import uuid
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-import uuid
 
 
 class AppUserManager(BaseUserManager):
@@ -20,9 +25,7 @@ class AppUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, user_id, email, username, nick_name, password=None):
-        user = self.create_user(
-            user_id, email, username, nick_name, password
-        )
+        user = self.create_user(user_id, email, username, nick_name, password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -36,9 +39,13 @@ class UserRole(models.TextChoices):
 
 
 # 사용자 모델
-class App_User(AbstractBaseUser,PermissionsMixin):
-    id = models.UUIDField(primary_key=True, max_length=255, unique=True, default=uuid.uuid4)  # UUID 형식의 고유 ID
-    user_id = models.CharField(max_length=255, unique=True)  # 로그인에 사용될 사용자 ID (이메일 형식)
+class App_User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(
+        primary_key=True, max_length=255, unique=True, default=uuid.uuid4
+    )  # UUID 형식의 고유 ID
+    user_id = models.CharField(
+        max_length=255, unique=True
+    )  # 로그인에 사용될 사용자 ID (이메일 형식)
     email = models.EmailField(unique=True)  # unique=True 추가
     username = models.CharField(max_length=255)  # 사용자 이름 (이름 + 성)
     nick_name = models.CharField(max_length=255)  # 닉네임
@@ -46,7 +53,9 @@ class App_User(AbstractBaseUser,PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)  # 업데이트 시간
     last_login_at = models.DateTimeField(null=True, blank=True)  # 마지막 로그인 시간
     is_active = models.BooleanField(default=True)  # 계정 활성화 여부
-    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.USER)  # 사용자 역할 (ADMIN 또는 USER)
+    role = models.CharField(
+        max_length=10, choices=UserRole.choices, default=UserRole.USER
+    )  # 사용자 역할 (ADMIN 또는 USER)
     is_staff = models.BooleanField(default=False)  # 스태프 권한 여부
     date_joined = models.DateTimeField(auto_now_add=True)  # 가입 날짜
     is_superuser = models.BooleanField(default=False)  # 최고 관리자 권한 여부
@@ -58,8 +67,15 @@ class App_User(AbstractBaseUser,PermissionsMixin):
     REQUIRED_FIELDS = ["nick_name", "username", "email"]  # username 필드 추가
 
     # Django Groups & Permissions 연동
-    groups = models.ManyToManyField(Group, verbose_name="groups", blank=True, related_name="app_user_set")
-    user_permissions = models.ManyToManyField(Permission, verbose_name="user permissions", blank=True, related_name="app_user_set")
+    groups = models.ManyToManyField(
+        Group, verbose_name="groups", blank=True, related_name="app_user_set"
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name="user permissions",
+        blank=True,
+        related_name="app_user_set",
+    )
 
     def __str__(self):
         return self.user_id

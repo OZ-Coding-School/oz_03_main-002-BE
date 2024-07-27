@@ -1,19 +1,23 @@
-from django.views import View
-from django.http import JsonResponse
-from rest_framework import status
-from .models import App_User
-from allauth.socialaccount.models import SocialAccount, SocialLogin
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from .forms import CompleteSocialSignupForm
 import logging
 import os
-import requests
 from json import JSONDecodeError
-from django.urls import reverse
-from allauth.socialaccount.providers.google.provider import GoogleProvider
-from allauth.account.views import SignupView
+
+import requests
 from allauth.account.utils import complete_signup
+from allauth.account.views import SignupView
+from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.models import SocialLogin
+from allauth.socialaccount.providers.google.provider import GoogleProvider
+from django.contrib.auth import login
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.urls import reverse
+from django.views import View
+from rest_framework import status
+
+from .forms import CompleteSocialSignupForm
+from .models import App_User
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -23,8 +27,8 @@ logger.setLevel(logging.DEBUG)
 # load_dotenv()
 
 state = os.environ.get("STATE")
-BASE_URL = 'http://127.0.0.1:8000/'  # 로컬 개발 환경 기준
-GOOGLE_CALLBACK_URI = BASE_URL + 'api/v1/google/callback/'
+BASE_URL = "http://127.0.0.1:8000/"  # 로컬 개발 환경 기준
+GOOGLE_CALLBACK_URI = BASE_URL + "api/v1/google/callback/"
 
 
 # 구글 로그인 URL 생성
@@ -37,7 +41,8 @@ def google_login(request):
     return redirect(
         f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}"
     )
-    
+
+
 # 구글 로그인 콜백 처리
 class GoogleLoginCallbackView(View):
     def get(self, request):
@@ -49,7 +54,7 @@ class GoogleLoginCallbackView(View):
         """
         client_id = os.environ.get("GOOGLE_CLIENT_ID")
         client_secret = os.environ.get("GOOGLE_CLIENT_SECRET")
-        code = request.GET.get('code')
+        code = request.GET.get("code")
 
         # 1. 받은 코드로 구글에 access token 요청
         token_req = requests.post(
@@ -63,43 +68,50 @@ class GoogleLoginCallbackView(View):
             raise JSONDecodeError(error)
 
         # 1-2. 성공 시 access_token 가져오기
-        access_token = token_req_json.get('access_token')
+        access_token = token_req_json.get("access_token")
 
         # 2. 가져온 access_token으로 사용자 정보를 구글에 요청 (people.get API 사용)
         people_api_response = requests.get(
             "https://www.googleapis.com/oauth2/v1/userinfo",
-            params={'access_token': access_token, 'alt': 'json'}
+            params={"access_token": access_token, "alt": "json"},
         )
         people_api_response_json = people_api_response.json()
 
         # 2-1. 에러 발생 시 400 에러 반환
         if people_api_response.status_code != 200:
-            return JsonResponse({'err_msg': 'failed to get user info'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(
+                {"err_msg": "failed to get user info"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # 2-2. 성공 시 이메일 및 추가 정보 가져오기
-        email = people_api_response_json.get('email')
-        user_id = people_api_response_json.get('id')  # 구글 사용자 ID
+        email = people_api_response_json.get("email")
+        user_id = people_api_response_json.get("id")  # 구글 사용자 ID
         social_data = people_api_response_json
 
         logger.debug(f"Social Login Data: {social_data}")
 
         try:
             # 기존 사용자 확인 (SocialAccount를 통해 User 객체 가져오기)
-            social_account = SocialAccount.objects.get(provider=GoogleProvider.id, uid=user_id)
+            social_account = SocialAccount.objects.get(
+                provider=GoogleProvider.id, uid=user_id
+            )
             user = social_account.user
 
             # 로그인 처리
             login(request, user)
 
             # access_token을 포함한 JSON 응답 반환
-            return JsonResponse({'access_token': access_token})
+            return JsonResponse({"access_token": access_token})
         except SocialAccount.DoesNotExist:
             # 신규 사용자 처리
             user = App_User.objects.create_user(
-                user_id=social_data['email'].split('@')[0],
-                email=social_data['email'],
-                username=social_data.get('given_name', '') + social_data.get('family_name', ''),
-                nick_name=social_data.get('given_name', '') + social_data.get('family_name', ''),
+                user_id=social_data["email"].split("@")[0],
+                email=social_data["email"],
+                username=social_data.get("given_name", "")
+                + social_data.get("family_name", ""),
+                nick_name=social_data.get("given_name", "")
+                + social_data.get("family_name", ""),
                 password=None,
             )
 
@@ -107,7 +119,7 @@ class GoogleLoginCallbackView(View):
             social_account = SocialAccount(
                 user=user,
                 provider=GoogleProvider.id,
-                uid=social_data['id'],
+                uid=social_data["id"],
                 extra_data=social_data,
             )
             social_account.save()
@@ -117,7 +129,7 @@ class GoogleLoginCallbackView(View):
             request.session["sociallogin"] = sociallogin.serialize()
 
             # access_token을 포함한 JSON 응답 반환
-            return JsonResponse({'access_token': access_token})
+            return JsonResponse({"access_token": access_token})
 
 
 # 소셜 로그인 추가 정보 입력 폼
@@ -125,31 +137,33 @@ class CompleteSocialSignupView(SignupView):
     form_class = CompleteSocialSignupForm  # 폼 클래스 지정
 
     def get(self, request, *args, **kwargs):
-        if not request.session.get('sociallogin'):
-            return redirect(reverse('user:google_login'))  # 앱 이름을 사용하여 reverse
+        if not request.session.get("sociallogin"):
+            return redirect(reverse("user:google_login"))  # 앱 이름을 사용하여 reverse
 
         # sociallogin 데이터 가져오기
-        sociallogin = SocialLogin.deserialize(request.session.get('sociallogin'))
+        sociallogin = SocialLogin.deserialize(request.session.get("sociallogin"))
 
         # 폼 초기화
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         # form.fields["email"].initial = sociallogin.user.email
 
-        return self.render_to_response(self.get_context_data(form=form, sociallogin=sociallogin))
+        return self.render_to_response(
+            self.get_context_data(form=form, sociallogin=sociallogin)
+        )
 
     def form_valid(self, form):
         # 폼 유효성 검사 통과 시 회원가입 완료 처리
-        sociallogin = SocialLogin.deserialize(self.request.session.get('sociallogin'))
+        sociallogin = SocialLogin.deserialize(self.request.session.get("sociallogin"))
         user = sociallogin.user
-        user.user_id = sociallogin.user.email.split('@')[0]
-        user.nick_name = form.cleaned_data.get('nick_name') or user.username
-        user.username = form.cleaned_data.get('username')
+        user.user_id = sociallogin.user.email.split("@")[0]
+        user.nick_name = form.cleaned_data.get("nick_name") or user.username
+        user.username = form.cleaned_data.get("username")
         user.save()
         return complete_signup(self.request, sociallogin, self.get_redirect_url())
 
 
-
+from allauth.socialaccount.models import SocialAccount
 
 # # app_user/views.py
 from drf_yasg import openapi
@@ -159,7 +173,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
-from allauth.socialaccount.models import SocialAccount
 
 # import logging
 # logger = logging.getLogger(__name__)
@@ -198,7 +211,7 @@ from allauth.socialaccount.models import SocialAccount
 
 #     # 1. 받은 코드로 구글에 access token 요청
 #     token_req = requests.post(f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}")
-    
+
 #     ### 1-1. json으로 변환 & 에러 부분 파싱
 #     token_req_json = token_req.json()
 #     error = token_req_json.get("error")
@@ -219,7 +232,7 @@ from allauth.socialaccount.models import SocialAccount
 #     ### 2-1. 에러 발생 시 400 에러 반환
 #     if email_req_status != 200:
 #         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 #     ### 2-2. 성공 시 이메일 가져오기
 #     email_req_json = email_req.json()
 #     email = email_req_json.get('email')
@@ -267,7 +280,7 @@ from allauth.socialaccount.models import SocialAccount
 #         accept_json = accept.json()
 #         accept_json.pop('user', None)
 #         return JsonResponse(accept_json)
-        
+
 
 # # views.py
 # from dj_rest_auth.registration.views import SocialLoginView
@@ -278,8 +291,8 @@ from allauth.socialaccount.models import SocialAccount
 #     adapter_class = google_view.GoogleOAuth2Adapter
 #     callback_url = GOOGLE_CALLBACK_URI
 #     client_class = OAuth2Client
-    
-    
+
+
 # from django.shortcuts import render, redirect
 # from django.contrib.auth import login
 # from allauth.socialaccount.models import SocialLogin
@@ -304,7 +317,6 @@ from allauth.socialaccount.models import SocialAccount
 #         form = CompleteSocialSignupForm()
 
 #     return render(request, 'complete_social_signup.html', {'form': form})
-
 
 
 class UserLoginViewSet(viewsets.GenericViewSet):
@@ -340,7 +352,6 @@ class UserLoginViewSet(viewsets.GenericViewSet):
     #     아이디로 사용자 로그인
     #     """
     #     return Response({"message": "아이디 로그인 API (미구현)"})
-    
 
     # 아이디로 사용자 로그인
     @swagger_auto_schema(

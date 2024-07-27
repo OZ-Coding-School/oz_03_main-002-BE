@@ -18,7 +18,12 @@ class Migration(migrations.Migration):
             name="App_User",
             fields=[
                 ("password", models.CharField(max_length=128, verbose_name="password")),
-                ("last_login", models.DateTimeField(blank=True, null=True, verbose_name="last login")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
                 (
                     "is_superuser",
                     models.BooleanField(
@@ -27,9 +32,24 @@ class Migration(migrations.Migration):
                         verbose_name="superuser status",
                     ),
                 ),
-                ("first_name", models.CharField(blank=True, max_length=150, verbose_name="first name")),
-                ("last_name", models.CharField(blank=True, max_length=150, verbose_name="last name")),
-                ("email", models.EmailField(blank=True, max_length=254, verbose_name="email address")),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="last name"
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        blank=True, max_length=254, verbose_name="email address"
+                    ),
+                ),
                 (
                     "is_staff",
                     models.BooleanField(
@@ -46,8 +66,16 @@ class Migration(migrations.Migration):
                         verbose_name="active",
                     ),
                 ),
-                ("date_joined", models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined")),
-                ("id", models.UUIDField(primary_key=True, serialize=False, unique=True)),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                (
+                    "id",
+                    models.UUIDField(primary_key=True, serialize=False, unique=True),
+                ),
                 ("user_id", models.CharField(max_length=255, unique=True)),
                 ("username", models.CharField(max_length=255)),
                 ("nick_name", models.CharField(max_length=255)),
@@ -57,18 +85,28 @@ class Migration(migrations.Migration):
                 ("is_activate", models.BooleanField(default=True)),
                 (
                     "role",
-                    models.CharField(choices=[("ADMIN", "Admin"), ("USER", "User")], default="USER", max_length=10),
+                    models.CharField(
+                        choices=[("ADMIN", "Admin"), ("USER", "User")],
+                        default="USER",
+                        max_length=10,
+                    ),
                 ),
                 (
                     "groups",
                     models.ManyToManyField(
-                        blank=True, related_name="app_user_set", to="auth.group", verbose_name="groups"
+                        blank=True,
+                        related_name="app_user_set",
+                        to="auth.group",
+                        verbose_name="groups",
                     ),
                 ),
                 (
                     "user_permissions",
                     models.ManyToManyField(
-                        blank=True, related_name="app_user_set", to="auth.permission", verbose_name="user permissions"
+                        blank=True,
+                        related_name="app_user_set",
+                        to="auth.permission",
+                        verbose_name="user permissions",
                     ),
                 ),
             ],

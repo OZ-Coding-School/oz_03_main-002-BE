@@ -59,11 +59,9 @@ CUSTOM_APPS = [
     # For Login
     "rest_framework_simplejwt",
     #   # Google Social Login
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    
-    
+    "rest_framework.authtoken",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -171,9 +169,9 @@ REST_FRAMEWORK = {
     # ... other settings
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     # 구글 소셜 로그인
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 SWAGGER_SETTINGS = {
@@ -204,15 +202,15 @@ SOCIALACCOUNT_PROVIDERS = {
 # 사이트는 1개만 사용할 것이라고 명시
 SITE_ID = 1
 
-AUTH_USER_MODEL = 'app_user.App_User'
+AUTH_USER_MODEL = "app_user.App_User"
 
 REST_USE_JWT = True
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
-ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
-ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # username 필드 사용 x
+ACCOUNT_EMAIL_REQUIRED = True  # email 필드 사용 o
+ACCOUNT_USERNAME_REQUIRED = False  # username 필드 사용 x
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
-SOCIALACCOUNT_AUTO_SIGNUP=False
-#소셜 계정에 uuid 추가
+SOCIALACCOUNT_AUTO_SIGNUP = False
+# 소셜 계정에 uuid 추가
 SOCIALACCOUNT_ADAPTER = "app.adapters.CustomSocialAccountAdapter"  # 커스텀 어댑터 경로

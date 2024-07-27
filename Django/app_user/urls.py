@@ -4,8 +4,10 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from . import views
+from .views import CompleteSocialSignupView
+from .views import GoogleLoginCallbackView
 from .views import google_login
-from .views import GoogleLoginCallbackView, CompleteSocialSignupView
+
 app_name = "user"
 
 router = DefaultRouter()
@@ -25,9 +27,12 @@ router.register(
 urlpatterns = [
     path("", include(router.urls)),
     # 구글 소셜로그인
-    path('google/login/', google_login, name='google_login'),
-    path('google/callback/', GoogleLoginCallbackView.as_view(), name='google_callback'),
+    path("google/login/", google_login, name="google_login"),
+    path("google/callback/", GoogleLoginCallbackView.as_view(), name="google_callback"),
     # path('google/login/finish/', CompleteSocialSignupView.as_view(), name='google_login_todjango'),
-    path("complete_social_signup/", CompleteSocialSignupView.as_view(), name="complete_social_signup"),  # 추가 정보 입력 폼 URL 패턴
+    path(
+        "complete_social_signup/",
+        CompleteSocialSignupView.as_view(),
+        name="complete_social_signup",
+    ),  # 추가 정보 입력 폼 URL 패턴
 ]
-

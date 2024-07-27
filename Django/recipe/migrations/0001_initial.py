@@ -18,65 +18,139 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="CookingMainIngre",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="CookingMethod",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="CookingNameList",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="CookingSituation",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="CookingType",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
             name="CookingAttribute",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "main_ingre",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingmainingre"),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingmainingre",
+                    ),
                 ),
                 (
                     "method",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingmethod"),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingmethod",
+                    ),
                 ),
                 (
                     "name",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingnamelist"),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingnamelist",
+                    ),
                 ),
                 (
                     "situation",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingsituation"),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingsituation",
+                    ),
                 ),
-                ("type", models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingtype")),
+                (
+                    "type",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingtype",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name="Recipe",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("url", models.URLField()),
                 ("recipe_name", models.TextField()),
                 ("recommend_num", models.PositiveIntegerField(default=0)),
@@ -85,7 +159,11 @@ class Migration(migrations.Migration):
                 (
                     "difficulty",
                     models.CharField(
-                        choices=[("EASY", "Easy"), ("MEDIUM", "Medium"), ("HARD", "Hard")],
+                        choices=[
+                            ("EASY", "Easy"),
+                            ("MEDIUM", "Medium"),
+                            ("HARD", "Hard"),
+                        ],
                         default="EASY",
                         max_length=10,
                     ),
@@ -94,34 +172,69 @@ class Migration(migrations.Migration):
                 ("thumbnail_url", models.URLField(blank=True)),
                 (
                     "attribute",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingattribute"),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="recipe.cookingattribute",
+                    ),
                 ),
                 (
                     "nick_name",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
                 ),
             ],
         ),
         migrations.CreateModel(
             name="DetailRecipe",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("img_url", models.URLField(blank=True)),
                 ("recipe_text", models.TextField()),
                 ("tip", models.TextField()),
                 ("step", models.PositiveSmallIntegerField()),
-                ("recipe", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe")),
+                (
+                    "recipe",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name="RecipeIngredientList",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "ingredient",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingredient"),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingredient",
+                    ),
                 ),
-                ("recipe", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe")),
+                (
+                    "recipe",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="recipe.recipe"
+                    ),
+                ),
             ],
         ),
     ]
