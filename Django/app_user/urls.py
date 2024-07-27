@@ -4,9 +4,11 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from . import views
+
 # from .views import CompleteSocialSignupView
 # from .views import GoogleLoginCallbackView
-from .views import GoogleLoginViewSet, CompleteSocialSignupViewSet
+from .views import CompleteSocialSignupViewSet
+from .views import GoogleLoginViewSet
 
 app_name = "user"
 
@@ -24,8 +26,12 @@ router.register(
     "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
 )  # UserRefrigeratorViewSet 등록
 ########
-router.register('google', views.GoogleLoginViewSet, basename='google_login')
-router.register('complete-signup', views.CompleteSocialSignupViewSet, basename='complete_social_signup')
+router.register("google", views.GoogleLoginViewSet, basename="google_login")
+router.register(
+    "complete-signup",
+    views.CompleteSocialSignupViewSet,
+    basename="complete_social_signup",
+)
 ########
 
 urlpatterns = [
@@ -40,6 +46,3 @@ urlpatterns = [
     #     name="complete_social_signup",
     # ),  # 추가 정보 입력 폼 URL 패턴
 ]
-
-
-

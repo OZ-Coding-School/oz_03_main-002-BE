@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin, UserChangeForm
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserChangeForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import App_User
