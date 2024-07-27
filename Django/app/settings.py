@@ -213,4 +213,6 @@ ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
 ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
-SOCIALACCOUNT_AUTO_SIGNUP=True
+SOCIALACCOUNT_AUTO_SIGNUP=False
+#소셜 계정에 uuid 추가
+SOCIALACCOUNT_ADAPTER = "app.adapters.CustomSocialAccountAdapter"  # 커스텀 어댑터 경로

@@ -23,8 +23,8 @@ class CustomUserAdmin(UserAdmin):
         ),
         (("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ("id", "username", "nick_name", "is_staff")
-    search_fields = ("id", "username", "nick_name")
+    list_display = ("id","user_id", "username", "nick_name", "is_staff")
+    search_fields = ("id","user_id", "username", "nick_name")
     ordering = ("-date_joined",)  # 최근 가입 순으로 정렬
 
 
