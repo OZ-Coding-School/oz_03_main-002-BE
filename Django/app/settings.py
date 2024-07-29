@@ -153,8 +153,11 @@ SIMPLE_JWT = {
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
 
+# GOOGLE_CALLBACK_URI = (
+#     "http://" + os.environ.get("IPv4") + ":8000/api/v1/google/callback/"
+# ) #로컬
 GOOGLE_CALLBACK_URI = (
-    "http://" + os.environ.get("IPv4") + ":8000/api/v1/google/callback/"
+    "http://" + os.environ.get("EC2_HOST") + ":8000/api/v1/google/callback/"
 )
 
 
@@ -162,9 +165,12 @@ CORS_ORIGIN_ALLOW_ALL = False  # 비활성화
 CORS_ALLOWED_ORIGINS = [
     "http://" + os.environ.get("IPv4") + ":3000",  # 프론트엔드 주소 (개발 환경)
     "http://" + os.environ.get("IPv4") + ":8000",  # 백엔드 주소 (개발 환경)
+    "http://" + os.environ.get("EC2_HOST") + ":3000",  # 프론트엔드 주소 (개발 환경)
+    "http://" + os.environ.get("EC2_HOST") + ":8000",  # 백엔드 주소 (개발 환경)
     # 실제 배포 환경의 프론트엔드 주소를 추가해야 합니다.
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_DOMAIN = os.environ.get("IPv4")  # 실제 도메인으로 변경
+# SESSION_COOKIE_DOMAIN = os.environ.get("IPv4")  # 실제 도메인으로 변경 #로컬
+SESSION_COOKIE_DOMAIN = os.environ.get("EC2_HOST")
 SESSION_COOKIE_PATH = "/"
