@@ -47,6 +47,16 @@ jobs:
         working-directory: Django
         run: cat .env
 
+
+      - name: Remove existing containers and images
+        working-directory: Django
+        run: |
+          docker-compose down
+          docker image rm test_project_web
+      - name: Prune Docker builder cache
+        working-directory: Django
+        run: docker builder prune -a
+
       - name: Start services with Docker Compose
         working-directory: Django
         run: docker-compose up -d --build
