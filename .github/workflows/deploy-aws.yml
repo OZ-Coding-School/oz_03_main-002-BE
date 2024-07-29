@@ -81,6 +81,7 @@ jobs:
                 ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
                 DEBUG=${{ secrets.DEBUG }}
                 IPv4=${{ secrets.EC2_IPv4 }}
+                EC2_HOST=${{ secrets.EC2_HOST }}
                 EOF
 
       # - name: Run database migrations
