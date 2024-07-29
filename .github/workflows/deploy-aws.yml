@@ -74,6 +74,13 @@ jobs:
                 RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
                 RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
                 RDS_PORT=${{ secrets.RDS_PORT }}
+                GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+                GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+                STATE=${{ secrets.STATE }}
+                SECRET_KEY=${{ secrets.SECRET_KEY }}
+                ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
+                DEBUG=${{ secrets.DEBUG }}
+                IPv4=${{ secrets.EC2_IPv4 }}
                 EOF
 
       # - name: Run database migrations
@@ -105,4 +112,4 @@ jobs:
             docker-compose --version # Docker Compose 버전 확인
             sudo docker-compose down  # 기존 컨테이너 중지 및 제거 (오류 무시)
             sudo docker-compose build # Docker 이미지 빌드
-            sudo docker-compose up -d --build   # 컨테이너 실행 (백그라운드)
+            sudo docker-compose up -d --build --force-recreate  # 컨테이너 실행 (백그라운드)

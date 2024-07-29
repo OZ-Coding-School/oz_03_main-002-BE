@@ -34,15 +34,27 @@ jobs:
           RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
           RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
           RDS_PORT=${{ secrets.RDS_PORT }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          STATE=${{ secrets.STATE }}
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
+          DEBUG=${{ secrets.DEBUG }}
+          IPv4='*'
           EOF
 
       - name: Print .env file contents (for debugging)
         working-directory: Django
         run: cat .env
 
-      - name: Start services with Docker Compose
+
+      - name: Remove existing containers
         working-directory: Django
-        run: docker-compose up -d --build
+        run: docker-compose down
+
+      - name: Start services with Docker Compose (Force rebuild)
+        working-directory: Django
+        run: docker-compose up -d --build --force-recreate
 
       - name: Wait for RDS to be ready
         working-directory: Django
@@ -59,9 +71,16 @@ jobs:
             exit 1
           fi
 
-      - name: Run database migrations
-        working-directory: Django
-        run: docker-compose run --rm web python manage.py migrate
+      # - name: Run database makemigrations
+      #   working-directory: Django
+      #   run:
+      #     docker-compose run --rm web python manage.py makemigrations 
+
+
+      # - name: Run database migrate
+      #   working-directory: Django
+      #   run:
+      #     docker-compose run --rm web python manage.py migrate
 
       - name: Check if runserver is running
         run: |
