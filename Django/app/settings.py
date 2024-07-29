@@ -150,7 +150,9 @@ SIMPLE_JWT = {
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
 
-GOOGLE_CALLBACK_URI = "http://" + os.environ.get("IPv4") + ":8000/api/v1/google/callback/"
+GOOGLE_CALLBACK_URI = (
+    "http://" + os.environ.get("IPv4") + ":8000/api/v1/google/callback/"
+)
 
 
 CORS_ORIGIN_ALLOW_ALL = False  # 비활성화
