@@ -1,14 +1,17 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin, UserChangeForm
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserChangeForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import App_User, OutstandingToken
+from .models import App_User
+from .models import OutstandingToken
 
 
 class CustomUserChangeForm(UserChangeForm):
     """
     사용자 정보 변경 폼: 비밀번호 필드를 읽기 전용으로 변경합니다.
     """
+
     password = ReadOnlyPasswordHashField()
 
     class Meta:
@@ -21,6 +24,7 @@ class CustomUserAdmin(UserAdmin):
     """
     사용자 관리 페이지 커스터마이징
     """
+
     form = CustomUserChangeForm  # 사용자 정의 폼 사용
     fieldsets = (
         (None, {"fields": ("user_id", "password")}),

@@ -1,35 +1,38 @@
 import os
+
 import requests
+from app_user.models import App_User
 from django.conf import settings
-from django.contrib.auth import get_user_model, login
-from django.http import JsonResponse, HttpResponse
+from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login
+from django.db import transaction
+from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views import View
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenBlacklistView,
-    TokenRefreshView,
-)
-from rest_framework_simplejwt.serializers import TokenRefreshSerializer
-from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.settings import api_settings
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from django.db import transaction
-from rest_framework.test import APIRequestFactory
-from django.contrib.auth import authenticate
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenBlacklistView
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
 
-from app_user.models import App_User
 from .serializers import CustomTokenObtainPairSerializer
 
 User = get_user_model()
 state = os.environ.get("STATE")
+
 
 # --- Google OAuth 관련 ---
 class GoogleLogin(View):
@@ -39,6 +42,7 @@ class GoogleLogin(View):
     Google OAuth 2.0 프로토콜을 사용하여 사용자를 인증하고,
     로그인 URL을 생성하여 Google 로그인 페이지로 리디렉션합니다.
     """
+
     def get(self, request):
         """
         Google 소셜 로그인 URL을 생성합니다.
@@ -55,6 +59,7 @@ class GoogleLogin(View):
             f"https://accounts.google.com/o/oauth2/v2/auth?client_id={settings.GOOGLE_CLIENT_ID}&response_type=code&scope={scope}&redirect_uri={redirect_uri}&state={state}"
         )
 
+
 class GoogleCallback(View):
     """
     Google OAuth 콜백을 처리하는 뷰입니다.
@@ -62,6 +67,7 @@ class GoogleCallback(View):
     Google 인증 서버로부터 받은 Authorization Code를 사용하여 액세스 토큰을 획득하고,
     사용자 정보를 가져와 Django 애플리케이션에 로그인 처리를 수행합니다.
     """
+
     def get(self, request):
         """
         Google OAuth 콜백을 처리합니다.
@@ -108,7 +114,9 @@ class GoogleCallback(View):
                 )
 
                 if user_info_response.status_code != 200:
-                    return JsonResponse({"error": "Failed to get user info"}, status=400)
+                    return JsonResponse(
+                        {"error": "Failed to get user info"}, status=400
+                    )
 
                 user_info = user_info_response.json()
                 email = user_info["email"]
@@ -128,21 +136,31 @@ class GoogleCallback(View):
                 # JWT 토큰 발급
                 pair_view = CustomTokenObtainPairView()
                 factory = APIRequestFactory()
-                drf_request = factory.post('/token/', {'email': user.email, 'password': 'dummy_password'})
-                drf_request.user = authenticate(request, username=user.email, password='dummy_password')
+                drf_request = factory.post(
+                    "/token/", {"email": user.email, "password": "dummy_password"}
+                )
+                drf_request.user = authenticate(
+                    request, username=user.email, password="dummy_password"
+                )
                 pair_view.request = drf_request
                 pair_view.user = user
                 response = pair_view.post(drf_request)
 
                 content = JSONRenderer().render(response.data)
-                return HttpResponse(content, content_type='application/json', status=response.status_code)
+                return HttpResponse(
+                    content,
+                    content_type="application/json",
+                    status=response.status_code,
+                )
 
             except Exception as e:
                 print(f"Error in Google callback: {str(e)}")
                 error_data = {"status": "error", "message": str(e)}
                 return JsonResponse(error_data, status=400)
 
+
 # --- JWT 관련 ---
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     """
@@ -191,7 +209,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         - 401 Unauthorized: 이메일 또는 비밀번호가 일치하지 않을 경우.
         - 400 Bad Request: 요청 데이터가 유효하지 않을 경우.
         """
-        if hasattr(self, 'user'):
+        if hasattr(self, "user"):
             user = self.user
         else:
             serializer = self.get_serializer(data=request.data)
@@ -201,11 +219,12 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
-        response = Response({'access': access_token, 'refresh': str(refresh)})
+        response = Response({"access": access_token, "refresh": str(refresh)})
         user.refresh_token = str(refresh)
-        user.save()  
+        user.save()
 
         return response
+
 
 class BlacklistTokenUpdateView(TokenBlacklistView):
     """
@@ -213,6 +232,7 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
 
     주로 로그아웃 기능을 구현할 때 사용됩니다.
     """
+
     @swagger_auto_schema(
         tags=["Google-Login"],
         operation_summary="JWT 토큰 블랙리스트 추가",
@@ -220,12 +240,16 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="Refresh 토큰"),
+                "refresh": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Refresh 토큰"
+                ),
             },
         ),
         responses={
             205: openapi.Response(description="로그아웃 성공"),
-            400: openapi.Response(description="Refresh 토큰이 유효하지 않거나, 요청 데이터에 Refresh 토큰이 없는 경우"),
+            400: openapi.Response(
+                description="Refresh 토큰이 유효하지 않거나, 요청 데이터에 Refresh 토큰이 없는 경우"
+            ),
         },
     )
     def post(self, request, *args, **kwargs):
@@ -242,26 +266,30 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
         - 205 Reset Content: 로그아웃 성공
         - 400 Bad Request: Refresh 토큰이 유효하지 않거나, 요청 데이터에 Refresh 토큰이 없는 경우
         """
-        refresh_token = request.data.get('refresh')
+        refresh_token = request.data.get("refresh")
         if refresh_token:
             try:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
 
                 user_id = token.payload.get(api_settings.USER_ID_CLAIM)
-                if user_id: 
+                if user_id:
                     user = App_User.objects.get(id=user_id)
                     user.refresh_token = None
                     user.save()
 
                 response = Response(status=status.HTTP_205_RESET_CONTENT)
-                response.delete_cookie('refresh')
+                response.delete_cookie("refresh")
                 return response
 
             except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error': 'Refresh token not found in cookie'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Refresh token not found in cookie"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 
 class CustomTokenRefreshView(TokenRefreshView):
     """
@@ -270,6 +298,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     Refresh 토큰이 유효하면 새로운 액세스 토큰을 발급하고,
     토큰 순환 설정이 활성화된 경우에는 기존 Refresh 토큰을 블랙리스트에 추가합니다.
     """
+
     @swagger_auto_schema(
         tags=["Google-Login"],
         operation_summary="JWT 토큰 갱신",
@@ -277,11 +306,15 @@ class CustomTokenRefreshView(TokenRefreshView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="Refresh 토큰"),
+                "refresh": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Refresh 토큰"
+                ),
             },
         ),
         responses={
-            200: openapi.Response(description="액세스 토큰 갱신 성공, 새로운 액세스 토큰과 리프레시 토큰 반환"),
+            200: openapi.Response(
+                description="액세스 토큰 갱신 성공, 새로운 액세스 토큰과 리프레시 토큰 반환"
+            ),
             401: openapi.Response(description="Refresh 토큰이 유효하지 않은 경우"),
             400: openapi.Response(description="요청 데이터에 Refresh 토큰이 없는 경우"),
         },
@@ -301,13 +334,16 @@ class CustomTokenRefreshView(TokenRefreshView):
         - 401 Unauthorized: Refresh 토큰이 유효하지 않은 경우
         - 400 Bad Request: 요청 데이터에 Refresh 토큰이 없는 경우
         """
-        refresh_token = request.data.get('refresh')
+        refresh_token = request.data.get("refresh")
         if not refresh_token:
-            return Response({'error': 'Refresh token not found in request body'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Refresh token not found in request body"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             token = RefreshToken(refresh_token)
-            serializer = self.get_serializer(data={'refresh': str(token)})
+            serializer = self.get_serializer(data={"refresh": str(token)})
             serializer.is_valid(raise_exception=True)
             response_data = serializer.validated_data
 
@@ -316,23 +352,21 @@ class CustomTokenRefreshView(TokenRefreshView):
                     token.blacklist()
                 except TokenError:
                     pass
-            
+
             user_id = token.payload[api_settings.USER_ID_CLAIM]
             user = App_User.objects.get(id=user_id)
             refresh = RefreshToken.for_user(user)
-            response_data['refresh'] = str(refresh)
+            response_data["refresh"] = str(refresh)
 
             user = App_User.objects.get(id=token.payload[api_settings.USER_ID_CLAIM])
             user.refresh_token = str(refresh)
-            user.save()  
+            user.save()
 
             return Response(response_data)
 
         except TokenError as e:
-            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-        
 
 # --- DRF Yasg ---
 class UserLoginViewSet(viewsets.GenericViewSet):

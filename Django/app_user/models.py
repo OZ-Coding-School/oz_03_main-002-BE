@@ -1,23 +1,22 @@
 import uuid
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-    Group,
-    Permission,
-)
+from cryptography.fernet import Fernet
+from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 from rest_framework_simplejwt.tokens import OutstandingToken
-from cryptography.fernet import Fernet
 
 
 class AppUserManager(BaseUserManager):
     """
     사용자 모델 관리자: 사용자 생성 및 슈퍼유저 생성 기능을 제공합니다.
     """
+
     def create_user(self, user_id, email, username, nick_name, password=None):
         """
         일반 사용자 생성
@@ -60,8 +59,12 @@ class App_User(AbstractBaseUser, PermissionsMixin):
     사용자 모델: 사용자 정보를 저장합니다.
     """
 
-    id = models.UUIDField(primary_key=True, max_length=255, unique=True, default=uuid.uuid4)
-    user_id = models.CharField(max_length=255, unique=True, editable=False)  # 로그인 ID (이메일 형식)
+    id = models.UUIDField(
+        primary_key=True, max_length=255, unique=True, default=uuid.uuid4
+    )
+    user_id = models.CharField(
+        max_length=255, unique=True, editable=False
+    )  # 로그인 ID (이메일 형식)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=255)
     nick_name = models.CharField(max_length=255)

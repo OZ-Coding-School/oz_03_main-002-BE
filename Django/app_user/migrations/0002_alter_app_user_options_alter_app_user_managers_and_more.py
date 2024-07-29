@@ -51,7 +51,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="app_user",
             name="id",
-            field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False, unique=True),
+            field=models.UUIDField(
+                default=uuid.uuid4, primary_key=True, serialize=False, unique=True
+            ),
         ),
         migrations.AlterField(
             model_name="app_user",
@@ -71,7 +73,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="app_user",
             name="role",
-            field=models.CharField(choices=[("ADMIN", "관리자"), ("USER", "사용자")], default="USER", max_length=10),
+            field=models.CharField(
+                choices=[("ADMIN", "관리자"), ("USER", "사용자")],
+                default="USER",
+                max_length=10,
+            ),
         ),
         migrations.AlterField(
             model_name="app_user",
@@ -81,7 +87,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OutstandingToken",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "user",
                     models.ForeignKey(
