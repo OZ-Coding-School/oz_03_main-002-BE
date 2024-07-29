@@ -68,7 +68,9 @@ jobs:
 
       - name: Run database migrations
         working-directory: Django
-        run: docker-compose run --rm web python manage.py migrate
+        run:
+          docker-compose run --rm web python manage.py makemigrations 
+          docker-compose run --rm web python manage.py migrate
 
       - name: Check if runserver is running
         run: |
