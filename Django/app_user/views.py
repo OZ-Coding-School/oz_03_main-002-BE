@@ -1,344 +1,344 @@
-# from django.views import View
-# from django.http import JsonResponse
-# from rest_framework import status
-# from .models import App_User
-# from allauth.socialaccount.models import SocialAccount, SocialLogin
-# from django.shortcuts import render, redirect
-# from django.contrib.auth import login
-# from .forms import CompleteSocialSignupForm
-# import logging
-# import os
-# import requests
-# from json import JSONDecodeError
-# from django.urls import reverse
-# from allauth.socialaccount.providers.google.provider import GoogleProvider
-# from allauth.account.views import SignupView
-# from allauth.account.utils import complete_signup
-
-import json
 import os
-
 import requests
-from allauth.socialaccount.models import SocialAccount
-from allauth.socialaccount.models import SocialLogin
-from allauth.socialaccount.providers.google.provider import GoogleProvider
 from django.conf import settings
-from django.contrib.auth import login
-from django.http import JsonResponse
+from django.contrib.auth import get_user_model, login
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework.authtoken.models import Token
+from django.views import View
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
-from .forms import CompleteSocialSignupForm
-from .serializers import UserSerializer
-
-# 환경 변수 로드 (예: .env 파일 사용 시)
-# from dotenv import load_dotenv
-# load_dotenv()
-
-state = os.environ.get("STATE")
-BASE_URL = "http://127.0.0.1:8000/"  # 로컬 개발 환경 기준
-GOOGLE_CALLBACK_URI = BASE_URL + "api/v1/google/callback/"
-
-
-###############################
-class GoogleLoginViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
-
-    @action(detail=False, methods=["get"])
-    def login(self, request):
-        """
-        구글 OAuth2 로그인 URL 생성 및 리디렉션
-        """
-        scope = "https://www.googleapis.com/auth/userinfo.email"
-        client_id = os.environ.get("GOOGLE_CLIENT_ID")
-        return redirect(
-            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}"
-        )
-
-    @action(detail=False, methods=["get"])
-    def callback(self, request):
-        """
-        구글 로그인 콜백 처리
-        """
-        client_id = os.environ.get("GOOGLE_CLIENT_ID")
-        client_secret = os.environ.get("GOOGLE_CLIENT_SECRET")
-        code = request.GET.get("code")
-
-        # 1. 받은 코드로 구글에 access token 요청
-        token_request = requests.post(
-            f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}"
-        )
-
-        # 1-1. JSON 응답 파싱 및 에러 처리
-        token_response_json = token_request.json()
-        error = token_response_json.get("error")
-        if error is not None:
-            return JsonResponse({"error": error}, status=400)
-
-        # 1-2. 성공 시 access_token 가져오기
-        access_token = token_response_json.get("access_token")
-
-        # 2. 가져온 access_token으로 사용자 정보를 구글에 요청 (people.get API 사용)
-        people_api_response = requests.get(
-            "https://www.googleapis.com/oauth2/v1/userinfo",
-            params={"access_token": access_token, "alt": "json"},
-        )
-        people_api_response_json = people_api_response.json()
-
-        # 2-1. 에러 발생 시 400 에러 반환
-        if people_api_response.status_code != 200:
-            return JsonResponse({"error": "failed to get user info"}, status=400)
-
-        # 2-2. 성공 시 이메일 및 추가 정보 가져오기
-        email = people_api_response_json.get("email")
-        user_id = people_api_response_json.get("id")  # 구글 사용자 ID
-        social_data = people_api_response_json
-        try:
-            social_account = SocialAccount.objects.get(
-                provider=GoogleProvider.id, uid=user_id
-            )
-            user = social_account.user
-            login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({"access_token": token.key})
-        except SocialAccount.DoesNotExist:
-            # 신규 사용자 처리
-            user = User.objects.create_user(
-                user_id=social_data["email"].split("@")[0],
-                email=social_data["email"],
-                username=social_data.get("given_name", "")
-                + social_data.get("family_name", ""),
-                nick_name=social_data.get("given_name", "")
-                + social_data.get("family_name", ""),
-                password=None,
-            )
-
-            # SocialAccount 생성 및 저장
-            social_account = SocialAccount(
-                user=user,
-                provider=GoogleProvider.id,
-                uid=social_data["id"],
-                extra_data=social_data,
-            )
-            social_account.save()
-
-            # SocialLogin 생성 및 세션에 저장
-            sociallogin = SocialLogin(user=user, account=social_account)
-            request.session["sociallogin"] = sociallogin.serialize()
-
-            serializer = UserSerializer(user)
-            return Response(serializer.data)
-
-
-class CompleteSocialSignupViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
-
-    @action(detail=False, methods=["get"])
-    def get_form(self, request):
-        """
-        추가 정보 입력 폼 제공
-        """
-        if not request.session.get("sociallogin"):
-            return redirect(reverse("user:google_login"))  # 앱 이름을 사용하여 reverse
-
-        sociallogin = SocialLogin.deserialize(request.session.get("sociallogin"))
-        form = CompleteSocialSignupForm(initial={"email": sociallogin.user.email})
-        return Response(form.as_p())  # 폼을 HTML 형태로 반환
-
-    @action(detail=False, methods=["post"])
-    def complete(self, request):
-        """
-        추가 정보 입력 완료 처리
-        """
-        sociallogin = SocialLogin.deserialize(request.session.get("sociallogin"))
-        user = sociallogin.user
-        form = CompleteSocialSignupForm(request.data, instance=user)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            del request.session["sociallogin"]
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({"access_token": token.key})
-        else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-###############################
-
-
-# # 구글 로그인 URL 생성
-# def google_login(request):
-#     """
-#     구글 OAuth2 로그인 URL을 생성하여 리디렉션합니다.
-#     """
-#     scope = "https://www.googleapis.com/auth/userinfo.email"  # 요청할 사용자 정보 범위
-#     client_id = os.environ.get("GOOGLE_CLIENT_ID")  # 구글 클라이언트 ID
-#     return redirect(
-#         f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}"
-#     )
-
-# # 구글 로그인 콜백 처리
-# class GoogleLoginCallbackView(View):
-#     def get(self, request):
-#         """
-#         구글 로그인 콜백을 처리합니다.
-#         1. authorization code를 사용하여 access token을 얻습니다.
-#         2. access token을 사용하여 사용자 정보(email)를 얻습니다.
-#         3. 기존 사용자인지 확인하고, 신규 사용자라면 추가 정보 입력 폼으로 리디렉션합니다.
-#         """
-#         client_id = os.environ.get("GOOGLE_CLIENT_ID")
-#         client_secret = os.environ.get("GOOGLE_CLIENT_SECRET")
-#         code = request.GET.get('code')
-
-#         # 1. 받은 코드로 구글에 access token 요청
-#         token_req = requests.post(
-#             f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}"
-#         )
-
-#         # 1-1. JSO   N 응답 파싱 및 에러 처리
-#         token_req_json = token_req.json()
-#         error = token_req_json.get("error")
-#         if error is not None:
-#             raise JSONDecodeError(error)
-
-#         # 1-2. 성공 시 access_token 가져오기
-#         access_token = token_req_json.get('access_token')
-
-#         # 2. 가져온 access_token으로 사용자 정보를 구글에 요청 (people.get API 사용)
-#         people_api_response = requests.get(
-#             "https://www.googleapis.com/oauth2/v1/userinfo",
-#             params={'access_token': access_token, 'alt': 'json'}
-#         )
-#         people_api_response_json = people_api_response.json()
-
-#         # 2-1. 에러 발생 시 400 에러 반환
-#         if people_api_response.status_code != 200:
-#             return JsonResponse({'err_msg': 'failed to get user info'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # 2-2. 성공 시 이메일 및 추가 정보 가져오기
-#         email = people_api_response_json.get('email')
-#         user_id = people_api_response_json.get('id')  # 구글 사용자 ID
-#         social_data = people_api_response_json
-
-#         logger.debug(f"Social Login Data: {social_data}")
-
-#         try:
-#             # 기존 사용자 확인 (SocialAccount를 통해 User 객체 가져오기)
-#             social_account = SocialAccount.objects.get(provider=GoogleProvider.id, uid=user_id)
-#             user = social_account.user
-
-#             # 로그인 처리
-#             login(request, user)
-
-#             # access_token을 포함한 JSON 응답 반환
-#             return JsonResponse({'access_token': access_token})
-#         except SocialAccount.DoesNotExist:
-#             # 신규 사용자 처리
-#             user = App_User.objects.create_user(
-#                 user_id=social_data['email'].split('@')[0],
-#                 email=social_data['email'],
-#                 username=social_data.get('given_name', '') + social_data.get('family_name', ''),
-#                 nick_name=social_data.get('given_name', '') + social_data.get('family_name', ''),
-#                 password=None,
-#             )
-
-#             # SocialAccount 생성 및 저장
-#             social_account = SocialAccount(
-#                 user=user,
-#                 provider=GoogleProvider.id,
-#                 uid=social_data['id'],
-#                 extra_data=social_data,
-#             )
-#             social_account.save()
-
-#             # SocialLogin 생성 및 세션에 저장
-#             sociallogin = SocialLogin(user=user, account=social_account)
-#             request.session["sociallogin"] = sociallogin.serialize()
-
-#             # access_token을 포함한 JSON 응답 반환
-#             return JsonResponse({'access_token': access_token})
-
-
-# # 소셜 로그인 추가 정보 입력 폼
-# class CompleteSocialSignupView(SignupView):
-#     form_class = CompleteSocialSignupForm  # 폼 클래스 지정
-
-#     def get(self, request, *args, **kwargs):
-#         if not request.session.get('sociallogin'):
-#             return redirect(reverse('user:google_login'))  # 앱 이름을 사용하여 reverse
-
-#         # sociallogin 데이터 가져오기
-#         sociallogin = SocialLogin.deserialize(request.session.get('sociallogin'))
-
-#         # 폼 초기화
-#         form_class = self.get_form_class()
-#         form = self.get_form(form_class)
-#         # form.fields["email"].initial = sociallogin.user.email
-
-#         return self.render_to_response(self.get_context_data(form=form, sociallogin=sociallogin))
-
-#     def form_valid(self, form):
-#         # 폼 유효성 검사 통과 시 회원가입 완료 처리
-#         sociallogin = SocialLogin.deserialize(self.request.session.get('sociallogin'))
-#         user = sociallogin.user
-#         user.user_id = sociallogin.user.email.split('@')[0]
-#         user.nick_name = form.cleaned_data.get('nick_name') or user.username
-#         user.username = form.cleaned_data.get('username')
-#         user.save()
-#         return complete_signup(self.request, sociallogin, self.get_redirect_url())
-
-
-from allauth.socialaccount.models import SocialAccount
-
-# # app_user/views.py
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenBlacklistView,
+    TokenRefreshView,
+)
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.routers import DefaultRouter
+from django.db import transaction
+from rest_framework.test import APIRequestFactory
+from django.contrib.auth import authenticate
+from rest_framework.renderers import JSONRenderer
+
+from app_user.models import App_User
+from .serializers import CustomTokenObtainPairSerializer
+
+User = get_user_model()
+state = os.environ.get("STATE")
+
+# --- Google OAuth 관련 ---
+class GoogleLogin(View):
+    """
+    Google 소셜 로그인을 위한 뷰입니다.
+
+    Google OAuth 2.0 프로토콜을 사용하여 사용자를 인증하고,
+    로그인 URL을 생성하여 Google 로그인 페이지로 리디렉션합니다.
+    """
+    def get(self, request):
+        """
+        Google 소셜 로그인 URL을 생성합니다.
+
+        **요청:**
+        - GET 요청
+
+        **응답:**
+        - 302 Redirect: Google 로그인 페이지로 리디렉션
+        """
+        scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+        redirect_uri = settings.GOOGLE_CALLBACK_URI
+        return redirect(
+            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={settings.GOOGLE_CLIENT_ID}&response_type=code&scope={scope}&redirect_uri={redirect_uri}&state={state}"
+        )
+
+class GoogleCallback(View):
+    """
+    Google OAuth 콜백을 처리하는 뷰입니다.
+
+    Google 인증 서버로부터 받은 Authorization Code를 사용하여 액세스 토큰을 획득하고,
+    사용자 정보를 가져와 Django 애플리케이션에 로그인 처리를 수행합니다.
+    """
+    def get(self, request):
+        """
+        Google OAuth 콜백을 처리합니다.
+
+        **요청:**
+        - GET 요청
+
+        **쿼리 매개변수:**
+        - code: Google 인증 서버에서 발급한 Authorization Code
+
+        **응답:**
+        - 200 OK: 로그인 성공 및 JWT 토큰 반환
+        - 400 Bad Request: 액세스 토큰 획득 실패, 사용자 정보 획득 실패, 기타 오류 발생
+        """
+        with transaction.atomic():
+            try:
+                code = request.GET.get("code")
+                if not code:
+                    return JsonResponse({"error": "Invalid code"}, status=400)
+
+                # 액세스 토큰 얻기
+                token_response = requests.post(
+                    "https://oauth2.googleapis.com/token",
+                    data={
+                        "code": code,
+                        "client_id": settings.GOOGLE_CLIENT_ID,
+                        "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                        "redirect_uri": settings.GOOGLE_CALLBACK_URI,
+                        "grant_type": "authorization_code",
+                    },
+                )
+
+                if token_response.status_code != 200:
+                    return JsonResponse(
+                        {"error": "Failed to get access token"}, status=400
+                    )
+
+                access_token = token_response.json()["access_token"]
+
+                # 사용자 정보 얻기
+                user_info_response = requests.get(
+                    "https://www.googleapis.com/oauth2/v1/userinfo",
+                    params={"access_token": access_token},
+                )
+
+                if user_info_response.status_code != 200:
+                    return JsonResponse({"error": "Failed to get user info"}, status=400)
+
+                user_info = user_info_response.json()
+                email = user_info["email"]
+
+                try:
+                    user = User.objects.get(email=email)
+                except User.DoesNotExist:
+                    user = User.objects.create_user(
+                        email=email,
+                        username=user_info.get("name", ""),
+                        nick_name=user_info.get("name", ""),
+                        user_id=email.split("@")[0],
+                    )
+
+                login(request, user)
+
+                # JWT 토큰 발급
+                pair_view = CustomTokenObtainPairView()
+                factory = APIRequestFactory()
+                drf_request = factory.post('/token/', {'email': user.email, 'password': 'dummy_password'})
+                drf_request.user = authenticate(request, username=user.email, password='dummy_password')
+                pair_view.request = drf_request
+                pair_view.user = user
+                response = pair_view.post(drf_request)
+
+                content = JSONRenderer().render(response.data)
+                return HttpResponse(content, content_type='application/json', status=response.status_code)
+
+            except Exception as e:
+                print(f"Error in Google callback: {str(e)}")
+                error_data = {"status": "error", "message": str(e)}
+                return JsonResponse(error_data, status=400)
+
+# --- JWT 관련 ---
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    """
+    사용자 지정 JWT 토큰 쌍을 발급하는 뷰입니다.
+
+    이메일과 비밀번호를 사용하여 사용자를 인증하고,
+    액세스 토큰과 리프레시 토큰을 발급합니다.
+    """
+
+    serializer_class = CustomTokenObtainPairSerializer
+
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="JWT 토큰 획득",
+        operation_description="이메일과 비밀번호를 사용하여 JWT 토큰 쌍(액세스 토큰, 리프레시 토큰)을 발급합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "email": openapi.Schema(type=openapi.TYPE_STRING),
+                "password": openapi.Schema(type=openapi.TYPE_STRING),
+            },
+        ),
+        responses={
+            200: openapi.Response(
+                description="로그인 성공 시, 액세스 토큰과 리프레시 토큰을 반환합니다."
+            ),
+            401: openapi.Response(
+                description="이메일 또는 비밀번호가 일치하지 않을 경우."
+            ),
+            400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
+        },
+    )
+    def post(self, request, *args, **kwargs):
+        """
+        JWT 토큰 쌍을 발급합니다.
+
+        **요청:**
+        - POST 요청
+
+        **요청 본문:**
+        - email: 사용자 이메일
+        - password: 사용자 비밀번호
+
+        **응답:**
+        - 200 OK: 로그인 성공 시, 액세스 토큰과 리프레시 토큰을 반환합니다.
+        - 401 Unauthorized: 이메일 또는 비밀번호가 일치하지 않을 경우.
+        - 400 Bad Request: 요청 데이터가 유효하지 않을 경우.
+        """
+        if hasattr(self, 'user'):
+            user = self.user
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.user
+
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        response = Response({'access': access_token, 'refresh': str(refresh)})
+        user.refresh_token = str(refresh)
+        user.save()  
+
+        return response
+
+class BlacklistTokenUpdateView(TokenBlacklistView):
+    """
+    Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제하는 뷰입니다.
+
+    주로 로그아웃 기능을 구현할 때 사용됩니다.
+    """
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="JWT 토큰 블랙리스트 추가",
+        operation_description="로그아웃 시, Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="Refresh 토큰"),
+            },
+        ),
+        responses={
+            205: openapi.Response(description="로그아웃 성공"),
+            400: openapi.Response(description="Refresh 토큰이 유효하지 않거나, 요청 데이터에 Refresh 토큰이 없는 경우"),
+        },
+    )
+    def post(self, request, *args, **kwargs):
+        """
+        Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제합니다.
+
+        **요청:**
+        - POST 요청
+
+        **요청 본문:**
+        - refresh: 블랙리스트에 추가할 Refresh 토큰
+
+        **응답:**
+        - 205 Reset Content: 로그아웃 성공
+        - 400 Bad Request: Refresh 토큰이 유효하지 않거나, 요청 데이터에 Refresh 토큰이 없는 경우
+        """
+        refresh_token = request.data.get('refresh')
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+
+                user_id = token.payload.get(api_settings.USER_ID_CLAIM)
+                if user_id: 
+                    user = App_User.objects.get(id=user_id)
+                    user.refresh_token = None
+                    user.save()
+
+                response = Response(status=status.HTTP_205_RESET_CONTENT)
+                response.delete_cookie('refresh')
+                return response
+
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Refresh token not found in cookie'}, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenRefreshView(TokenRefreshView):
+    """
+    Refresh 토큰을 사용하여 액세스 토큰을 갱신하는 뷰입니다.
+
+    Refresh 토큰이 유효하면 새로운 액세스 토큰을 발급하고,
+    토큰 순환 설정이 활성화된 경우에는 기존 Refresh 토큰을 블랙리스트에 추가합니다.
+    """
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="JWT 토큰 갱신",
+        operation_description="Refresh 토큰을 사용하여 액세스 토큰을 갱신합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="Refresh 토큰"),
+            },
+        ),
+        responses={
+            200: openapi.Response(description="액세스 토큰 갱신 성공, 새로운 액세스 토큰과 리프레시 토큰 반환"),
+            401: openapi.Response(description="Refresh 토큰이 유효하지 않은 경우"),
+            400: openapi.Response(description="요청 데이터에 Refresh 토큰이 없는 경우"),
+        },
+    )
+    def post(self, request, *args, **kwargs):
+        """
+        Refresh 토큰을 사용하여 액세스 토큰을 갱신합니다.
+
+        **요청:**
+        - POST 요청
+
+        **요청 본문:**
+        - refresh: 액세스 토큰 갱신에 사용할 Refresh 토큰
+
+        **응답:**
+        - 200 OK: 액세스 토큰 갱신 성공, 새로운 액세스 토큰과 리프레시 토큰 반환
+        - 401 Unauthorized: Refresh 토큰이 유효하지 않은 경우
+        - 400 Bad Request: 요청 데이터에 Refresh 토큰이 없는 경우
+        """
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({'error': 'Refresh token not found in request body'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            token = RefreshToken(refresh_token)
+            serializer = self.get_serializer(data={'refresh': str(token)})
+            serializer.is_valid(raise_exception=True)
+            response_data = serializer.validated_data
+
+            if api_settings.ROTATE_REFRESH_TOKENS:
+                try:
+                    token.blacklist()
+                except TokenError:
+                    pass
+            
+            user_id = token.payload[api_settings.USER_ID_CLAIM]
+            user = App_User.objects.get(id=user_id)
+            refresh = RefreshToken.for_user(user)
+            response_data['refresh'] = str(refresh)
+
+            user = App_User.objects.get(id=token.payload[api_settings.USER_ID_CLAIM])
+            user.refresh_token = str(refresh)
+            user.save()  
+
+            return Response(response_data)
+
+        except TokenError as e:
+            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+        
+
+# --- DRF Yasg ---
 class UserLoginViewSet(viewsets.GenericViewSet):
     """
-    사용자 로그인 관련 API
+    사용자 로그인 관련 API (미구현)
     """
-
-    # 소셜 사용자 로그인
-    # @swagger_auto_schema(
-    #     tags=["UserLogin"],
-    #     operation_summary="소셜 로그인",
-    #     operation_description="구글 소셜 로그인을 이용하여 로그인합니다.",
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             "username": openapi.Schema(type=openapi.TYPE_STRING),
-    #             "password": openapi.Schema(type=openapi.TYPE_STRING),
-    #         },
-    #     ),
-    #     responses={
-    #         201: openapi.Response(
-    #             description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
-    #         ),
-    #         401: openapi.Response(
-    #             description="아이디 또는 비밀번호가 일치하지 않을 경우."
-    #         ),
-    #         400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
-    #     },
-    # )
-    # @action(detail=False, methods=["post"], name="google_login", url_path="google/login")
-    # def user_social_login_id(self, request):
-    #     """
-    #     아이디로 사용자 로그인
-    #     """
-    #     return Response({"message": "아이디 로그인 API (미구현)"})
 
     # 아이디로 사용자 로그인
     @swagger_auto_schema(

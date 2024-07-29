@@ -1,10 +1,11 @@
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
-User = get_user_model()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "nick_name", "user_id"]
+class CustomTokenObtainPairSerializer(TokenRefreshSerializer):
+    """
+    JWT 토큰 갱신을 위한 커스텀 시리얼라이저
+    """
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['user_id'] = str(user.id)
+        return token

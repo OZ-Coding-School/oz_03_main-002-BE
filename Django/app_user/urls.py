@@ -1,48 +1,30 @@
-# app/urls.py
-from django.urls import include
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from . import views
+from .views import GoogleLogin, GoogleCallback, CustomTokenObtainPairView, BlacklistTokenUpdateView, CustomTokenRefreshView
 
-# from .views import CompleteSocialSignupView
-# from .views import GoogleLoginCallbackView
-from .views import CompleteSocialSignupViewSet
-from .views import GoogleLoginViewSet
-
-app_name = "user"
+app_name = "app_user"
 
 router = DefaultRouter()
-router.register(
-    "login", views.UserLoginViewSet, basename="user_login"
-)  # UserLoginViewSet 등록
-router.register(
-    "auth", views.UserSignInViewSet, basename="user_signin"
-)  # UserSignInViewSet 등록
-router.register(
-    "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
-)  # UserAccountRecoveryViewSet 등록
-router.register(
-    "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
-)  # UserRefrigeratorViewSet 등록
-########
-router.register("google", views.GoogleLoginViewSet, basename="google_login")
-router.register(
-    "complete-signup",
-    views.CompleteSocialSignupViewSet,
-    basename="complete_social_signup",
-)
-########
+
+# 뷰셋 등록 (로그인, 회원가입, 계정 복구, 냉장고)
+router.register("login", views.UserLoginViewSet, basename="user_login")  # 로그인 관련 뷰셋
+router.register("auth", views.UserSignInViewSet, basename="user_signin") # 회원가입 관련 뷰셋
+router.register("recovery", views.UserAccountRecoveryViewSet, basename="user_recovery") # 계정 복구 관련 뷰셋
+router.register("refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator") # 냉장고 관련 뷰셋
 
 urlpatterns = [
+    # 뷰셋 URL 포함
     path("", include(router.urls)),
-    # 구글 소셜로그인
-    # path("google/login/", google_login, name="google_login"),
-    # path("google/callback/", GoogleLoginCallbackView.as_view(), name="google_callback"),
-    # # path('google/login/finish/', CompleteSocialSignupView.as_view(), name='google_login_todjango'),
-    # path(
-    #     "complete_social_signup/",
-    #     CompleteSocialSignupView.as_view(),
-    #     name="complete_social_signup",
-    # ),  # 추가 정보 입력 폼 URL 패턴
+    
+    # Google OAuth 로그인 관련 URL
+    path("google/login/", GoogleLogin.as_view(), name="google_login"),  # GoogleLogin도 클래스 기반 뷰로 변경
+    path("google/callback/", GoogleCallback.as_view(), name="google_callback"),  # .as_view() 추가
+
+    
+    # JWT 토큰 관련 URL
+    path("token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"),
+    path("token/blacklist/", BlacklistTokenUpdateView.as_view(), name="token_blacklist"),
 ]
