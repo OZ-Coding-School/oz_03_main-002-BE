@@ -12,7 +12,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")  # 암호화 키 (반드시 비밀 유
 DEBUG = os.environ.get(
     "DEBUG", default=False
 )  # 개발 모드 (True) 또는 배포 모드 (False)
-ALLOWED_HOSTS = [os.environ.get("IPv4")]  # 접근 허용 호스트
+# ALLOWED_HOSTS = [os.environ.get("IPv4")]  # 로컬
+ALLOWED_HOSTS = [os.environ.get("IPv4"), os.environ.get("EC2_HOST")]  # 접근 허용 호스트
 
 # 애플리케이션 목록 (Django 기본 앱 및 프로젝트 앱)
 INSTALLED_APPS = [
