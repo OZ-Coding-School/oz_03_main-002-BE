@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")  # 암호화 키 (반드시 비밀 유
 DEBUG = os.environ.get(
     "DEBUG", default=False
 )  # 개발 모드 (True) 또는 배포 모드 (False)
-ALLOWED_HOSTS = [os.getcwd("IPv4")]  # 접근 허용 호스트
+ALLOWED_HOSTS = [os.environ.get("IPv4")]  # 접근 허용 호스트
 
 # 애플리케이션 목록 (Django 기본 앱 및 프로젝트 앱)
 INSTALLED_APPS = [
@@ -150,16 +150,16 @@ SIMPLE_JWT = {
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
 
-GOOGLE_CALLBACK_URI = "http://" + os.getcwd("IPv4") + ":8000/api/v1/google/callback/"
+GOOGLE_CALLBACK_URI = "http://" + os.environ.get("IPv4") + ":8000/api/v1/google/callback/"
 
 
 CORS_ORIGIN_ALLOW_ALL = False  # 비활성화
 CORS_ALLOWED_ORIGINS = [
-    "http://" + os.getcwd("IPv4") + ":3000",  # 프론트엔드 주소 (개발 환경)
-    "http://" + os.getcwd("IPv4") + ":8000",  # 백엔드 주소 (개발 환경)
+    "http://" + os.environ.get("IPv4") + ":3000",  # 프론트엔드 주소 (개발 환경)
+    "http://" + os.environ.get("IPv4") + ":8000",  # 백엔드 주소 (개발 환경)
     # 실제 배포 환경의 프론트엔드 주소를 추가해야 합니다.
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_DOMAIN = os.getcwd("IPv4")  # 실제 도메인으로 변경
+SESSION_COOKIE_DOMAIN = os.environ.get("IPv4")  # 실제 도메인으로 변경
 SESSION_COOKIE_PATH = "/"
