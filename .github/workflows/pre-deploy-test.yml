@@ -86,7 +86,7 @@ jobs:
         run: |
           ATTEMPTS=0
           MAX_ATTEMPTS=10
-          until curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
+          until curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/ || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
             echo "Waiting for runserver to start..."
             sleep 5
             ATTEMPTS=$((ATTEMPTS + 1))
