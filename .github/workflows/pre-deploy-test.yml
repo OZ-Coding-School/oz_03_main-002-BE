@@ -48,19 +48,13 @@ jobs:
         run: cat .env
 
 
-      - name: Remove existing containers and images
+      - name: Remove existing containers
         working-directory: Django
-        run: |
-          docker-compose down
-          docker rmi $(docker images -q)
+        run: docker-compose down
 
-      - name: Prune Docker builder cache
+      - name: Start services with Docker Compose (Force rebuild)
         working-directory: Django
-        run: docker builder prune -a
-
-      - name: Start services with Docker Compose
-        working-directory: Django
-        run: docker-compose up -d --build
+        run: docker-compose up -d --build --force-recreate
 
       - name: Wait for RDS to be ready
         working-directory: Django
