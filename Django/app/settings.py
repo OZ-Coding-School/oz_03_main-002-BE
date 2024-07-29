@@ -126,7 +126,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-SITE_ID=1
+SITE_ID = 1
 
 # Google OAuth 설정 (클라이언트 ID, 시크릿 키)
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
