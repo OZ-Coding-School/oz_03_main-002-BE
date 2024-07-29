@@ -34,6 +34,13 @@ jobs:
           RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
           RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
           RDS_PORT=${{ secrets.RDS_PORT }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          STATE=${{ secrets.STATE }}
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
+          DEBUG=${{ secrets.DEBUG }}
+          IPv4='*'
           EOF
 
       - name: Print .env file contents (for debugging)
