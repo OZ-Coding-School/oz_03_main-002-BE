@@ -19,6 +19,7 @@ from rest_framework.decorators import action
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -35,7 +36,7 @@ state = os.environ.get("STATE")
 
 
 # --- Google OAuth 관련 ---
-class GoogleLogin(View):
+class GoogleLogin(APIView):
     """
     Google 소셜 로그인을 위한 뷰입니다.
 
@@ -75,7 +76,7 @@ class GoogleLogin(View):
         )
 
 
-class GoogleCallback(View):
+class GoogleCallback(APIView):
     """
     Google OAuth 콜백을 처리하는 뷰입니다.
 
