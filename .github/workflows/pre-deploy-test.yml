@@ -25,14 +25,10 @@ jobs:
         working-directory: Django  # Django 프로젝트 폴더로 이동
         run: echo "COMPOSE_PROJECT_NAME=test_project" >> $GITHUB_ENV  # 컨테이너 이름 설정 (선택 사항)
 
-      - name: Create .env file on EC2
-        uses: appleboy/ssh-action@master
-        with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      - name: Create temporary .env file
+        working-directory: Django
+        run: |
             script: |
-                cd /home/ubuntu/my-app/Django
                 cat << EOF > .env
                 RDS_DATABASE=${{ secrets.RDS_DATABASE }}
                 RDS_USERNAME=${{ secrets.RDS_USERNAME }}
