@@ -9,7 +9,7 @@ load_dotenv()
 # Django 기본 설정
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG")
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # 애플리케이션 목록
@@ -71,7 +71,7 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("RDS_DATABASE"),
+        "NAME": os.environ.get("RDS_USERNAME"),
         "USER": os.environ.get("RDS_USERNAME"),
         "PASSWORD": os.environ.get("RDS_PASSWORD"),
         "HOST": os.environ.get("RDS_HOST"),
