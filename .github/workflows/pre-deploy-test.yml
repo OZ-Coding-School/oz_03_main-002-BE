@@ -79,7 +79,7 @@ jobs:
           fi
 
       - name: Check if runserver is running
-        working-directory: Djangoq
+        working-directory: Django
         run: |
           ATTEMPTS=0
           MAX_ATTEMPTS=10
