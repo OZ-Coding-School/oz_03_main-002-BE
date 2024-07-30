@@ -219,7 +219,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 획득",
         operation_description="이메일과 비밀번호를 사용하여 JWT 토큰 쌍(액세스 토큰, 리프레시 토큰)을 발급합니다.",
         request_body=openapi.Schema(
@@ -280,7 +280,7 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 블랙리스트 추가",
         operation_description="로그아웃 시, Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제합니다.",
         request_body=openapi.Schema(
@@ -346,7 +346,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 갱신",
         operation_description="Refresh 토큰을 사용하여 액세스 토큰을 갱신합니다.",
         request_body=openapi.Schema(
