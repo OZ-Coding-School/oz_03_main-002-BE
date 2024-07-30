@@ -81,10 +81,18 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 LANGUAGE_CODE = "ko-kr"
@@ -124,7 +132,9 @@ SIMPLE_JWT = {
 
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
-GOOGLE_CALLBACK_URI = f"http://{os.environ.get('HOST')}:{os.environ.get('PORT')}/api/v1/google/callback/"
+GOOGLE_CALLBACK_URI = (
+    f"http://{os.environ.get('HOST')}:{os.environ.get('PORT')}/api/v1/google/callback/"
+)
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
