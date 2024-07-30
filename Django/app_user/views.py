@@ -51,7 +51,7 @@ class GoogleLogin(View):
             302: openapi.Response(
                 description="Google 로그인 페이지로 리디렉션",
                 headers={
-                    "Location": openapi.Header(
+                    "Location": openapi.Schema(
                         type=openapi.TYPE_STRING, description="Google 인증 URL"
                     )
                 },
