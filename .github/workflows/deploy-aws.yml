@@ -82,7 +82,7 @@ jobs:
                 DEBUG=${{ secrets.DEBUG }}
                 IPv4=${{ secrets.EC2_IPv4 }}
                 HOST=${{ secrets.EC2_HOST }}
-                ALLOWED_HOSTS=${{ secrets.EC2_HOST }},${{ secrets.EC2_IPv4 }}
+                ALLOWED_HOSTS=${{ secrets.EC2_HOST }},${{ secrets.EC2_IPv4 }},${{ secrets.API_DOMAIN }}
                 PORT= ${{ secrets.Django_Port }}
                 CORS_ALLOWED_ORIGINS = http://${{ secrets.EC2_IPv4 }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_IPv4 }}:${{ secrets.Front_Port }},http://${{ secrets.EC2_HOST }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_HOST }}:${{ secrets.Front_Port }}
                 SESSION_COOKIE_DOMAIN =${{ secrets.EC2_HOST }}
