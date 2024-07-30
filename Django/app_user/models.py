@@ -3,6 +3,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.crypto import get_random_string # added common user
+# from django.utils import timezone
 
 
 class UserRole(models.TextChoices):
@@ -21,6 +23,9 @@ class App_User(AbstractUser):
     is_activate = models.BooleanField(default=True)
     role = models.CharField(
         max_length=10, choices=UserRole.choices, default=UserRole.USER
+    is_email_verified = models.BooleanField(default=False) # added common user email verified
+    email_verification_token = models.CharField(max_length=100, blank=True) # added common user email token
+    email = models.EmailField(unique=True)
     )
 
     USERNAME_FIELD = "user_id"  # user_id를 사용자 이름으로 사용
@@ -29,6 +34,7 @@ class App_User(AbstractUser):
         "nick_name",
         "password_hash",
         "username",
+        'email', # added common login email
     ]  # 필수 필드 설정
     groups = models.ManyToManyField(
         Group, verbose_name="groups", blank=True, related_name="app_user_set"
@@ -42,3 +48,8 @@ class App_User(AbstractUser):
 
     def __str__(self):
         return self.user_id
+
+    # added generate email token
+    def generate_email_token(self):
+        self.email_verification_token = get_random_string(length=32)
+        self.save()

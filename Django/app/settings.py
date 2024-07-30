@@ -65,7 +65,6 @@ CUSTOM_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",  # Google provider 추가
     #   # Common Login
-    "common_user",
 ]
 
 
@@ -213,23 +212,24 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 
-# # Common Login
-# AUTH_USER_MODEL = "common_user.commonUser" # Added Custom User
+# added common Login JWT
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
+# JWT Settings
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
-# 이메일 설정
+# e-mail settings (ex1. used gmail)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP 서버 사용
 EMAIL_PORT = 587

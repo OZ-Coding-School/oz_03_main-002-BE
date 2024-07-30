@@ -6,6 +6,20 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
+# import added common login
+from django.shortcuts import render
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate, get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
+# from .models import EmailVerificationToken
+# from .utils import send_verification_email
+from django.utils.crypto import get_random_string
+from .serializers import (UserRegistrationSerializer, UserLoginSerializer,
+                          PasswordResetRequestSerializer, PasswordResetConfirmSerializer)
 
 
 class UserLoginViewSet(viewsets.GenericViewSet):
@@ -281,6 +295,115 @@ class UserAccountRecoveryViewSet(viewsets.GenericViewSet):
         """
         return Response({"message": "비밀번호 재설정 API (미구현)"})
 
+
+# added Common User
+
+User = get_user_model()
+
+
+class UserRegistrationView(APIView):
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            user.generate_email_token()
+
+            # Send verification email
+            subject = 'Verify your email'
+            message = f'Please click the link to verify your email: http://yourdomain.com/verify-email/{user.email_verification_token}'
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
+
+            return Response({
+                'message': 'User registered successfully. Please check your email to verify your account.',
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email,
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginView(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            if not user.is_email_verified:
+                return Response({'error': 'Please verify your email before logging in.'},
+                                status=status.HTTP_403_FORBIDDEN)
+
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email,
+            })
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EmailVerificationView(APIView):
+    def get(self, request, token):
+        try:
+            user = User.objects.get(email_verification_token=token)
+            user.is_email_verified = True
+            user.email_verification_token = ''
+            user.save()
+            return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user = User.objects.get(email=email)
+                token = get_random_string(length=32)
+                user.email_verification_token = token
+                user.save()
+
+                # Send password reset email
+                subject = 'Password Reset'
+                message = f'Use this token to reset your password: {token}'
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
+
+                return Response({'message': 'Password reset email sent'}, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({'error': 'User with this email does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            token = serializer.validated_data['token']
+            new_password = serializer.validated_data['new_password']
+            try:
+                user = User.objects.get(email_verification_token=token)
+                user.set_password(new_password)
+                user.email_verification_token = ''
+                user.save()
+                return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserRefrigeratorViewSet(viewsets.ViewSet):  # ListModelMixin 제거
     """

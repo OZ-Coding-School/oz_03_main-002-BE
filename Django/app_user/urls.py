@@ -2,6 +2,8 @@
 from django.urls import include
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+from .views import (UserRegistrationView, UserLoginView, EmailVerificationView,
+                    PasswordResetRequestView, PasswordResetConfirmView, UserLogoutView) # import added common user
 
 from . import views
 
@@ -23,4 +25,12 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('register/', UserRegistrationView.as_view(), name='user-register'),
+    # added common login user-register path
+    path('login/', UserLoginView.as_view(), name='user-login'),
+    # added common login user-login path
+    path('verify-email/<str:token>/', EmailVerificationView.as_view(), name='verify-email'),
+    path('password-reset/', PasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+    path('logout/', UserLogoutView.as_view(), name='user-logout'),
 ]
