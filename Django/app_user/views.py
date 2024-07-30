@@ -43,6 +43,21 @@ class GoogleLogin(View):
     로그인 URL을 생성하여 Google 로그인 페이지로 리디렉션합니다.
     """
 
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="Google 소셜 로그인 시작",
+        operation_description="Google 소셜 로그인 프로세스를 시작합니다. Google 로그인 페이지로 리디렉션됩니다.",
+        responses={
+            302: openapi.Response(
+                description="Google 로그인 페이지로 리디렉션",
+                headers={
+                    "Location": openapi.Schema(
+                        type=openapi.TYPE_STRING, description="Google 인증 URL"
+                    )
+                },
+            )
+        },
+    )
     def get(self, request):
         """
         Google 소셜 로그인 URL을 생성합니다.
@@ -68,6 +83,42 @@ class GoogleCallback(View):
     사용자 정보를 가져와 Django 애플리케이션에 로그인 처리를 수행합니다.
     """
 
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="Google 소셜 로그인 콜백",
+        operation_description="Google 인증 후 콜백을 처리합니다. 사용자 정보를 받아 로그인 또는 회원가입을 진행합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                "code",
+                openapi.IN_QUERY,
+                description="Google에서 제공하는 인증 코드",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "state",
+                openapi.IN_QUERY,
+                description="CSRF 방지를 위한 상태 토큰",
+                type=openapi.TYPE_STRING,
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="로그인 성공 및 JWT 토큰 반환",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "access": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="JWT 액세스 토큰"
+                        ),
+                        "refresh": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="JWT 리프레시 토큰"
+                        ),
+                    },
+                ),
+            ),
+            400: openapi.Response(description="잘못된 요청 또는 인증 실패"),
+        },
+    )
     def get(self, request):
         """
         Google OAuth 콜백을 처리합니다.
@@ -173,7 +224,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 획득",
         operation_description="이메일과 비밀번호를 사용하여 JWT 토큰 쌍(액세스 토큰, 리프레시 토큰)을 발급합니다.",
         request_body=openapi.Schema(
@@ -234,7 +285,7 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 블랙리스트 추가",
         operation_description="로그아웃 시, Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제합니다.",
         request_body=openapi.Schema(
@@ -300,7 +351,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 갱신",
         operation_description="Refresh 토큰을 사용하여 액세스 토큰을 갱신합니다.",
         request_body=openapi.Schema(
