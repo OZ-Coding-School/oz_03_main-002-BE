@@ -44,3 +44,18 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     token = serializers.CharField()
     new_password = serializers.CharField(write_only=True, validators=[validate_password])
+
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+
+
+class CustomTokenObtainPairSerializer(TokenRefreshSerializer):
+    """
+    JWT 토큰 갱신을 위한 커스텀 시리얼라이저
+    """
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["user_id"] = str(user.id)
+        return token
+

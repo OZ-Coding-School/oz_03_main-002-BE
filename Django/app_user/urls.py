@@ -1,4 +1,3 @@
-# app/urls.py
 from django.urls import include
 from django.urls import path
 from rest_framework.routers import DefaultRouter
@@ -6,24 +5,32 @@ from .views import (UserRegistrationView, UserLoginView, EmailVerificationView,
                     PasswordResetRequestView, PasswordResetConfirmView, UserLogoutView) # import added common user
 
 from . import views
+from .views import BlacklistTokenUpdateView
+from .views import CustomTokenObtainPairView
+from .views import CustomTokenRefreshView
+from .views import GoogleCallback
+from .views import GoogleLogin
 
-app_name = "user"
+app_name = "app_user"
 
 router = DefaultRouter()
+
+# 뷰셋 등록 (로그인, 회원가입, 계정 복구, 냉장고)
 router.register(
     "login", views.UserLoginViewSet, basename="user_login"
-)  # UserLoginViewSet 등록
+)  # 로그인 관련 뷰셋
 router.register(
     "auth", views.UserSignInViewSet, basename="user_signin"
-)  # UserSignInViewSet 등록
+)  # 회원가입 관련 뷰셋
 router.register(
     "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
-)  # UserAccountRecoveryViewSet 등록
+)  # 계정 복구 관련 뷰셋
 router.register(
     "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
-)  # UserRefrigeratorViewSet 등록
+)  # 냉장고 관련 뷰셋
 
 urlpatterns = [
+    # 뷰셋 URL 포함
     path("", include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user-register'),
     # added common login user-register path
@@ -33,4 +40,17 @@ urlpatterns = [
     path('password-reset/', PasswordResetRequestView.as_view(), name='password-reset-request'),
     path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     path('logout/', UserLogoutView.as_view(), name='user-logout'),
+    # Google OAuth 로그인 관련 URL
+    path(
+        "google/login/", GoogleLogin.as_view(), name="google_login"
+    ),  # GoogleLogin도 클래스 기반 뷰로 변경
+    path(
+        "google/callback/", GoogleCallback.as_view(), name="google_callback"
+    ),  # .as_view() 추가
+    # JWT 토큰 관련 URL
+    path("token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "token/blacklist/", BlacklistTokenUpdateView.as_view(), name="token_blacklist"
+    ),
 ]
