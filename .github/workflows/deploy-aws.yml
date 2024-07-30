@@ -81,26 +81,13 @@ jobs:
                 ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
                 DEBUG=${{ secrets.DEBUG }}
                 IPv4=${{ secrets.EC2_IPv4 }}
-                EC2_HOST=${{ secrets.EC2_HOST }}
+                HOST=${{ secrets.EC2_HOST }}
+                ALLOWED_HOSTS=${{ secrets.EC2_HOST }},${{ secrets.EC2_IPv4 }}
+                PORT= ${{ secrets.Django_Port }}
+                CORS_ALLOWED_ORIGINS = http://${{ secrets.EC2_IPv4 }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_IPv4 }}:${{ secrets.Front_Port }},http://${{ secrets.EC2_HOST }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_HOST }}${{ secrets.Front_Port }}
+                SESSION_COOKIE_DOMAIN =${{ secrets.EC2_HOST }}
                 EOF
 
-      # - name: Run database migrations
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ubuntu
-      #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-      #     script: |
-      #       cd /home/ubuntu/my-app/Django
-
-      #       # Check for existing containers and remove them
-      #       EXISTING_CONTAINERS=$(sudo docker ps -aq)
-      #       if [ -n "$EXISTING_CONTAINERS" ]; then
-      #         echo "Stopping and removing existing containers..."
-      #         sudo docker stop $EXISTING_CONTAINERS
-      #         sudo docker rm $EXISTING_CONTAINERS
-      #       fi
-      #       sudo docker-compose run --rm web python manage.py migrate  # 마이그레이션 실행
 
       - name: Build and run Docker Compose on EC2
         uses: appleboy/ssh-action@master
