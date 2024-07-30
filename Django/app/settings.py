@@ -71,14 +71,17 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("RDS_USERNAME"),
-        "USER": os.environ.get("RDS_USERNAME"),
-        "PASSWORD": os.environ.get("RDS_PASSWORD"),
-        "HOST": os.environ.get("RDS_HOST"),
-        "PORT": os.environ.get("RDS_PORT"),
-        "CONN_MAX_AGE": 3600,
+        "NAME": os.environ.get("RDS_USERNAME"),  # 데이터베이스 이름 (환경 변수 사용)
+        "USER": os.environ.get("RDS_USERNAME"),  # 데이터베이스 사용자 (환경 변수 사용)
+        "PASSWORD": os.environ.get(
+            "RDS_PASSWORD"
+        ),  # 데이터베이스 비밀번호 (환경 변수 사용)
+        "HOST": os.environ.get("RDS_HOSTNAME"),  # 데이터베이스 호스트 (환경 변수 사용)
+        "PORT": os.environ.get("RDS_PORT"),  # 데이터베이스 포트 (환경 변수 사용)
+        "CONN_MAX_AGE": 3600,  # 데이터베이스 연결 유지 시간 (초 단위)
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
