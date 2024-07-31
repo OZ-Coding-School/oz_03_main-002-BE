@@ -14,18 +14,18 @@ app_name = "app_user"
 router = DefaultRouter()
 
 # 뷰셋 등록 (로그인, 회원가입, 계정 복구, 냉장고)
-router.register(
-    "login", views.UserLoginViewSet, basename="user_login"
-)  # 로그인 관련 뷰셋
-router.register(
-    "auth", views.UserSignInViewSet, basename="user_signin"
-)  # 회원가입 관련 뷰셋
-router.register(
-    "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
-)  # 계정 복구 관련 뷰셋
-router.register(
-    "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
-)  # 냉장고 관련 뷰셋
+# router.register(
+#     "login", views.UserLoginViewSet, basename="user_login"
+# )  # 로그인 관련 뷰셋
+# router.register(
+#     "auth", views.UserSignInViewSet, basename="user_signin"
+# )  # 회원가입 관련 뷰셋
+# router.register(
+#     "recovery", views.UserAccountRecoveryViewSet, basename="user_recovery"
+# )  # 계정 복구 관련 뷰셋
+# router.register(
+#     "refrigerator", views.UserRefrigeratorViewSet, basename="user_refrigerator"
+# )  # 냉장고 관련 뷰셋
 
 urlpatterns = [
     # 뷰셋 URL 포함
