@@ -1,21 +1,19 @@
-from django.urls import include
 from django.urls import path
-from rest_framework.routers import DefaultRouter
 
-from . import views
-
-app_name = "refrigerator"
-
-router = DefaultRouter()
-# router.register(
-#     "", views.RefrigeratorViewSet, basename="refrigerator"
-# )  # RefrigeratorViewSet 등록
-# router.register(
-#     "ingredient",
-#     views.RefrigeratorIngredientViewSet,
-#     basename="refrigerator_ingredient",
-# )  # RefrigeratorIngredientViewSet 등록
+from .views import RefrigeratorDetail
+from .views import RefrigeratorIngredientList
+from .views import RefrigeratorList
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("refrigerator/", RefrigeratorList.as_view(), name="refrigerator-list"),
+    path(
+        "refrigerator/<int:pk>/",
+        RefrigeratorDetail.as_view(),
+        name="refrigerator-detail",
+    ),
+    path(
+        "refrigerator/<int:pk>/ingredients/",
+        RefrigeratorIngredientList.as_view(),
+        name="refrigerator-ingredient-list",
+    ),
 ]
