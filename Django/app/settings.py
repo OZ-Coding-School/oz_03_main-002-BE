@@ -185,10 +185,10 @@ SIMPLE_JWT = {
 
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
-# GOOGLE_CALLBACK_URI = f"https://{os.environ.get('HOST')}/api/v1/google/callback/"
-GOOGLE_CALLBACK_URI = (
-    f"http://127.0.0.1:8000/api/v1/google/callback/"  # 로컬 개발시 환경
-)
+GOOGLE_CALLBACK_URI = f"https://{os.environ.get('HOST')}/api/v1/google/callback/"
+# GOOGLE_CALLBACK_URI = (
+#     f"http://127.0.0.1:8000/api/v1/google/callback/"  # 로컬 개발시 환경
+# )
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
