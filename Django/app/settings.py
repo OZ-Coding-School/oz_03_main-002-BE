@@ -208,3 +208,5 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,  # 세션 인증 비활성화 (JWT 사용 시)
     "JSON_EDITOR": True,  # JSON 형식 편집기 활성화 (선택 사항)
 }
+
+SECURE_SSL_REDIRECT = True  # HTTP 요청을 HTTPS로 리디렉션
