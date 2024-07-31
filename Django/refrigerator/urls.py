@@ -10,11 +10,11 @@ router = DefaultRouter()
 # router.register(
 #     "", views.RefrigeratorViewSet, basename="refrigerator"
 # )  # RefrigeratorViewSet 등록
-# router.register(
-#     "ingredient",
-#     views.RefrigeratorIngredientViewSet,
-#     basename="refrigerator_ingredient",
-# )  # RefrigeratorIngredientViewSet 등록
+router.register(
+    "",
+    views.RefrigeratorViewSet,
+    basename="refrigerator_",
+)  # RefrigeratorViewSet 등록
 
 urlpatterns = [
     path("", include(router.urls)),
