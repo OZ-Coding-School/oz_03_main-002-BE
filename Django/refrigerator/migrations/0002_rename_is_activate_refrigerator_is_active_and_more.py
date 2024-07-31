@@ -39,19 +39,32 @@ class Migration(migrations.Migration):
             model_name="refrigerator",
             name="user",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, related_name="refrigerators", to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="refrigerators",
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.CreateModel(
             name="RefrigeratorIngredient",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("expiration_date", models.DateField()),
                 ("quantity", models.FloatField(default=1)),
                 ("unit", models.CharField(default="개", max_length=20)),
                 (
                     "ingredient",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingredient"),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ingredient.ingredient",
+                    ),
                 ),
                 (
                     "refrigerator",

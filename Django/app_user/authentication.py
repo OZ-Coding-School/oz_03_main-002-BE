@@ -1,8 +1,11 @@
 import logging
+
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework_simplejwt.exceptions import TokenError
 
 logger = logging.getLogger(__name__)
+
 
 class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
