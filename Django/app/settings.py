@@ -136,7 +136,7 @@ SIMPLE_JWT = {
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
 GOOGLE_CALLBACK_URI = (
-    f"http://{os.environ.get('HOST')}:{os.environ.get('PORT')}/api/v1/google/callback/"
+    f"https://{os.environ.get('HOST')}/api/v1/google/callback/"
 )
 
 CORS_ORIGIN_ALLOW_ALL = False
