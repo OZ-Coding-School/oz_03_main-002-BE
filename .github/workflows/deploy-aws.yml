@@ -81,11 +81,11 @@ jobs:
                 ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
                 DEBUG=${{ secrets.DEBUG }}
                 IPv4=${{ secrets.EC2_IPv4 }}
-                HOST=${{ secrets.API_DOMAIN }}
-                ALLOWED_HOSTS=${{ secrets.EC2_HOST }},${{ secrets.EC2_IPv4 }},${{ secrets.EC2_HOST }}
+                HOST=${{ secrets.EC2_HOST }}
+                ALLOWED_HOSTS=${{ secrets.EC2_HOST }},${{ secrets.EC2_IPv4 }}
                 PORT= ${{ secrets.Django_Port }}
-                CORS_ALLOWED_ORIGINS = http://${{ secrets.EC2_IPv4 }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_IPv4 }}:${{ secrets.Front_Port }},http://${{ secrets.EC2_HOST }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_HOST }}:${{ secrets.Front_Port }},https://${{ secrets.API_DOMAIN }}, https://${{ secrets.FRONT_DOMAIN }}
-                SESSION_COOKIE_DOMAIN =${{ secrets.API_DOMAIN }}
+                CORS_ALLOWED_ORIGINS = http://${{ secrets.EC2_IPv4 }}:${{ secrets.Django_Port }}, http://${{ secrets.EC2_IPv4 }}:${{ secrets.Front_Port }},http://${{ secrets.EC2_HOST }}:${{ secrets.Django_Port }}, http://${{ secrets.FRONT_DOMAIN }}:${{ secrets.Front_Port }},https://${{ secrets.EC2_HOST }}, https://${{ secrets.FRONT_DOMAIN }}
+                SESSION_COOKIE_DOMAIN =${{ secrets.EC2_HOST }}
                 EOF
 
 
