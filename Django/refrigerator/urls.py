@@ -7,14 +7,14 @@ from . import views
 app_name = "refrigerator"
 
 router = DefaultRouter()
-router.register(
-    "", views.RefrigeratorViewSet, basename="refrigerator"
-)  # RefrigeratorViewSet 등록
-router.register(
-    "ingredient",
-    views.RefrigeratorIngredientViewSet,
-    basename="refrigerator_ingredient",
-)  # RefrigeratorIngredientViewSet 등록
+# router.register(
+#     "", views.RefrigeratorViewSet, basename="refrigerator"
+# )  # RefrigeratorViewSet 등록
+# router.register(
+#     "ingredient",
+#     views.RefrigeratorIngredientViewSet,
+#     basename="refrigerator_ingredient",
+# )  # RefrigeratorIngredientViewSet 등록
 
 urlpatterns = [
     path("", include(router.urls)),
