@@ -15,7 +15,7 @@ schema_view = get_schema_view(
         title="냉똑이 API 문서",
         default_version="v1",
         description="API 설명",
-        # terms_of_service="https://",
+        terms_of_service="https://",
         contact=openapi.Contact(email="joonho1366@gmail.com"),
         license=openapi.License(name="MIT License"),
     ),
