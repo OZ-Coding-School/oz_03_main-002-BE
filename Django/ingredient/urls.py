@@ -7,9 +7,9 @@ from . import views
 app_name = "ingredient"
 
 router = DefaultRouter()
-router.register(
-    "ingredient", views.IngredientViewSet, basename="ingredient"
-)  # IngredientViewSet 등록
+# router.register(
+#     "ingredient", views.IngredientViewSet, basename="ingredient"
+# )  # IngredientViewSet 등록
 
 urlpatterns = [
     path("", include(router.urls)),
