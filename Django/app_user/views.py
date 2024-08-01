@@ -186,29 +186,36 @@ class GoogleCallback(APIView):
                 login(request, user)
 
                 # JWT 토큰 발급
-                pair_view = CustomTokenObtainPairView()
-                factory = APIRequestFactory()
-                drf_request = factory.post(
-                    "/token/", {"email": user.email, "password": "dummy_password"}
-                )
-                drf_request.user = authenticate(
-                    request, username=user.email, password="dummy_password"
-                )
-                pair_view.request = drf_request
-                pair_view.user = user
-                response = pair_view.post(drf_request)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
 
-                content = JSONRenderer().render(response.data)
-                return HttpResponse(
-                    content,
-                    content_type="application/json",
-                    status=response.status_code,
+                # Response 객체 생성 및 쿠키 설정
+                response = Response({})
+                response.set_cookie(
+                    "access", access_token, httponly=True, secure=True, samesite="Lax"
                 )
+                response.set_cookie(
+                    "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+                )
+
+                # 사용자 모델에 refresh 토큰 저장 (선택 사항)
+                user.refresh_token = str(refresh)
+                user.save()
+
+                return response
+
+            except requests.exceptions.RequestException as e:
+                print(f"Error in Google OAuth request: {str(e)}")
+                return JsonResponse(
+                    {"error": "Google OAuth request failed"}, status=400
+                )
+
+            except User.DoesNotExist:
+                return JsonResponse({"error": "User not found"}, status=404)
 
             except Exception as e:
-                print(f"Error in Google callback: {str(e)}")
-                error_data = {"status": "error", "message": str(e)}
-                return JsonResponse(error_data, status=400)
+                print(f"Unexpected error in Google callback: {str(e)}")
+                return JsonResponse({"error": "Internal server error"}, status=500)
 
 
 # --- JWT 관련 ---
@@ -270,12 +277,27 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
+        # response = Response({"access": access_token, "refresh": str(refresh)})
+        # user.refresh_token = str(refresh)
+        # user.save()
 
+        # return response
+        # 토큰을 쿠키에 저장
         response = Response({"access": access_token, "refresh": str(refresh)})
+
+        # JWT 토큰을 쿠키에 설정
+        response.set_cookie(
+            "access", access_token, httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True)
+        response.set_cookie(
+            "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True
+
+        # 사용자 모델에 refresh 토큰 저장 (선택 사항)
         user.refresh_token = str(refresh)
         user.save()
 
-        return response
+        # return response
 
 
 class BlacklistTokenUpdateView(TokenBlacklistView):
@@ -408,13 +430,25 @@ class CustomTokenRefreshView(TokenRefreshView):
             user_id = token.payload[api_settings.USER_ID_CLAIM]
             user = App_User.objects.get(id=user_id)
             refresh = RefreshToken.for_user(user)
-            response_data["refresh"] = str(refresh)
+            # 새로운 리프레시 토큰 생성 및 쿠키 설정
+            refresh = RefreshToken.for_user(user)
+            response = Response({})
+            response.set_cookie(
+                "access",
+                str(refresh.access_token),
+                httponly=True,
+                secure=True,
+                samesite="Lax",
+            )
+            response.set_cookie(
+                "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+            )
 
-            user = App_User.objects.get(id=token.payload[api_settings.USER_ID_CLAIM])
+            # 사용자 모델에 새로운 리프레시 토큰 저장
             user.refresh_token = str(refresh)
             user.save()
 
-            return Response(response_data)
+            return response
 
         except TokenError as e:
             return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
