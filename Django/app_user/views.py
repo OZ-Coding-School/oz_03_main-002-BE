@@ -191,8 +191,12 @@ class GoogleCallback(APIView):
 
                 # Response 객체 생성 및 쿠키 설정
                 response = Response({})
-                response.set_cookie("access", access_token, httponly=True, secure=True, samesite='Lax')
-                response.set_cookie("refresh", str(refresh), httponly=True, secure=True, samesite='Lax')
+                response.set_cookie(
+                    "access", access_token, httponly=True, secure=True, samesite="Lax"
+                )
+                response.set_cookie(
+                    "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+                )
 
                 # 사용자 모델에 refresh 토큰 저장 (선택 사항)
                 user.refresh_token = str(refresh)
@@ -202,7 +206,9 @@ class GoogleCallback(APIView):
 
             except requests.exceptions.RequestException as e:
                 print(f"Error in Google OAuth request: {str(e)}")
-                return JsonResponse({"error": "Google OAuth request failed"}, status=400)
+                return JsonResponse(
+                    {"error": "Google OAuth request failed"}, status=400
+                )
 
             except User.DoesNotExist:
                 return JsonResponse({"error": "User not found"}, status=404)
@@ -280,8 +286,12 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         response = Response({"access": access_token, "refresh": str(refresh)})
 
         # JWT 토큰을 쿠키에 설정
-        response.set_cookie("access", access_token, httponly=True,secure=True,samesite='Lax')#HTTPS만 저장되도록 secure=True)
-        response.set_cookie("refresh", str(refresh), httponly=True,secure=True,samesite='Lax')#HTTPS만 저장되도록 secure=True
+        response.set_cookie(
+            "access", access_token, httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True)
+        response.set_cookie(
+            "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True
 
         # 사용자 모델에 refresh 토큰 저장 (선택 사항)
         user.refresh_token = str(refresh)
@@ -422,9 +432,17 @@ class CustomTokenRefreshView(TokenRefreshView):
             refresh = RefreshToken.for_user(user)
             # 새로운 리프레시 토큰 생성 및 쿠키 설정
             refresh = RefreshToken.for_user(user)
-            response = Response({}) 
-            response.set_cookie("access", str(refresh.access_token), httponly=True, secure=True, samesite='Lax')
-            response.set_cookie("refresh", str(refresh), httponly=True, secure=True, samesite='Lax')
+            response = Response({})
+            response.set_cookie(
+                "access",
+                str(refresh.access_token),
+                httponly=True,
+                secure=True,
+                samesite="Lax",
+            )
+            response.set_cookie(
+                "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+            )
 
             # 사용자 모델에 새로운 리프레시 토큰 저장
             user.refresh_token = str(refresh)
