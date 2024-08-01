@@ -29,6 +29,5 @@ urlpatterns = [
     path(
         "token/blacklist/", BlacklistTokenUpdateView.as_view(), name="token_blacklist"
     ),
-    path('userinfo/', UserInfoView.as_view(), name='userinfo'),
-
+    path("userinfo/", UserInfoView.as_view(), name="userinfo"),
 ]

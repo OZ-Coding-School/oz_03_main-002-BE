@@ -16,6 +16,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
@@ -28,7 +29,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenBlacklistView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
-from rest_framework.permissions import IsAuthenticated
 
 from .serializers import CustomTokenObtainPairSerializer
 
@@ -454,10 +454,12 @@ class CustomTokenRefreshView(TokenRefreshView):
         except TokenError as e:
             return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 class UserInfoView(APIView):
     """
     액세스 토큰을 사용하여 사용자 정보를 조회하는 API 뷰입니다.
     """
+
     permission_classes = [IsAuthenticated]  # 인증된 사용자만 접근 가능하도록 설정
     authentication_classes = [JWTAuthentication]
 
@@ -494,9 +496,11 @@ class UserInfoView(APIView):
         """
         user = request.user  # JWTAuthentication을 통해 인증된 사용자 정보 가져오기
 
-        return Response({
-            "username": user.username,
-            "user_id": user.user_id,
-            "email": user.email,
-            "is_active": user.is_active,
-        })
+        return Response(
+            {
+                "username": user.username,
+                "user_id": user.user_id,
+                "email": user.email,
+                "is_active": user.is_active,
+            }
+        )
