@@ -1,29 +1,16 @@
 import json
+import os
 
-from cryptography.fernet import Fernet
+import dotenv
 
-
-def load_config(config_file, key_file):
-    with open(key_file, "rb") as f:
-        key = f.read()
-    fernet = Fernet(key)
-
-    with open(config_file, "rb") as f:
-        encrypted_config = f.read()
-    decrypted_config = fernet.decrypt(encrypted_config)
-
-    return json.loads(decrypted_config)
+dotenv.load_dotenv("../Django/.env")
 
 
-# 테스트를 위한 코드
-config = load_config(
-    "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-)
 # 본 코드
 # config = load_config('config.json.enc', 'config.key')
-endpoint = config["endpoint"]
-username = config["username"]
-password = config["password"]
+endpoint = os.getenv("RDS_HOSTNAME")
+username = os.getenv("RDS_USERNAME")
+password = os.getenv("RDS_PASSWORD")
 
 # RDS 연결 로직 (예시)
 import psycopg2
@@ -42,7 +29,9 @@ cur = conn.cursor()
 for item in data:
     code = data[item]["major_code"]
     name = data[item]["major_name"]
-    cur.execute("INSERT INTO ingre_major (name, id) VALUES (%s, %s)", (name, code))
+    cur.execute(
+        "INSERT INTO ingredient_ingremajor (name, id) VALUES (%s, %s)", (name, code)
+    )
 conn.commit()
 print("데이터 삽입 완료")
 
@@ -58,7 +47,7 @@ for item in data:
     major_code = data[item]["major_code"]
     if code not in temp:
         cur.execute(
-            "INSERT INTO ingre_middle (name, id, major_id) VALUES (%s, %s, %s)",
+            "INSERT INTO ingredient_ingremiddle (name, id, major_id) VALUES (%s, %s, %s)",
             (name, code, major_code),
         )
         temp.append(code)
@@ -80,7 +69,7 @@ for item in data:
         name = "None"
     if code not in temp:
         cur.execute(
-            "INSERT INTO ingre_sub (name, id, middle_id) VALUES (%s, %s, %s)",
+            "INSERT INTO ingredient_ingresub (name, id, middle_id) VALUES (%s, %s, %s)",
             (name, code, middle_code),
         )
         temp.append(code)
