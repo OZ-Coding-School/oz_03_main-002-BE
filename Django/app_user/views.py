@@ -28,6 +28,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenBlacklistView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import CustomTokenObtainPairSerializer
 
@@ -452,3 +453,50 @@ class CustomTokenRefreshView(TokenRefreshView):
 
         except TokenError as e:
             return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserInfoView(APIView):
+    """
+    액세스 토큰을 사용하여 사용자 정보를 조회하는 API 뷰입니다.
+    """
+    permission_classes = [IsAuthenticated]  # 인증된 사용자만 접근 가능하도록 설정
+    authentication_classes = [JWTAuthentication]
+
+    @swagger_auto_schema(
+        tags=["User"],
+        operation_summary="사용자 정보 조회",
+        operation_description="액세스 토큰을 사용하여 사용자 정보(username, user_id, email, is_active)를 조회합니다.",
+        responses={
+            200: openapi.Response(
+                description="사용자 정보 조회 성공",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "username": openapi.Schema(type=openapi.TYPE_STRING),
+                        "user_id": openapi.Schema(type=openapi.TYPE_STRING),
+                        "email": openapi.Schema(type=openapi.TYPE_STRING),
+                        "is_active": openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                    },
+                ),
+            ),
+            401: openapi.Response(description="인증되지 않은 사용자"),
+        },
+    )
+    def get(self, request):
+        """
+        액세스 토큰으로 사용자 정보를 조회합니다.
+
+        **요청:**
+        - GET 요청
+
+        **응답:**
+        - 200 OK: 사용자 정보 반환
+        - 401 Unauthorized: 인증되지 않은 사용자
+        """
+        user = request.user  # JWTAuthentication을 통해 인증된 사용자 정보 가져오기
+
+        return Response({
+            "username": user.username,
+            "user_id": user.user_id,
+            "email": user.email,
+            "is_active": user.is_active,
+        })

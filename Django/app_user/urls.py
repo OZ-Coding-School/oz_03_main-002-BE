@@ -2,12 +2,12 @@ from django.urls import include
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from . import views
 from .views import BlacklistTokenUpdateView
 from .views import CustomTokenObtainPairView
 from .views import CustomTokenRefreshView
 from .views import GoogleCallback
 from .views import GoogleLogin
+from .views import UserInfoView
 
 app_name = "app_user"
 
@@ -29,4 +29,6 @@ urlpatterns = [
     path(
         "token/blacklist/", BlacklistTokenUpdateView.as_view(), name="token_blacklist"
     ),
+    path('userinfo/', UserInfoView.as_view(), name='userinfo'),
+
 ]
