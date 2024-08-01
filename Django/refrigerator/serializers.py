@@ -1,14 +1,9 @@
 from ingredient.models import Ingredient
+from ingredient.serializers import IngredientSerializer
 from rest_framework import serializers
 
 from .models import Refrigerator
 from .models import RefrigeratorIngredient
-
-
-class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = ["id", "name"]
 
 
 class RefrigeratorIngredientSerializer(serializers.ModelSerializer):
@@ -16,6 +11,7 @@ class RefrigeratorIngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RefrigeratorIngredient
+        ref_name = "RefrigeratorIngredient"  # 명시적으로 ref_name 설정
         fields = ["id", "ingredient", "quantity", "unit", "expiration_date"]
 
 
