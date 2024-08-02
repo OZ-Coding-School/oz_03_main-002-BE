@@ -9,6 +9,8 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.crypto import get_random_string # added common user
+# from django.utils import timezone
 from rest_framework_simplejwt.tokens import OutstandingToken
 
 
@@ -72,14 +74,23 @@ class App_User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)  # 업데이트 시간
     last_login_at = models.DateTimeField(null=True, blank=True)  # 마지막 로그인 시간
     is_active = models.BooleanField(default=True)  # 계정 활성화 여부
-    role = models.CharField(
-        max_length=10, choices=UserRole.choices, default=UserRole.USER
-    )
+    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.USER)
+    is_email_verified = models.BooleanField(default=False) # added common user email verified
+    email_verification_token = models.CharField(max_length=100, blank=True) # added common user email token
+    email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)  # 스태프 권한
     date_joined = models.DateTimeField(auto_now_add=True)  # 가입일
     is_superuser = models.BooleanField(default=False)  # 최고 관리자 권한
     refresh_token = models.TextField(blank=True, null=True)  # 리프레시 토큰 저장 필드
 
+    USERNAME_FIELD = "user_id"  # user_id를 사용자 이름으로 사용
+    REQUIRED_FIELDS = [
+        "name",
+        "nick_name",
+        "password_hash",
+        "username",
+        'email', # added common login email
+    ]  # 필수 필드 설정
     objects = AppUserManager()  # 커스텀 사용자 관리자 사용
 
     USERNAME_FIELD = "user_id"  # 로그인에 사용할 필드
@@ -115,6 +126,10 @@ class App_User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.user_id
 
+    # added generate email token
+    def generate_email_token(self):
+        self.email_verification_token = get_random_string(length=32)
+        self.save()
 
 # --- SimpleJWT 관련 ---
 class OutstandingToken(models.Model):
