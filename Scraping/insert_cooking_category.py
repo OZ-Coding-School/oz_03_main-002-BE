@@ -1,29 +1,17 @@
 import json
 
-from cryptography.fernet import Fernet
+
+import dotenv
+import os
+
+dotenv.load_dotenv("../Django/.env")
 
 
-def load_config(config_file, key_file):
-    with open(key_file, "rb") as f:
-        key = f.read()
-    fernet = Fernet(key)
-
-    with open(config_file, "rb") as f:
-        encrypted_config = f.read()
-    decrypted_config = fernet.decrypt(encrypted_config)
-
-    return json.loads(decrypted_config)
-
-
-# 테스트를 위한 코드
-config = load_config(
-    "../crypto_files/config_test.json.enc", "../crypto_files/config.key"
-)
 # 본 코드
 # config = load_config('config.json.enc', 'config.key')
-endpoint = config["endpoint"]
-username = config["username"]
-password = config["password"]
+endpoint = os.getenv("RDS_HOSTNAME")
+username = os.getenv("RDS_USERNAME")
+password = os.getenv("RDS_PASSWORD")
 
 # RDS 연결 로직 (예시)
 import psycopg2
@@ -39,7 +27,7 @@ with open("../DataTools/Data/result/cooking_type_list.json", "r") as f:
     data = json.load(f)
 cur = conn.cursor()
 for item in data:
-    cur.execute(f"INSERT INTO cooking_type (name) VALUES ('{data[item]}')")
+    cur.execute(f"INSERT INTO recipe_cookingtype (name) VALUES ('{data[item]}')")
 conn.commit()
 print("데이터 삽입 완료")
 
@@ -48,7 +36,7 @@ with open("../DataTools/Data/result/cooking_situation_list.json", "r") as f:
     data = json.load(f)
 cur = conn.cursor()
 for item in data:
-    cur.execute(f"INSERT INTO cooking_type (name) VALUES ('{data[item]}')")
+    cur.execute(f"INSERT INTO recipe_cookingsituation (name) VALUES ('{data[item]}')")
 conn.commit()
 print("데이터 삽입 완료")
 
@@ -57,7 +45,7 @@ with open("../DataTools/Data/result/cooking_methods_list.json", "r") as f:
     data = json.load(f)
 cur = conn.cursor()
 for item in data:
-    cur.execute(f"INSERT INTO cooking_type (name) VALUES ('{data[item]}')")
+    cur.execute(f"INSERT INTO recipe_cookingmethod (name) VALUES ('{data[item]}')")
 conn.commit()
 print("데이터 삽입 완료")
 
@@ -67,6 +55,6 @@ with open("../DataTools/Data/result/cooking_main_ingredients_list.json", "r") as
     data = json.load(f)
 cur = conn.cursor()
 for item in data:
-    cur.execute(f"INSERT INTO cooking_type (name) VALUES ('{data[item]}')")
+    cur.execute(f"INSERT INTO recipe_cookingmainingre (name) VALUES ('{data[item]}')")
 conn.commit()
 print("데이터 삽입 완료")
