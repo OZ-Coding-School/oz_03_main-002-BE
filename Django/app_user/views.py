@@ -203,7 +203,7 @@ class GoogleCallback(APIView):
                 user.refresh_token = str(refresh)
                 user.save()
 
-                return response
+                return redirect("https://naengttogi.com/")
 
             except requests.exceptions.RequestException as e:
                 print(f"Error in Google OAuth request: {str(e)}")
