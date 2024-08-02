@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import login
 from django.db import transaction
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views import View
@@ -191,19 +192,30 @@ class GoogleCallback(APIView):
                 access_token = str(refresh.access_token)
 
                 # Response 객체 생성 및 쿠키 설정
-                response = Response({})
+                # response = HttpResponseRedirect("https://naengttogi.com/", status=307)
+                response = HttpResponseRedirect(
+                    "http://localhost:5173/", status=307
+                )  # 프론트 테스트용
                 response.set_cookie(
-                    "access", access_token, httponly=True, secure=True, samesite="Lax"
+                    "access",
+                    access_token,
+                    httponly=True,
+                    secure=settings.DEBUG is False,  # 개발 환경에 따라 secure 설정
+                    samesite="None",  # Cross-site 쿠키 허용
                 )
                 response.set_cookie(
-                    "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+                    "refresh",
+                    str(refresh),
+                    httponly=True,
+                    secure=settings.DEBUG is False,
+                    samesite="None",
                 )
 
-                # 사용자 모델에 refresh 토큰 저장 (선택 사항)
+                # 사용자 모델에 refresh 토큰 저장
                 user.refresh_token = str(refresh)
                 user.save()
 
-                return redirect("https://naengttogi.com/")
+                return response
 
             except requests.exceptions.RequestException as e:
                 print(f"Error in Google OAuth request: {str(e)}")

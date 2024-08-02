@@ -166,8 +166,8 @@ SITE_ID = 1
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
-CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -185,10 +185,10 @@ SIMPLE_JWT = {
 
 ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 
-GOOGLE_CALLBACK_URI = f"https://{os.environ.get('HOST')}/api/v1/google/callback/"
-# GOOGLE_CALLBACK_URI = (
-#     f"http://127.0.0.1:8000/api/v1/google/callback/"  # 로컬 개발시 환경
-# )
+if DEBUG:
+    GOOGLE_CALLBACK_URI = "http://127.0.0.1:8000/api/v1/google/callback/"
+else:
+    GOOGLE_CALLBACK_URI = "https://naengttogi.com/api/v1/google/callback/"
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
@@ -208,3 +208,8 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,  # 세션 인증 비활성화 (JWT 사용 시)
     "JSON_EDITOR": True,  # JSON 형식 편집기 활성화 (선택 사항)
 }
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_DOMAIN = ".naengttogi.com"
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken", "Set-Cookie"]
