@@ -208,3 +208,11 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,  # 세션 인증 비활성화 (JWT 사용 시)
     "JSON_EDITOR": True,  # JSON 형식 편집기 활성화 (선택 사항)
 }
+
+# # 이메일 설정 (예: Gmail 사용)
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-email-password'

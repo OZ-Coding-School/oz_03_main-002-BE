@@ -9,8 +9,8 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.utils.crypto import get_random_string # added common user
-# from django.utils import timezone
+from django.utils.crypto import get_random_string # added common user login dependency
+# from django.utils import timezone # added common user login dependency
 from rest_framework_simplejwt.tokens import OutstandingToken
 
 
@@ -126,7 +126,7 @@ class App_User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.user_id
 
-    # added generate email token
+    # added common user generate email token
     def generate_email_token(self):
         self.email_verification_token = get_random_string(length=32)
         self.save()

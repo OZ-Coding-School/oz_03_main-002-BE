@@ -7,7 +7,9 @@ User = get_user_model()
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
-
+    """
+    added common user sign-up registration
+    """
     class Meta:
         model = User
         fields = ('email', 'username', 'nickname', 'password', 'password2')
@@ -31,13 +33,14 @@ class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=False)
     email = serializers.EmailField(required=False)
     password = serializers.CharField()
-
+    """
+    added common user sign-in
+    """
     def validate(self, data):
         if not data.get('username') and not data.get('email'):
             raise serializers.ValidationError("Must include either 'username' or 'email'.")
         return data
 
-# added common user Password Reset
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
@@ -47,6 +50,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
+"""
+added common user password reset management
+"""
 
 class CustomTokenObtainPairSerializer(TokenRefreshSerializer):
     """

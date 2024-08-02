@@ -1,51 +1,43 @@
 import os
-
 import requests
 from app_user.models import App_User
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.db import transaction
-from django.http import HttpResponse
-from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.views import View
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
-# import added common login
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate, get_user_model
-from django.core.mail import send_mail
-from django.conf import settings
-# from .models import EmailVerificationToken
-# from .utils import send_verification_email
-from django.utils.crypto import get_random_string
-from .serializers import (UserRegistrationSerializer, UserLoginSerializer,
-                          PasswordResetRequestSerializer, PasswordResetConfirmSerializer)
-from rest_framework.test import APIRequestFactory
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
-from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenBlacklistView
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenBlacklistView, TokenObtainPairView, TokenRefreshView
 
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import (UserRegistrationSerializer, UserLoginSerializer,
+                          PasswordResetRequestSerializer, PasswordResetConfirmSerializer,
+                          CustomTokenObtainPairSerializer)
+
+"""
+duplicate import code clean legibility
+
+- django.contrib.auth에서 authenticate, login, get_user_model을 한 줄로 정리
+- django.http에서 HttpResponse, JsonResponse를 한 줄로 정리
+- django.shortcuts에서 redirect, render를 한 줄로 정리
+- rest_framework에서 status, viewsets를 한 줄로 정리
+- rest_framework_simplejwt.tokens에서 RefreshToken을 중복 제거
+
+"""
 
 User = get_user_model()
 state = os.environ.get("STATE")
@@ -601,12 +593,22 @@ class UserAccountRecoveryViewSet(viewsets.GenericViewSet):
         return Response({"message": "비밀번호 재설정 API (미구현)"})
 
 
-# added Common User
+# added Common User code fix update swagger
 
 User = get_user_model()
 
 
 class UserRegistrationView(APIView):
+    @swagger_auto_schema(
+        request_body=UserRegistrationSerializer,
+        responses={
+            201: openapi.Response('User registered successfully'),
+            400: openapi.Response('Invalid data'),
+        },
+        tags=["User"],
+        operation_summary="사용자 등록",
+        operation_description="사용자를 등록하고 이메일 확인을 위한 토큰을 발송합니다."
+    )
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -615,7 +617,7 @@ class UserRegistrationView(APIView):
 
             # Send verification email
             subject = 'Verify your email'
-            message = f'Please click the link to verify your email: http://yourdomain.com/verify-email/{user.email_verification_token}'
+            message = f'Please click the link to verify your email: {user.email_verification_token}'
             send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
 
             return Response({
@@ -628,6 +630,17 @@ class UserRegistrationView(APIView):
 
 
 class UserLoginView(APIView):
+    @swagger_auto_schema(
+        request_body=UserLoginSerializer,
+        responses={
+            200: openapi.Response('User logged in successfully'),
+            403: openapi.Response('Email not verified'),
+            400: openapi.Response('Invalid data'),
+        },
+        tags=["User"],
+        operation_summary="사용자 로그인",
+        operation_description="이메일 확인 후 사용자가 로그인할 수 있도록 합니다."
+    )
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -648,6 +661,15 @@ class UserLoginView(APIView):
 
 
 class EmailVerificationView(APIView):
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response('Email verified successfully'),
+            400: openapi.Response('Invalid token'),
+        },
+        tags=["User"],
+        operation_summary="이메일 인증",
+        operation_description="이메일 인증 토큰을 사용하여 사용자의 이메일을 인증합니다."
+    )
     def get(self, request, token):
         try:
             user = User.objects.get(email_verification_token=token)
@@ -662,6 +684,21 @@ class EmailVerificationView(APIView):
 class UserLogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'refresh_token': openapi.Schema(type=openapi.TYPE_STRING)
+            }
+        ),
+        responses={
+            200: openapi.Response('Successfully logged out'),
+            400: openapi.Response('Invalid token'),
+        },
+        tags=["User"],
+        operation_summary="사용자 로그아웃",
+        operation_description="사용자가 로그아웃합니다."
+    )
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
@@ -673,6 +710,17 @@ class UserLogoutView(APIView):
 
 
 class PasswordResetRequestView(APIView):
+    @swagger_auto_schema(
+        request_body=PasswordResetRequestSerializer,
+        responses={
+            200: openapi.Response('Password reset email sent'),
+            404: openapi.Response('User with this email does not exist'),
+            400: openapi.Response('Invalid data'),
+        },
+        tags=["User"],
+        operation_summary="비밀번호 재설정 요청",
+        operation_description="사용자의 이메일로 비밀번호 재설정 토큰을 발송합니다."
+    )
     def post(self, request):
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -695,6 +743,16 @@ class PasswordResetRequestView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
+    @swagger_auto_schema(
+        request_body=PasswordResetConfirmSerializer,
+        responses={
+            200: openapi.Response('Password reset successfully'),
+            400: openapi.Response('Invalid token'),
+        },
+        tags=["User"],
+        operation_summary="비밀번호 재설정 확인",
+        operation_description="재설정 토큰을 사용하여 비밀번호를 변경합니다."
+    )
     def post(self, request):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
@@ -709,6 +767,7 @@ class PasswordResetConfirmView(APIView):
             except User.DoesNotExist:
                 return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserRefrigeratorViewSet(viewsets.ViewSet):  # ListModelMixin 제거
     """
