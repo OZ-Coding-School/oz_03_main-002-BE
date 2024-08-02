@@ -30,12 +30,19 @@ class RecipeDifficulty(models.TextChoices):
 
 
 class CookingAttribute(models.Model):
-    name = models.ForeignKey(CookingNameList, on_delete=models.CASCADE)  # ForeignKey로 변경
-    method = models.ForeignKey(CookingMethod, on_delete=models.CASCADE)  # ForeignKey로 변경
-    situation = models.ForeignKey(CookingSituation, on_delete=models.CASCADE)  # ForeignKey로 변경
-    main_ingre = models.ForeignKey(CookingMainIngre, on_delete=models.CASCADE)  # ForeignKey로 변경
+    name = models.ForeignKey(
+        CookingNameList, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    method = models.ForeignKey(
+        CookingMethod, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    situation = models.ForeignKey(
+        CookingSituation, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    main_ingre = models.ForeignKey(
+        CookingMainIngre, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
     type = models.ForeignKey(CookingType, on_delete=models.CASCADE)  # ForeignKey로 변경
-    
 
 
 class Recipe(models.Model):

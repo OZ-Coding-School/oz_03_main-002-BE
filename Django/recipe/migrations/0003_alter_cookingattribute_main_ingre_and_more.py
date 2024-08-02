@@ -14,21 +14,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="cookingattribute",
             name="main_ingre",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingmainingre"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="recipe.cookingmainingre",
+            ),
         ),
         migrations.AlterField(
             model_name="cookingattribute",
             name="method",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingmethod"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingmethod"
+            ),
         ),
         migrations.AlterField(
             model_name="cookingattribute",
             name="situation",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingsituation"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="recipe.cookingsituation",
+            ),
         ),
         migrations.AlterField(
             model_name="cookingattribute",
             name="type",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingtype"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingtype"
+            ),
         ),
     ]

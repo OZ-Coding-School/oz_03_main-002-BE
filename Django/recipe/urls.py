@@ -1,17 +1,15 @@
 from django.urls import path
 
+from .views import CookingMainIngreListView
+from .views import CookingMethodListView
+from .views import CookingNameListListView
+from .views import CookingSituationListView
+from .views import CookingTypeListView
 from .views import DetailRecipeListView
 from .views import RecipeCreateView
 from .views import RecipeDetailView
 from .views import RecipeFilterView
 from .views import RecipeListView
-from .views import (
-        CookingNameListListView,
-    CookingMethodListView,
-    CookingSituationListView,
-    CookingMainIngreListView,
-    CookingTypeListView,
-)
 
 urlpatterns = [
     path("recipes/", RecipeListView.as_view(), name="recipe-list"),
@@ -23,9 +21,23 @@ urlpatterns = [
         DetailRecipeListView.as_view(),
         name="detail-recipe-list",
     ),
-    path('cooking_name_lists/', CookingNameListListView.as_view(), name='cooking-name-list'),
-    path('cooking_methods/', CookingMethodListView.as_view(), name='cooking-method-list'),
-    path('cooking_situations/', CookingSituationListView.as_view(), name='cooking-situation-list'),
-    path('cooking_main_ingres/', CookingMainIngreListView.as_view(), name='cooking-main-ingre-list'),
-    path('cooking_types/', CookingTypeListView.as_view(), name='cooking-type-list'),
+    path(
+        "cooking_name_lists/",
+        CookingNameListListView.as_view(),
+        name="cooking-name-list",
+    ),
+    path(
+        "cooking_methods/", CookingMethodListView.as_view(), name="cooking-method-list"
+    ),
+    path(
+        "cooking_situations/",
+        CookingSituationListView.as_view(),
+        name="cooking-situation-list",
+    ),
+    path(
+        "cooking_main_ingres/",
+        CookingMainIngreListView.as_view(),
+        name="cooking-main-ingre-list",
+    ),
+    path("cooking_types/", CookingTypeListView.as_view(), name="cooking-type-list"),
 ]

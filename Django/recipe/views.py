@@ -7,10 +7,18 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import CookingMainIngre
+from .models import CookingMethod
+from .models import CookingNameList
+from .models import CookingSituation
+from .models import CookingType
 from .models import Recipe
 from .models import RecipeIngredientList
-from .models import CookingNameList, CookingMethod, CookingSituation, CookingMainIngre, CookingType
-from .serializers import CookingNameListSerializer, CookingMethodSerializer, CookingSituationSerializer, CookingMainIngreSerializer, CookingTypeSerializer
+from .serializers import CookingMainIngreSerializer
+from .serializers import CookingMethodSerializer
+from .serializers import CookingNameListSerializer
+from .serializers import CookingSituationSerializer
+from .serializers import CookingTypeSerializer
 from .serializers import DetailRecipeSerializer
 from .serializers import RecipeSerializer
 
@@ -47,7 +55,9 @@ class RecipeListView(APIView):
         queryset = Recipe.objects.all().order_by("-created_at")
 
         if last_recipe_id:
-            queryset = queryset.filter(id__lt=last_recipe_id)  # 마지막 레시피 ID보다 작은 레시피만 필터링
+            queryset = queryset.filter(
+                id__lt=last_recipe_id
+            )  # 마지막 레시피 ID보다 작은 레시피만 필터링
 
         recipes = queryset[:page_size]
         serializer = RecipeSerializer(recipes, many=True)
@@ -77,9 +87,10 @@ class RecipeCreateView(APIView):
         serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid():
             recipe = serializer.save(nick_name=request.user)
-            return Response(RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED)
+            return Response(
+                RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class RecipeDetailView(APIView):
@@ -215,7 +226,8 @@ class DetailRecipeListView(APIView):
         detail_recipes = DetailRecipe.objects.filter(recipe_id=recipe_id)
         serializer = DetailRecipeSerializer(detail_recipes, many=True)
         return Response(serializer.data)
-    
+
+
 class CookingNameListListView(APIView):
     """
     CookingNameList 목록 조회 API 뷰
@@ -230,7 +242,7 @@ class CookingNameListListView(APIView):
                 description="CookingNameList 목록 조회 성공",
                 schema=CookingNameListSerializer(many=True),
             )
-        }
+        },
     )
     def get(self, request):
         queryset = CookingNameList.objects.all()
@@ -252,7 +264,7 @@ class CookingMethodListView(APIView):
                 description="CookingMethod 목록 조회 성공",
                 schema=CookingMethodSerializer(many=True),
             )
-        }
+        },
     )
     def get(self, request):
         queryset = CookingMethod.objects.all()
@@ -274,7 +286,7 @@ class CookingSituationListView(APIView):
                 description="CookingSituation 목록 조회 성공",
                 schema=CookingSituationSerializer(many=True),
             )
-        }
+        },
     )
     def get(self, request):
         queryset = CookingSituation.objects.all()
@@ -296,7 +308,7 @@ class CookingMainIngreListView(APIView):
                 description="CookingMainIngre 목록 조회 성공",
                 schema=CookingMainIngreSerializer(many=True),
             )
-        }
+        },
     )
     def get(self, request):
         queryset = CookingMainIngre.objects.all()
@@ -318,7 +330,7 @@ class CookingTypeListView(APIView):
                 description="CookingType 목록 조회 성공",
                 schema=CookingTypeSerializer(many=True),
             )
-        }
+        },
     )
     def get(self, request):
         queryset = CookingType.objects.all()

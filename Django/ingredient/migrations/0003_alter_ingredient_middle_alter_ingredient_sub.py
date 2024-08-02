@@ -15,12 +15,18 @@ class Migration(migrations.Migration):
             model_name="ingredient",
             name="middle",
             field=models.ForeignKey(
-                null=True, on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingremiddle"
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="ingredient.ingremiddle",
             ),
         ),
         migrations.AlterField(
             model_name="ingredient",
             name="sub",
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to="ingredient.ingresub"),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="ingredient.ingresub",
+            ),
         ),
     ]

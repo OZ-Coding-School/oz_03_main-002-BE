@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="cookingattribute",
             name="name",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingnamelist"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="recipe.cookingnamelist"
+            ),
         ),
         migrations.AlterUniqueTogether(
             name="cookingattribute",
