@@ -16,6 +16,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -34,6 +35,7 @@ from django.utils.crypto import get_random_string
 from .serializers import (UserRegistrationSerializer, UserLoginSerializer,
                           PasswordResetRequestSerializer, PasswordResetConfirmSerializer)
 from rest_framework.test import APIRequestFactory
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -50,7 +52,7 @@ state = os.environ.get("STATE")
 
 
 # --- Google OAuth 관련 ---
-class GoogleLogin(View):
+class GoogleLogin(APIView):
     """
     Google 소셜 로그인을 위한 뷰입니다.
 
@@ -58,6 +60,21 @@ class GoogleLogin(View):
     로그인 URL을 생성하여 Google 로그인 페이지로 리디렉션합니다.
     """
 
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="Google 소셜 로그인 시작",
+        operation_description="Google 소셜 로그인 프로세스를 시작합니다. Google 로그인 페이지로 리디렉션됩니다.",
+        responses={
+            302: openapi.Response(
+                description="Google 로그인 페이지로 리디렉션",
+                headers={
+                    "Location": openapi.Schema(
+                        type=openapi.TYPE_STRING, description="Google 인증 URL"
+                    )
+                },
+            )
+        },
+    )
     def get(self, request):
         """
         Google 소셜 로그인 URL을 생성합니다.
@@ -75,7 +92,7 @@ class GoogleLogin(View):
         )
 
 
-class GoogleCallback(View):
+class GoogleCallback(APIView):
     """
     Google OAuth 콜백을 처리하는 뷰입니다.
 
@@ -83,6 +100,42 @@ class GoogleCallback(View):
     사용자 정보를 가져와 Django 애플리케이션에 로그인 처리를 수행합니다.
     """
 
+    @swagger_auto_schema(
+        tags=["Google-Login"],
+        operation_summary="Google 소셜 로그인 콜백",
+        operation_description="Google 인증 후 콜백을 처리합니다. 사용자 정보를 받아 로그인 또는 회원가입을 진행합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                "code",
+                openapi.IN_QUERY,
+                description="Google에서 제공하는 인증 코드",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "state",
+                openapi.IN_QUERY,
+                description="CSRF 방지를 위한 상태 토큰",
+                type=openapi.TYPE_STRING,
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="로그인 성공 및 JWT 토큰 반환",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "access": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="JWT 액세스 토큰"
+                        ),
+                        "refresh": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="JWT 리프레시 토큰"
+                        ),
+                    },
+                ),
+            ),
+            400: openapi.Response(description="잘못된 요청 또는 인증 실패"),
+        },
+    )
     def get(self, request):
         """
         Google OAuth 콜백을 처리합니다.
@@ -149,29 +202,36 @@ class GoogleCallback(View):
                 login(request, user)
 
                 # JWT 토큰 발급
-                pair_view = CustomTokenObtainPairView()
-                factory = APIRequestFactory()
-                drf_request = factory.post(
-                    "/token/", {"email": user.email, "password": "dummy_password"}
-                )
-                drf_request.user = authenticate(
-                    request, username=user.email, password="dummy_password"
-                )
-                pair_view.request = drf_request
-                pair_view.user = user
-                response = pair_view.post(drf_request)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
 
-                content = JSONRenderer().render(response.data)
-                return HttpResponse(
-                    content,
-                    content_type="application/json",
-                    status=response.status_code,
+                # Response 객체 생성 및 쿠키 설정
+                response = Response({})
+                response.set_cookie(
+                    "access", access_token, httponly=True, secure=True, samesite="Lax"
                 )
+                response.set_cookie(
+                    "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+                )
+
+                # 사용자 모델에 refresh 토큰 저장 (선택 사항)
+                user.refresh_token = str(refresh)
+                user.save()
+
+                return redirect("https://naengttogi.com/")
+
+            except requests.exceptions.RequestException as e:
+                print(f"Error in Google OAuth request: {str(e)}")
+                return JsonResponse(
+                    {"error": "Google OAuth request failed"}, status=400
+                )
+
+            except User.DoesNotExist:
+                return JsonResponse({"error": "User not found"}, status=404)
 
             except Exception as e:
-                print(f"Error in Google callback: {str(e)}")
-                error_data = {"status": "error", "message": str(e)}
-                return JsonResponse(error_data, status=400)
+                print(f"Unexpected error in Google callback: {str(e)}")
+                return JsonResponse({"error": "Internal server error"}, status=500)
 
 
 # --- JWT 관련 ---
@@ -188,7 +248,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 획득",
         operation_description="이메일과 비밀번호를 사용하여 JWT 토큰 쌍(액세스 토큰, 리프레시 토큰)을 발급합니다.",
         request_body=openapi.Schema(
@@ -233,12 +293,27 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
+        # response = Response({"access": access_token, "refresh": str(refresh)})
+        # user.refresh_token = str(refresh)
+        # user.save()
 
+        # return response
+        # 토큰을 쿠키에 저장
         response = Response({"access": access_token, "refresh": str(refresh)})
+
+        # JWT 토큰을 쿠키에 설정
+        response.set_cookie(
+            "access", access_token, httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True)
+        response.set_cookie(
+            "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+        )  # HTTPS만 저장되도록 secure=True
+
+        # 사용자 모델에 refresh 토큰 저장 (선택 사항)
         user.refresh_token = str(refresh)
         user.save()
 
-        return response
+        # return response
 
 
 class BlacklistTokenUpdateView(TokenBlacklistView):
@@ -249,7 +324,7 @@ class BlacklistTokenUpdateView(TokenBlacklistView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 블랙리스트 추가",
         operation_description="로그아웃 시, Refresh 토큰을 블랙리스트에 추가하고 사용자 모델에서 삭제합니다.",
         request_body=openapi.Schema(
@@ -315,7 +390,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     """
 
     @swagger_auto_schema(
-        tags=["Google-Login"],
+        tags=["JWT"],
         operation_summary="JWT 토큰 갱신",
         operation_description="Refresh 토큰을 사용하여 액세스 토큰을 갱신합니다.",
         request_body=openapi.Schema(
@@ -371,162 +446,59 @@ class CustomTokenRefreshView(TokenRefreshView):
             user_id = token.payload[api_settings.USER_ID_CLAIM]
             user = App_User.objects.get(id=user_id)
             refresh = RefreshToken.for_user(user)
-            response_data["refresh"] = str(refresh)
+            # 새로운 리프레시 토큰 생성 및 쿠키 설정
+            refresh = RefreshToken.for_user(user)
+            response = Response({})
+            response.set_cookie(
+                "access",
+                str(refresh.access_token),
+                httponly=True,
+                secure=True,
+                samesite="Lax",
+            )
+            response.set_cookie(
+                "refresh", str(refresh), httponly=True, secure=True, samesite="Lax"
+            )
 
-            user = App_User.objects.get(id=token.payload[api_settings.USER_ID_CLAIM])
+            # 사용자 모델에 새로운 리프레시 토큰 저장
             user.refresh_token = str(refresh)
             user.save()
 
-            return Response(response_data)
+            return response
 
         except TokenError as e:
             return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# --- DRF Yasg ---
-class UserLoginViewSet(viewsets.GenericViewSet):
+class UserInfoView(APIView):
     """
-    사용자 로그인 관련 API (미구현)
+    액세스 토큰을 사용하여 사용자 정보를 조회하는 API 뷰입니다.
     """
 
-    # 아이디로 사용자 로그인
+    permission_classes = [IsAuthenticated]  # 인증된 사용자만 접근 가능하도록 설정
+    authentication_classes = [JWTAuthentication]
+
     @swagger_auto_schema(
-        tags=["UserLogin"],
-        operation_summary="아이디 로그인",
-        operation_description="아이디와 비밀번호를 사용하여 로그인합니다.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "username": openapi.Schema(type=openapi.TYPE_STRING),
-                "password": openapi.Schema(type=openapi.TYPE_STRING),
-            },
-        ),
+        tags=["User"],
+        operation_summary="사용자 정보 조회",
+        operation_description="액세스 토큰을 사용하여 사용자 정보(username, user_id, email, is_active)를 조회합니다.",
         responses={
-            201: openapi.Response(
-                description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
-            ),
-            401: openapi.Response(
-                description="아이디 또는 비밀번호가 일치하지 않을 경우."
-            ),
-            400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
-        },
-    )
-    @action(detail=False, methods=["post"], name="id_login", url_path="id")
-    def user_login_id(self, request):
-        """
-        아이디로 사용자 로그인
-        """
-        return Response({"message": "아이디 로그인 API (미구현)"})
-
-    # 이메일로 사용자 로그인
-    @swagger_auto_schema(
-        tags=["UserLogin"],
-        operation_summary="이메일 로그인",
-        operation_description="이메일과 비밀번호를 사용하여 로그인합니다.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(type=openapi.TYPE_STRING),
-                "password": openapi.Schema(type=openapi.TYPE_STRING),
-            },
-        ),
-        responses={
-            201: openapi.Response(
-                description="로그인 성공 시, 사용자 정보 및 토큰을 반환합니다."
-            ),
-            401: openapi.Response(
-                description="이메일 또는 비밀번호가 일치하지 않을 경우."
-            ),
-            400: openapi.Response(description="요청 데이터가 유효하지 않을 경우."),
-        },
-    )
-    @action(detail=False, methods=["post"], name="email_login", url_path="email")
-    def user_login_email(self, request):
-        """
-        이메일로 사용자 로그인
-        """
-        return Response({"message": "이메일 로그인 API (미구현)"})
-
-
-class UserSignInViewSet(viewsets.GenericViewSet):
-    """
-    사용자 회원가입 관련 API
-    """
-
-    # 소셜 회원 가입
-    @swagger_auto_schema(
-        tags=["Sign-In"],
-        operation_summary="구글 소셜 회원 가입",
-        operation_description="사용자가 구글 API를 이용해 회원가입을 합니다.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "username": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="사용자 아이디"
-                ),
-                "password": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="비밀번호"
-                ),
-            },
-            required=["username", "password"],  # 필수 필드 추가
-        ),
-        responses={
-            201: openapi.Response(
-                description="회원가입 성공. 사용자 정보 및 토큰 반환",
+            200: openapi.Response(
+                description="사용자 정보 조회 성공",
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-                        "token": openapi.Schema(type=openapi.TYPE_STRING),
+                        "username": openapi.Schema(type=openapi.TYPE_STRING),
+                        "user_id": openapi.Schema(type=openapi.TYPE_STRING),
+                        "email": openapi.Schema(type=openapi.TYPE_STRING),
+                        "is_active": openapi.Schema(type=openapi.TYPE_BOOLEAN),
                     },
                 ),
             ),
-            400: openapi.Response(
-                description="요청 데이터가 유효하지 않을 경우 (예: 중복된 아이디)"
-            ),
+            401: openapi.Response(description="인증되지 않은 사용자"),
         },
     )
-    @action(detail=False, methods=["post"], name="google", url_path="google/signin")
-    def user_social_sign_in(self, request):
-        """
-        사용자 회원 가입
-        """
-        return Response({"message": "사용자 회원 가입 API (미구현)"})
-
-    @swagger_auto_schema(
-        tags=["Sign-In"],
-        operation_summary="회원 가입",
-        operation_description="사용자가 회원가입을 합니다.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "username": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="사용자 아이디"
-                ),
-                "password": openapi.Schema(
-                    type=openapi.TYPE_STRING, description="비밀번호"
-                ),
-            },
-            required=["username", "password"],  # 필수 필드 추가
-        ),
-        responses={
-            201: openapi.Response(
-                description="회원가입 성공. 사용자 정보 및 토큰 반환",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-                        "token": openapi.Schema(type=openapi.TYPE_STRING),
-                    },
-                ),
-            ),
-            400: openapi.Response(
-                description="요청 데이터가 유효하지 않을 경우 (예: 중복된 아이디)"
-            ),
-        },
-    )
-    @action(detail=False, methods=["post"], name="signin", url_path="signin")
-    def user_sign_in(self, request):
+    def get(self, request):
         """
         사용자 회원 가입
         """

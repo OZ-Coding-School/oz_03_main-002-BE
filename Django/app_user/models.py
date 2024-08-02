@@ -74,12 +74,10 @@ class App_User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)  # 업데이트 시간
     last_login_at = models.DateTimeField(null=True, blank=True)  # 마지막 로그인 시간
     is_active = models.BooleanField(default=True)  # 계정 활성화 여부
-    role = models.CharField(
-        max_length=10, choices=UserRole.choices, default=UserRole.USER
+    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.USER)
     is_email_verified = models.BooleanField(default=False) # added common user email verified
     email_verification_token = models.CharField(max_length=100, blank=True) # added common user email token
     email = models.EmailField(unique=True)
-    )
     is_staff = models.BooleanField(default=False)  # 스태프 권한
     date_joined = models.DateTimeField(auto_now_add=True)  # 가입일
     is_superuser = models.BooleanField(default=False)  # 최고 관리자 권한

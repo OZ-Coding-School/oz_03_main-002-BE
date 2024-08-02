@@ -28,20 +28,27 @@ jobs:
       - name: Create temporary .env file
         working-directory: Django
         run: |
-          cat << EOF > .env
-          RDS_DATABASE=${{ secrets.RDS_DATABASE }}
-          RDS_USERNAME=${{ secrets.RDS_USERNAME }}
-          RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
-          RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
-          RDS_PORT=${{ secrets.RDS_PORT }}
-          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-          STATE=${{ secrets.STATE }}
-          SECRET_KEY=${{ secrets.SECRET_KEY }}
-          ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
-          DEBUG=${{ secrets.DEBUG }}
-          IPv4='*'
-          EOF
+            script: |
+                cat << EOF > .env
+                RDS_DATABASE=${{ secrets.RDS_DATABASE }}
+                RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+                RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+                RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
+                RDS_PORT=${{ secrets.RDS_PORT }}
+                GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+                GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+                STATE=${{ secrets.STATE }}
+                SECRET_KEY=${{ secrets.SECRET_KEY }}
+                ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
+                DEBUG=${{ secrets.DEBUG }}
+                IPv4=*
+                HOST=localhost
+                ALLOWED_HOSTS=*
+                PORT= ${{ secrets.Django_Port }}
+                CORS_ALLOWED_ORIGINS = http://127.0.0.1:${{ secrets.Django_Port }}, http://127.0.0.1:${{ secrets.Front_Port }},http://localhost:${{ secrets.Django_Port }}, http://localhost:${{ secrets.Front_Port }}
+                SESSION_COOKIE_DOMAIN =127.0.0.1
+                EOF
+
 
       - name: Print .env file contents (for debugging)
         working-directory: Django
@@ -71,22 +78,12 @@ jobs:
             exit 1
           fi
 
-      # - name: Run database makemigrations
-      #   working-directory: Django
-      #   run:
-      #     docker-compose run --rm web python manage.py makemigrations 
-
-
-      # - name: Run database migrate
-      #   working-directory: Django
-      #   run:
-      #     docker-compose run --rm web python manage.py migrate
-
       - name: Check if runserver is running
+        working-directory: Django
         run: |
           ATTEMPTS=0
           MAX_ATTEMPTS=10
-          until curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
+          until curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/ || [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; do
             echo "Waiting for runserver to start..."
             sleep 5
             ATTEMPTS=$((ATTEMPTS + 1))
@@ -96,9 +93,6 @@ jobs:
             exit 1
           fi
 
-      # - name: Run tests (Optional)
-      #   working-directory: Django
-      #   run: docker-compose run --rm web python manage.py test
 
       - name: Stop services and clean up
         if: always()

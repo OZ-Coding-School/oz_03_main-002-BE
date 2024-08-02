@@ -30,11 +30,19 @@ class RecipeDifficulty(models.TextChoices):
 
 
 class CookingAttribute(models.Model):
-    name = models.OneToOneField(CookingNameList, on_delete=models.CASCADE)
-    method = models.OneToOneField(CookingMethod, on_delete=models.CASCADE)
-    situation = models.OneToOneField(CookingSituation, on_delete=models.CASCADE)
-    main_ingre = models.OneToOneField(CookingMainIngre, on_delete=models.CASCADE)
-    type = models.OneToOneField(CookingType, on_delete=models.CASCADE)
+    name = models.ForeignKey(
+        CookingNameList, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    method = models.ForeignKey(
+        CookingMethod, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    situation = models.ForeignKey(
+        CookingSituation, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    main_ingre = models.ForeignKey(
+        CookingMainIngre, on_delete=models.CASCADE
+    )  # ForeignKey로 변경
+    type = models.ForeignKey(CookingType, on_delete=models.CASCADE)  # ForeignKey로 변경
 
 
 class Recipe(models.Model):
@@ -52,11 +60,14 @@ class Recipe(models.Model):
     attribute = models.OneToOneField(
         CookingAttribute, on_delete=models.CASCADE, unique=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)  # 레시피 생성 시간 추가
+    updated_at = models.DateTimeField(auto_now=True)  # 레시피 수정 시간 추가
 
 
 class RecipeIngredientList(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    quantity = models.CharField(max_length=50, blank=True)  # 재료 수량 추가 (선택 사항)
 
 
 class DetailRecipe(models.Model):
