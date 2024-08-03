@@ -12,6 +12,7 @@ from .models import CookingMethod
 from .models import CookingNameList
 from .models import CookingSituation
 from .models import CookingType
+from .models import DetailRecipe
 from .models import Recipe
 from .models import RecipeIngredientList
 from .serializers import CookingMainIngreSerializer
