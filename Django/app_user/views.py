@@ -192,11 +192,11 @@ class GoogleCallback(APIView):
                 access_token = str(refresh.access_token)
 
                 # Response 객체 생성 및 쿠키 설정
-                # response = HttpResponseRedirect("https://naengttogi.com/", status=307)
+                response = HttpResponseRedirect("https://naengttogi.com/", status=307)
                 # response = HttpResponseRedirect(
                 #     "http://localhost:5173/", status=307
                 # )  # 프론트 테스트용
-                response = Response({str(refresh), access_token})  # 백엔드 테스트용
+                # response = Response({str(refresh), access_token})  # 백엔드 테스트용
 
                 response.set_cookie(
                     "access",
