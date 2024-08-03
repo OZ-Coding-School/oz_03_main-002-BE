@@ -23,7 +23,7 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
     generator_class=OpenAPISchemaGenerator,  # OpenAPISchemaGenerator 사용
     authentication_classes=[],
-    url="https://api.naengttogi.com/",
+    # url="https://api.naengttogi.com/",
 )
 
 

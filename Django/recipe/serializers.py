@@ -1,3 +1,4 @@
+from app_user.models import App_User
 from ingredient.models import Ingredient
 from rest_framework import serializers
 
@@ -129,6 +130,63 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
 
         return recipe
+
+    def update(self, instance, validated_data):
+        attribute_data = validated_data.pop("attribute", None)
+        ingredients_data = validated_data.pop("ingredients", [])
+        nick_name_data = validated_data.pop("nick_name", None)
+
+        # 레시피 기본 정보 업데이트
+        instance = super().update(instance, validated_data)
+
+        # CookingAttribute 업데이트
+        if attribute_data:
+            name, _ = CookingNameList.objects.get_or_create(name=attribute_data["name"])
+            method, _ = CookingMethod.objects.get_or_create(
+                name=attribute_data["method"]
+            )
+            situation, _ = CookingSituation.objects.get_or_create(
+                name=attribute_data["situation"]
+            )
+            main_ingre, _ = CookingMainIngre.objects.get_or_create(
+                name=attribute_data["main_ingre"]
+            )
+            type, _ = CookingType.objects.get_or_create(name=attribute_data["type"])
+
+            instance.attribute.name = name
+            instance.attribute.method = method
+            instance.attribute.situation = situation
+            instance.attribute.main_ingre = main_ingre
+            instance.attribute.type = type
+            instance.attribute.save()
+
+        # RecipeIngredientList 업데이트
+        if ingredients_data:
+            # 기존 RecipeIngredientList 객체 삭제
+            RecipeIngredientList.objects.filter(recipe=instance).delete()
+
+            # 새로운 RecipeIngredientList 객체 생성 및 저장
+            for ingredient_data in ingredients_data:
+                ingredient_name = ingredient_data.pop("ingredient_name")
+                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+                RecipeIngredientList.objects.create(
+                    recipe=instance, ingredient=ingredient, **ingredient_data
+                )
+
+        # nick_name 업데이트 (get_or_create 대신 get 사용)
+        if nick_name_data:
+            try:
+                nick_name_user = App_User.objects.get(nick_name=nick_name_data)
+            except App_User.DoesNotExist:
+                # nick_name이 존재하지 않는 경우, 기존 사용자의 nick_name만 변경
+                instance.nick_name.nick_name = nick_name_data
+                instance.nick_name.save()
+            else:
+                # nick_name이 이미 존재하는 경우, 해당 사용자로 변경
+                instance.nick_name = nick_name_user
+
+        instance.save()
+        return instance
 
 
 class DetailRecipeSerializer(serializers.ModelSerializer):
