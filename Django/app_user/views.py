@@ -73,9 +73,8 @@ class GoogleLogin(APIView):
         """
         scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
         redirect_uri = settings.GOOGLE_CALLBACK_URI
-        return redirect(
-            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={settings.GOOGLE_CLIENT_ID}&response_type=code&scope={scope}&redirect_uri={redirect_uri}&state={state}"
-        )
+        auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={settings.GOOGLE_CLIENT_ID}&response_type=code&scope={scope}&redirect_uri={redirect_uri}&state={state}"
+        return HttpResponseRedirect(auth_url)
 
 
 class GoogleCallback(APIView):
@@ -193,6 +192,8 @@ class GoogleCallback(APIView):
 
                 # Response 객체 생성 및 쿠키 설정
                 response = HttpResponseRedirect("https://naengttogi.com/", status=307)
+                response["Access-Control-Allow-Origin"] = "https://naengttogi.com"
+                response["Access-Control-Allow-Credentials"] = "true"
                 # response = HttpResponseRedirect(
                 #     "http://localhost:5173/", status=307
                 # )  # 프론트 테스트용
@@ -202,15 +203,17 @@ class GoogleCallback(APIView):
                     "access",
                     access_token,
                     httponly=True,
-                    secure=settings.DEBUG is False,  # 개발 환경에 따라 secure 설정
+                    secure=True,  # HTTPS 사용 시 True
                     samesite="None",  # Cross-site 쿠키 허용
+                    domain=".naengttogi.com",  # 도메인 설정
                 )
                 response.set_cookie(
                     "refresh",
                     str(refresh),
                     httponly=True,
-                    secure=settings.DEBUG is False,
+                    secure=True,
                     samesite="None",
+                    domain=".naengttogi.com",
                 )
 
                 # 사용자 모델에 refresh 토큰 저장

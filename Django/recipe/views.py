@@ -87,7 +87,9 @@ class RecipeCreateView(APIView):
     def post(self, request):
         serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid():
-            recipe = serializer.save(nick_name=request.user)
+            recipe = serializer.save(
+                nick_name=request.user
+            )  # nick_name을 현재 사용자로 설정
             return Response(
                 RecipeSerializer(recipe).data, status=status.HTTP_201_CREATED
             )
