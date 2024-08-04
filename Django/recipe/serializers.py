@@ -68,9 +68,9 @@ class RecipeIngredientListSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    nick_name = serializers.CharField(
-        source="nick_name.nick_name"
-    )  # nick_name.nick_name으로 수정
+    nick_name = serializers.PrimaryKeyRelatedField(
+        queryset=App_User.objects.all()
+    )  # 닉네임 필드 수정
     attribute = CookingAttributeSerializer()
     ingredients = RecipeIngredientListSerializer(
         source="recipeingredientlist_set",
@@ -102,7 +102,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         attribute_data = validated_data.pop("attribute")
         ingredients_data = validated_data.pop("ingredients", [])
 
-        # CookingNameList 객체 조회 또는 생성
+        # CookingAttribute 생성
         name, _ = CookingNameList.objects.get_or_create(name=attribute_data["name"])
         method, _ = CookingMethod.objects.get_or_create(name=attribute_data["method"])
         situation, _ = CookingSituation.objects.get_or_create(
@@ -112,7 +112,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             name=attribute_data["main_ingre"]
         )
         type, _ = CookingType.objects.get_or_create(name=attribute_data["type"])
-
         cooking_attribute = CookingAttribute.objects.create(
             name=name,
             method=method,
@@ -120,13 +119,15 @@ class RecipeSerializer(serializers.ModelSerializer):
             main_ingre=main_ingre,
             type=type,
         )
-        recipe = Recipe.objects.create(attribute=cooking_attribute, **validated_data)
 
+        # Recipe 생성 및 ingredients 연결
+        recipe = Recipe.objects.create(attribute=cooking_attribute, **validated_data)
         for ingredient_data in ingredients_data:
-            ingredient_name = ingredient_data.pop("ingredient_name")
+            ingredient_name = ingredient_data["ingredient_name"]
+            quantity = ingredient_data["quantity"]  # 수량 정보 추가
             ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
             RecipeIngredientList.objects.create(
-                recipe=recipe, ingredient=ingredient, **ingredient_data
+                recipe=recipe, ingredient=ingredient, quantity=quantity
             )
 
         return recipe

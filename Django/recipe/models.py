@@ -4,23 +4,23 @@ from ingredient.models import Ingredient
 
 
 class CookingNameList(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class CookingMethod(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class CookingSituation(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class CookingMainIngre(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class CookingType(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class RecipeDifficulty(models.TextChoices):
@@ -48,7 +48,9 @@ class CookingAttribute(models.Model):
 class Recipe(models.Model):
     url = models.URLField()
     recipe_name = models.TextField()
-    nick_name = models.ForeignKey(App_User, on_delete=models.CASCADE)
+    nick_name = models.CharField(
+        max_length=255, blank=True, null=True
+    )  # ForeignKey에서 CharField로 변경
     recommend_num = models.PositiveIntegerField(default=0)
     recipe_intro = models.TextField(blank=True)
     eat_people = models.PositiveSmallIntegerField(default=1)

@@ -62,6 +62,7 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # 애플리케이션 목록
 INSTALLED_APPS = [
+    "management",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -188,7 +189,7 @@ ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
 if DEBUG:
     GOOGLE_CALLBACK_URI = "http://127.0.0.1:8000/api/v1/google/callback/"
 else:
-    GOOGLE_CALLBACK_URI = "https://naengttogi.com/api/v1/google/callback/"
+    GOOGLE_CALLBACK_URI = "https://api.naengttogi.com/api/v1/google/callback/"
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
@@ -213,3 +214,14 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_DOMAIN = ".naengttogi.com"
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken", "Set-Cookie"]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
